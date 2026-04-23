@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('paciente_id')->nullable();
             $table->integer('usuario_medico_id')->nullable();
             $table->integer('tipo_id')->nullable();
-            $table->integer('cie10_id')->nullable();
+            $table->integer('enfermedad_id')->nullable();
             $table->timestamp('fecha_hora')->nullable()->default(DB::raw("now()"));
             $table->text('motivo_consulta')->nullable();
             $table->float('peso')->nullable();

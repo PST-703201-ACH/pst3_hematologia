@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cie10', function (Blueprint $table) {
-            $table->integer('enfermedad_id')->primary();
-            $table->string('codigo', 10)->nullable()->unique('cie10_codigo_key');
-            $table->string('descripcion')->nullable();
+        Schema::create('enfermedad', function (Blueprint $table) {
+            $table->id('enfermedad_id')->primary();
+            $table->boolean("tipo")->index();
+            $table->string('nombre_enfermedad', 255)->unique();
         });
     }
 
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cie10');
+        Schema::dropIfExists('enfermedad');
     }
 };
