@@ -117,7 +117,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }else if(resultado.status === "error") {
                     let alertaUsu = `
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
+<<<<<<< HEAD
                             <i class="icon fas fa-xmark"></i> 
+=======
+                            <i class="icon fas fa-check"></i> 
+>>>>>>> 9b8cb449df078442379e25103917c7201c03974a
                             ${resultado.mensaje}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>

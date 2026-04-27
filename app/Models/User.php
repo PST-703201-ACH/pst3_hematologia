@@ -13,15 +13,21 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $table = 'usuario';
+    protected $primaryKey = 'usuario_id';
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'username',
+        'persona_id',
+        'password_hash',
+        'id_rol',
+        'status',
     ];
 
     /**
@@ -30,20 +36,43 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'password_hash',
         'remember_token',
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Get the password for the user.
      *
-     * @return array<string, string>
+     * @return string
      */
-    protected function casts(): array
+    public function getAuthPassword()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->password_hash;
+    }
+
+    /**
+     * Get the column name for the "username" field.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'username';
+    }
+
+    /**
+     * Relación con el rol.
+     */
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class, 'id_rol', 'rol_id');
+    }
+
+    /**
+     * Relación con la persona.
+     */
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class, 'persona_id', 'persona_id');
     }
 }
