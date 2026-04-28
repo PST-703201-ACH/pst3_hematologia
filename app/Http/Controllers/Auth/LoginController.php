@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    /**
-     * Muestra la vista de login.
-     */
+|
     public function showLoginForm()
     {
         if (Auth::check()) {
@@ -26,7 +24,7 @@ class LoginController extends Controller
     {
         $credentials = $request->validate([
             'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
+            'password_hash' => ['required', 'string'],
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
@@ -45,8 +43,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        // Por ahora redirige a admin, pero dejamos la estructura lista para otros roles.
-        // Asumimos que el ID del rol de administrador es 1 (ajustar según sea necesario).
+
         switch ($user->id_rol) {
             case 1:
                 return redirect()->intended('/admin/');
@@ -55,9 +52,6 @@ class LoginController extends Controller
         }
     }
 
-    /**
-     * Cierra la sesión.
-     */
     public function logout(Request $request)
     {
         Auth::logout();
