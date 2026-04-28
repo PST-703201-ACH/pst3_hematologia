@@ -14,7 +14,7 @@ class UsuarioNuevo extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $datos
+    public $datos;
 
     public function __construct($datosRecibidos)
     {
@@ -37,7 +37,7 @@ class UsuarioNuevo extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.emailBienvenido.blade.php',
+            view: 'emails.emailBienvenido',
         );
     }
 

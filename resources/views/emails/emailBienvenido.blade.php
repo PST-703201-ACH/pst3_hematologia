@@ -18,7 +18,7 @@
             <h1>Bienvenido al sistema del servicio de Hematologia Dr. Walles Camarillo</h1>
         </div>
         <div class="content">
-            <p>Hola, <strong>{{ $datos['Usuario'] }}</strong>,</p>
+            <p>Hola, <strong>{{ $datos['usuario'] }}</strong>,</p>
             <p>Tu registro en el sistema del servicio de hematología se ha completado con éxito. A partir de ahora puedes acceder a tu panel de control utilizando tus credenciales.</p>
             
             <div style="background-color: #f1f1f1; padding: 15px; border-radius: 5px; margin: 20px 0;">

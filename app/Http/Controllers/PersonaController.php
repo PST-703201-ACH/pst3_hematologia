@@ -6,9 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\Persona;
 use App\Models\Usuario;
 use App\Mail\UsuarioNuevo;
+use Illuminate\Support\Facades\Mail;
 
 class PersonaController extends Controller
 {
+    public function generarPassword($longitud = 12) {
+    $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $password = '';
+    $max = strlen($caracteres) - 1;
+    for ($i = 0; $i < $longitud; $i++) {
+        $password .= $caracteres[random_int(0, $max)];
+    }
+    return $password;
+    }
+
     public function store(Request $request)
     {
 
@@ -35,10 +46,10 @@ class PersonaController extends Controller
         if (empty($request->cedula)) {
             $errores['4'] = "Debe escribir el numero de cedula de identidad del nuevo usuario";
         }
-        if (empty($request->apellido2)) {
+        if (empty($request->telefono)) {
             $errores['5'] = "Debe escribir el numero telefonico del nuevo usuario";
         }
-        if (empty($request->apellido2)) {
+        if (empty($request->correo)) {
             $errores['6'] = "Debe escribir la direccion de correo electronico del nuevo usuario";
         }
         if (empty($request->estado)) {
@@ -54,7 +65,7 @@ class PersonaController extends Controller
             $errores['10'] = "Debe escribir la direccion de domicilio exacta del usuario";
         }
         if (empty($request->rol)) {
-            $errores['11'] = "Seleccione el rol del nuevo usuario";
+            $errores['11'] = "";
         }
         if (!empty($errores)) {
             return response()->json([
@@ -83,23 +94,14 @@ class PersonaController extends Controller
             if ($persona->save()) { 
                 
                 switch ($request->tipo_reg) {
+                    
                     case 'usuario':
                         $usuario = new Usuario();
-                        $clave = generarPassword(12);
+                        $clave = $this->generarPassword(12);
                         $usuario->password_hash = password_hash($clave, PASSWORD_DEFAULT);
                         $usuario->persona_id = $persona->persona_id;
                         $usuario->username = $request->cedula;
                         $usuario->id_rol = $request->rol;
-
-                        function generarPassword($longitud = 12) {
-                            $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                            $password = '';
-                            $max = strlen($caracteres) - 1;
-                            for ($i = 0; $i < $longitud; $i++) {
-                                $password .= $caracteres[random_int(0, $max)];
-                            }
-                            return $password;
-                        }
 
                         if($usuario->save()){
 
@@ -111,8 +113,9 @@ class PersonaController extends Controller
 
                             Mail::to($persona->email)->send(new UsuarioNuevo($infoUsu));
 
-                            return response()->json(['status' => 'exito', 'mensaje' => 'Usuario registrado con exito', 'Usuario' => $usuario->username]);    
-                        }               break;
+                            return response()->json(['status' => 'exito', 'mensaje' => 'Usuario registrado con exito']);    
+                        }               
+                    break;
                 }
             }
             return response()->json(['status' => 'error', 'mensaje' => 'No se pudo registrar la persona']);
@@ -120,7 +123,7 @@ class PersonaController extends Controller
             
             return response()->json([
                 'status' => 'error', 
-                'mensaje' => 'Error de servidor o base de datos: '
+                'mensaje' => 'Error de servidor o base de datos: '. $e->getMessage()
             ]);
         }
     }

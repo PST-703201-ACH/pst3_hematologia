@@ -7,27 +7,27 @@
 			<div class="row">
 				<div class="col">
 					<label for="0">Primer nombre</label>
-					<input type="text" class="form-control" name="nombre1" id="0" placeholder="Inserte el primer nombre del nuevo usuario">
+					<input type="text" class="form-control" name="nombre1" id="0" placeholder="Inserte el primer nombre del nuevo usuario" autocomplete="off">
 				</div>
 				<div class="col">
 					<label for="0.5">Segundo nombre</label>
-					<input type="text" class="form-control" name="nombre2" id="0.5" placeholder="Inserte el segundo nombre del nuevo usuario">
+					<input type="text" class="form-control" name="nombre2" id="0.5" placeholder="Inserte el segundo nombre del nuevo usuario" autocomplete="off">
 				</div>				
 			</div>
 			<div class="row">
 				<div class="col">
 					<label for="1">Primer apellido</label>
-					<input type="text" class="form-control" name="apellido1" id="1" placeholder="Inserte el primer apellido del nuevo usuario">
+					<input type="text" class="form-control" name="apellido1" id="1" placeholder="Inserte el primer apellido del nuevo usuario" autocomplete="off">
 				</div>
 				<div class="col">
 					<label for="1.5">Segundo apellido</label>
-					<input type="text" class="form-control" name="apellido2" id="1.5" placeholder="Inserte el segundo apellido del nuevo usuario">
+					<input type="text" class="form-control" name="apellido2" id="1.5" placeholder="Inserte el segundo apellido del nuevo usuario" autocomplete="off">
 				</div>	
 			</div>
 			
 			<div class="form-group">
 				<label for="2">Fecha de nacimiento</label>
-				<input type="date" class="form-control" name="fecha_nac" id="2">
+				<input type="date" class="form-control" name="fecha_nac" id="2" autocomplete="off">
 			</div>
 			<div class="form-group">
 				<label for="3">Sexo</label>
@@ -35,20 +35,19 @@
 					<option disabled selected>Seleccione el genero del nuevo usuario</option>
 					<option value="Masculino">Masculino</option>
 					<option value="Femenino">Femenino</option>
-					<option value="Indefinido">Indefinido</option>
 				</select>
 			</div>
 			<div class="form-group">
 				<label for="4">Cedula</label>
-				<input type="text" class="form-control" name="cedula" id="4" placeholder="Inserte el numero de cedula de identidad del nuevo usuario">
+				<input type="text" class="form-control" name="cedula" id="4" placeholder="Inserte el numero de cedula de identidad del nuevo usuario" autocomplete="off">
 			</div>
 			<div class="form-group">
 				<label for="5">Telefono</label>
-				<input type="text" class="form-control" name="telefono" id="5" placeholder="Inserte el numero telefonico del nuevo usuario">
+				<input type="text" class="form-control" name="telefono" id="5" placeholder="Inserte el numero telefonico del nuevo usuario" autocomplete="off">
 			</div>
 			<div class="form-group">
 				<label for="6">Correo electronico</label>
-				<input type="text" class="form-control" name="correo" id="6" placeholder="Inserte la direccion de correo electronico del nuevo usuario">
+				<input type="text" class="form-control" name="correo" id="6" placeholder="Inserte la direccion de correo electronico del nuevo usuario" autocomplete="off">
 				<small id=6.5 class="form-text text-muted">La contraseña de acceso sera enviada a este correo
 			</div>
 			<div class="form-group">
@@ -71,7 +70,7 @@
 			</div>
 			<div class="form-group">
 				<label for="10">Direccion de domicilio exacta</label>
-				<input type="text" class="form-control" name="direccion" id="10" placeholder="Inserte la direccion exacta donde vive el nuevo usuario">
+				<input type="text" class="form-control" name="direccion" id="10" placeholder="Inserte la direccion exacta donde vive el nuevo usuario" autocomplete="off">
 			</div>
 			<div class="form-group">
 				<label for="11">Rol</label>
@@ -81,7 +80,7 @@
 			</div>
 			<button type="submit" class="btn btn-success">Registrar</button>
 			<button type="button" class="btn btn-danger" id="btnCancelarReg">Cancelar</button>
-			<input type="hidden" name="tipo_reg" value="usuario">
+			<input type="hidden" name="tipo_reg" value="usuario" autocomplete="off">
 		</form>
 	</div>
 </div>

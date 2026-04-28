@@ -12,4 +12,11 @@ class Usuario extends Model
     public $incrementing = true;
     protected $keyType = 'int';
     protected $fillable = ['username', 'persona_id', 'password_hash'];
+
+    public function persona(){
+        return $this->belongsTo(Persona::class, 'persona_id', 'persona_id');
+    }
+    public function rol(){
+    return $this->belongsTo(Rol::class, 'id_rol', 'rol_id');
+    }
 }

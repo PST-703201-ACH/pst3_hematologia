@@ -322,7 +322,7 @@ return [
             'icon' => 'fas fa-fw fa-user',
             'id' => 'btnUsuarios'
         ],
-        [
+        /*[
             'text' => 'change_password',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
@@ -364,8 +364,8 @@ return [
                     'url' => '#',
                 ],
             ],
-        ],
-        ['header' => 'labels'],
+        ],*/
+        /*['header' => 'labels'],
         [
             'text' => 'important',
             'icon_color' => 'red',
@@ -380,16 +380,8 @@ return [
             'text' => 'information',
             'icon_color' => 'cyan',
             'url' => '#',
-        ],
-        ['header' => 'SESIÓN'],
-        [
-            'text' => 'Cerrar Sesión',
-            'url' => 'logout',
-            'icon' => 'fas fa-fw fa-sign-out-alt',
-            'icon_color' => 'light',
-        ],
+        ],*/
     ],
-
 
     /*
     |--------------------------------------------------------------------------

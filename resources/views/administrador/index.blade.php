@@ -17,7 +17,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <p>Aca estara el dashboard</p>
+        @include('administrador.dashboards')    
         </div>
     </div>
 
@@ -33,6 +33,8 @@
 @section('js')
 <script src="{{ asset('js/botones_sidebar.js') }}"></script>
 <script src="{{ asset('js/registrar_usuario.js') }}"></script>
+<script src="{{ asset('js/listar_usuario.js') }}"></script>
+<script src="{{ asset('js/dashboards_admin.js') }}"></script>
 @stop
 </body>
 </html>
