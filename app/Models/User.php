@@ -54,7 +54,7 @@ class User extends Authenticatable
      * Get the column name for the "username" field.
      *
      * @return string
-     */
+     */ 
     public function getAuthIdentifierName()
     {
         return 'username';
