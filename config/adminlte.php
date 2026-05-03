@@ -320,16 +320,19 @@ return [
             'text' => 'Usuarios',
             'url' => '#',
             'icon' => 'fas fa-fw fa-user',
-            'id' => 'btnUsuarios'
+            'id' => 'btnUsuarios',
+            'can' => 'es-admin'
         ],
         [
             'text' => 'change_password',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
+            'can' => 'es-admin'
         ],
         [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
+            'can' => 'es-admin',
             'submenu' => [
                 [
                     'text' => 'level_one',
@@ -365,21 +368,47 @@ return [
                 ],
             ],
         ],
-        ['header' => 'labels'],
+        ['header' => 'labels', 'can' => 'es-admin'],
         [
             'text' => 'important',
             'icon_color' => 'red',
             'url' => '#',
+            'can' => 'es-admin',
         ],
         [
             'text' => 'warning',
             'icon_color' => 'yellow',
             'url' => '#',
+            'can' => 'es-admin',
         ],
         [
             'text' => 'information',
             'icon_color' => 'cyan',
             'url' => '#',
+            'can' => 'es-admin',
+        ],
+        [
+            'text' => 'Panel de Control',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
+            'url'  => 'medico/',
+            'can'  => 'es-medico',
+        ],
+        [
+            'text' => 'Pacientes',
+            'icon' => 'fas fa-fw fa-users',
+            'can'  => 'es-medico',
+            'submenu' => [
+                [
+                    'text' => 'Registrar Paciente',
+                    'url'  => 'medico/pacientes/crear',
+                    'icon' => 'fas fa-fw fa-user-plus',
+                ],
+                [
+                    'text' => 'Listado de Pacientes',
+                    'url'  => 'medico/pacientes',
+                    'icon' => 'fas fa-fw fa-list',
+                ],
+            ],
         ],
         ['header' => 'SESIÓN'],
         [
