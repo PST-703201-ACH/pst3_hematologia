@@ -1,3 +1,4 @@
+
 async function listarUsuarios() {
     try {
         const respuesta = await fetch('/obtener-usuarios');
@@ -7,15 +8,24 @@ async function listarUsuarios() {
         let id = 1;
 
         usuarios.forEach(usu => {
+            if (usu.status == 1) {
+                usu.status = '<p class="text-success">Activo</p>';
+            } else if (usu.status == 0) {
+                usu.status = '<p class="text-danger">Inactivo</p>';
+            }
             filas += `
                 <tr>
                     <td>${id++}</td>
                     <td>${usu.persona.nombres} ${usu.persona.apellidos}</td>
                     <td>${usu.rol.nombre}</td>
-                    <td>${usu.username}</td>
+                    <td>${usu.persona.cedula}</td>
                     <td>${usu.persona.telefono}</td>
-                    <td>${usu.persona.email}</td>
-                    <td><button class="btn btn-info">Detalles</button></td>
+                    <td id="status">${usu.status}</td>
+                    <td class="text-center">
+                        <button class="btn btn-warning" data-id="${usu.persona_id}" onclick="cambiarStatus(this);">Cambiar status</button>
+                        <button onclick="cargarDetalle(this)" class="btn btn-secondary" data-id="${usu.persona_id}">Detalles</button>
+                        <button onclick="intercambiarVista('actualizar-usuario'); precargarDatos(this);" class="btn btn-primary" data-id="${usu.persona_id}">Actualizar</button>
+                    </td>
                 </tr>
             `;
         });

@@ -11,7 +11,7 @@ class Usuario extends Model
     protected $primaryKey = 'usuario_id';
     public $incrementing = true;
     protected $keyType = 'int';
-    protected $fillable = ['username', 'persona_id', 'password_hash'];
+    protected $fillable = ['username', 'persona_id', 'password_hash', 'status', 'id_rol'];
 
     public function persona(){
         return $this->belongsTo(Persona::class, 'persona_id', 'persona_id');

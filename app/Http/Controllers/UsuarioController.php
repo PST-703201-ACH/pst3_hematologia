@@ -14,4 +14,43 @@ class UsuarioController extends Controller
 
         return response()->json($usuarios);
     }
+
+    public function ver($id){
+        $usuario = Usuario::with('persona.estado', 'persona.municipio', 'persona.parroquia', 'rol')->where('persona_id', $id)->first();
+        return response()->json($usuario);
+    }
+
+    public function precargar($id){
+        $usuario = Usuario::with('persona.estado', 'persona.municipio', 'persona.parroquia', 'rol')->where('persona_id', $id)->first();
+        return response()->json($usuario);
+    }
+
+    public function nuevo_status($id){
+        $usuario = Usuario::where('persona_id', $id)->first();
+
+        if ($usuario) {
+            try{
+                switch ($usuario->status) {
+                    case '1':
+                        $usuario->update([
+                            'status' => '0'
+                        ]);
+                        return response()->json(['status' => 'exito']);
+                    break;
+
+                    case '0':
+                        $usuario->update([
+                            'status' => '1'
+                        ]);
+                        return response()->json(['status' => 'exito']);
+                    break;
+                }
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'error'
+                ]);
+            }
+        }
+    }
+    
 }

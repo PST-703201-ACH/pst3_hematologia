@@ -11,4 +11,5 @@ class Municipio extends Model
     protected $fillable = ['nombre'];
     public $incrementing = true;
     public $timestamps = false;
+
 }

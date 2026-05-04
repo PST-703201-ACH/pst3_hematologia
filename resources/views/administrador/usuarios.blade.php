@@ -16,8 +16,8 @@
 						<th scope="col">Rol</th>
 						<th scope="col">Cedula</th>
 						<th scope="col">Telefono</th>
-						<th scope="col">Correo electronico</th>
-						<th colspan="2">Acciones</th>
+						<th scope="col">Status</th>
+						<th style="text-align: center;">Acciones</th>
 					</tr>
 				</thead>
 				<tbody id="cuerpoTablaUsuarios">

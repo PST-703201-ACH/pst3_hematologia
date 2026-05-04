@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UsuarioNuevo extends Mailable
+class UsuarioActualizado extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -24,17 +24,14 @@ class UsuarioNuevo extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bienvenido al sistema del servicio de Hematologia Dr. Walles Camarillo',
+            subject: 'Has sido actualizado en el sistema del servicio de Hematologia Dr. Walles Camarillo',
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
-            view: 'emails.emailBienvenido',
+            view: 'emails.emailActualizacion',
         );
     }
 

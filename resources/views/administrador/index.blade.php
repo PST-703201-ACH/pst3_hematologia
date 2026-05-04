@@ -28,13 +28,21 @@
     <div id="registro-usuario" class="vista_admin d-none">
         @include('administrador.registrar')
     </div>
+    <div id="actualizar-usuario" class="vista_admin d-none">
+        @include('administrador.actualizar')
+    </div>
+
+        @include('administrador.ver')
 @stop
 
 @section('js')
-<script src="{{ asset('js/botones_sidebar.js') }}"></script>
+<script src="{{ asset('js/botones.js') }}"></script>
 <script src="{{ asset('js/registrar_usuario.js') }}"></script>
 <script src="{{ asset('js/listar_usuario.js') }}"></script>
 <script src="{{ asset('js/dashboards_admin.js') }}"></script>
+<script src="{{ asset('js/ver_usuario.js') }}"></script>
+<script src="{{ asset('js/actualizar_usuario.js') }}"></script>
+<script src="{{ asset('js/status_usuario.js') }}"></script>
 @stop
 </body>
 </html>
