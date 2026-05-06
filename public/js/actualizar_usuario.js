@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                         `;
                         document.getElementById('alertUpdate').innerHTML = alertaUsu;
+                        listarUsuarios();
                         setTimeout(function (){
                             document.getElementById('alertUpdate').innerHTML = "";
                         }, 3000);
@@ -178,9 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			document.getElementById('actualizar1.5').value = apellido2;
 			document.getElementById('actualizar2').value = datos.persona.fecha_nacimiento;
 			document.getElementById('actualizar3').value = datos.persona.sexo;
-			const [nacionalidad, cedula] = datos.persona.cedula.split("-");
-			document.getElementById('actualizar4').value = nacionalidad;
-			document.getElementById('actualizar4.5').value = cedula;
 			const telefono = datos.persona.telefono.replace(/^0/, "");
 			document.getElementById('actualizar5').value = telefono;
 			document.getElementById('actualizar6').value = datos.persona.email;

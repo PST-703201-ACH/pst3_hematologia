@@ -117,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         `;
                         document.getElementById('alertCreate').innerHTML = alertaUsu;
+                        listarUsuarios();
                         setTimeout(function (){
                             document.getElementById('alertCreate').innerHTML = "";
                         }, 3000);

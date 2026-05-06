@@ -12,5 +12,5 @@ class ParroquiaController extends Controller
         return response()->json($parroquias);
     }
 
-    
+   
 }

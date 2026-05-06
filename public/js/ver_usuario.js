@@ -6,6 +6,8 @@ async function cargarDetalle(boton){
 		const detalle = await respuesta.json();
 		if (detalle.status == 1) {
 			detalle.status = '<p class="text-success">Activo</p>';
+		} else if (detalle.status == 0) {
+			detalle.status = '<p class="text-danger">Inactivo</p>';
 		}
 
 			document.getElementById('detalleStatus').innerHTML = detalle.status;

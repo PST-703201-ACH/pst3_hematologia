@@ -228,16 +228,6 @@ class PersonaController extends Controller
             $errores['actualizar3'] = "Seleccione el genero del nuevo usuario";
         }
 
-        if (empty($request->cedula)) {
-            $errores['actualizar4.5'] = "Debe escribir el numero de cedula de identidad del nuevo usuario";
-        } else if (!is_numeric($request->cedula)) {
-            $errores['actualizar4.5'] = "Solo se permiten numeros";
-        } else if (strlen($request->cedula) < 7 || strlen($request->cedula) > 8) {
-            $errores['actualizar4.5'] = "El numero de cedula debe tener de 7 a 8 digitos";
-        }
-
-        $cedula = $request->nacionalidad.'-'.$request->cedula; 
-
         if (empty($request->telefono)) {
             $errores['actualizar5'] = "Debe escribir el numero telefonico del nuevo usuario";
         } else if (!is_numeric($request->telefono)) {
@@ -296,7 +286,6 @@ class PersonaController extends Controller
                 'apellidos' => $request->apellido1." ".$request->apellido2,
                 'fecha_nacimiento' => $request->fecha_nac,
                 'sexo' => $request->sexo,
-                'cedula' => $cedula,
                 'telefono' => $telefono,
                 'email' => $request->correo,
                 'estado_id' => $request->estado,
@@ -314,7 +303,6 @@ class PersonaController extends Controller
                                 
                                 'password_hash' => password_hash($clave, PASSWORD_DEFAULT),
                                 'persona_id' => $persona->persona_id,
-                                'username' => $request->cedula,
                                 'id_rol' => $request->rol,
                                 'status' => 1,
                                 ])){
