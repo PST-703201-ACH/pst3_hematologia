@@ -37,17 +37,6 @@
 					<option value="Femenino">Femenino</option>
 				</select>
 			</div>
-			<label>Cedula</label>
-			<div class="input-group mb-3">
-				<div class="input-group-prepend">
-		          	<select class="form-control input-group-text" name="nacionalidad" id="actualizar4">
-		          		<option value="V">V</option>
-		          		<option value="E">E</option>
-		          	</select>
-		        </div>
-
-				<input type="text" class="form-control" name="cedula" id="actualizar4.5" placeholder="Ingrese el numero de cedula de identidad del nuevo usuario" autocomplete="off">
-			</div>
 			<label>Telefono</label>
 			<div class="input-group mb-3">
 		        <div class="input-group-prepend">
