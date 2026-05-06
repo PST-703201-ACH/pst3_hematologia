@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -14,7 +16,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return $this->authenticated(request(), Auth::user());
+            return redirect()->intended(Auth::user()->getDashboardUrl());
         }
         return view('auth.login');
     }
@@ -24,39 +26,30 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $user = User::findByCredentials($request->username);
+
+        if ($user && Hash::check($request->password, $user->password_hash)) {
+            // Verificar si el usuario está activo
+            if ($user->status !== User::STATUS_ACTIVO) {
+                return back()->withErrors([
+                    'username' => 'Tu cuenta no se encuentra activa en el sistema.',
+                ])->onlyInput('username');
+            }
+
+            Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
 
-            return $this->authenticated($request, Auth::user());
+            return redirect()->intended($user->getDashboardUrl());
         }
 
         return back()->withErrors([
-            'username' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
+            'username' => 'Las credenciales no coinciden con nuestros registros.',
         ])->onlyInput('username');
-    }
-
-    /**
-     * Lógica de redirección basada en roles tras la autenticación.
-     */
-    protected function authenticated(Request $request, $user)
-    {
-        // Por ahora redirige a admin, pero dejamos la estructura lista para otros roles.
-        // Asumimos que el ID del rol de administrador es 1 (ajustar según sea necesario).
-        // refactorizar para simplificar la logica de redireccion del usuario autenticado
-
-        switch ($user->id_rol) {
-            case 1:
-                return redirect()->intended('/admin/');
-            case 2:
-                return redirect()->intended('/medico/');
-            default:
-                return redirect()->intended('/admin/');
-        }
     }
 
     /**
@@ -72,29 +65,3 @@ class LoginController extends Controller
         return redirect('/login');
     }
 }
-
-
-/*
-public function login(Request $request)
-{
-    $login = $request->input('username'); // El campo del form
-    $password = $request->input('password');
-
-    // Buscamos al usuario por username O por la cedula de su persona vinculada
-    $user = User::where('username', $login)
-        ->orWhereHas('persona', function($query) use ($login) {
-            $query->where('cedula', $login);
-        })
-        ->first();
-
-    if ($user && Hash::check($password, $user->password_hash)) {
-        Auth::login($user, $request->boolean('remember'));
-        $request->session()->regenerate();
-        return $this->authenticated($request, $user);
-    }
-
-    return back()->withErrors([
-        'username' => 'Las credenciales no coinciden.',
-    ])->onlyInput('username');
-}
-*/
