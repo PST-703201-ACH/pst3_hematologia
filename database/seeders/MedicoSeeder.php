@@ -23,7 +23,7 @@ class MedicoSeeder extends Seeder
 
         // 2. Crear una Persona para el médico
         $persona = Persona::updateOrCreate(
-            ['cedula' => 'V-12345678'],
+            ['cedula' => '12345678'],
             [
                 'persona_id' => 2,
                 'nombres' => 'Gregory',
@@ -45,7 +45,7 @@ class MedicoSeeder extends Seeder
                 'persona_id' => $persona->persona_id,
                 'password_hash' => Hash::make('medico123'),
                 'id_rol' => $rol->rol_id,
-                'status' => 'Activo'
+                'status' => User::STATUS_ACTIVO
             ]
         );
     }

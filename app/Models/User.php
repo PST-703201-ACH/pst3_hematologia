@@ -13,6 +13,10 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    // Constantes de estado
+    public const STATUS_ACTIVO = 1;
+    public const STATUS_INACTIVO = 0;
+
     protected $table = 'usuario';
     protected $primaryKey = 'usuario_id';
     public $timestamps = false;
@@ -39,6 +43,30 @@ class User extends Authenticatable
         'password_hash',
         'remember_token',
     ];
+
+    /**
+     * Busca un usuario por username o por la cédula de su persona vinculada.
+     */
+    public static function findByCredentials($login)
+    {
+        return self::where('username', $login)
+            ->orWhereHas('persona', function($query) use ($login) {
+                $query->where('cedula', $login);
+            })
+            ->first();
+    }
+
+    /**
+     * Obtiene la URL del dashboard correspondiente según el rol.
+     */
+    public function getDashboardUrl()
+    {
+        return match ($this->id_rol) {
+            1 => route('admin.index'),
+            2 => route('medico.index'),
+            default => route('admin.index'),
+        };
+    }
 
     /**
      * Get the password for the user.
@@ -76,3 +104,4 @@ class User extends Authenticatable
         return $this->belongsTo(Persona::class, 'persona_id', 'persona_id');
     }
 }
+
