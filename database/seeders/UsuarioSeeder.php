@@ -45,7 +45,7 @@ class UsuarioSeeder extends Seeder
                 'persona_id' => $persona->persona_id,
                 'password_hash' => Hash::make('admin123'),
                 'id_rol' => $rol->rol_id,
-                'status' => 'Activo'
+                'status' => User::STATUS_ACTIVO
             ]
         );
     }

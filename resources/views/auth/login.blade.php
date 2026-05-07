@@ -9,7 +9,7 @@
         {{-- Username field --}}
         <div class="input-group mb-3">
             <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"
-                   value="{{ old('username') }}" placeholder="Nombre de usuario" autofocus>
+                   value="{{ old('username') }}" placeholder="Usuario o Cédula" autofocus>
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-user {{ config('adminlte.classes_auth_icon', '') }}"></span>

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('username', 50)->nullable()->unique('usuario_username_key');
             $table->string('password_hash')->nullable();
             $table->integer('id_rol')->nullable();
-            $table->string('status', 20)->nullable()->default('Activo');
+            $table->integer('status')->nullable();
         });
     }
 
