@@ -5,7 +5,8 @@
 
 	<div class="card-body">
 		<button id="btnRegistrarUsu" class="btn btn-success">Nuevo</button>
-		<button id="btnRefrescarUsu" onclick="listarUsuarios()" class="btn btn-primary">Actualizar</button>
+		<button id="btnRefrescarUsu" onclick="listarUsuarios()" class="btn btn-primary"><i class="fas fa-undo" aria-hidden="true"></i>
+</button>
 		<div class="table-responsive">
 			<table class="card-table table">
 				<caption>Usuarios del sistema</caption>
