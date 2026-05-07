@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::define('es-medico', function ($user) {
-            return $user->id_rol === 2;
+            return $user->id_rol === 3;
         });
     }
 }
