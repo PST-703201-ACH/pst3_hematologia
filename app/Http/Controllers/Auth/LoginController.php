@@ -5,14 +5,18 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-|
+    /**
+     * Muestra la vista de login.
+     */
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return $this->authenticated(request(), Auth::user());
+            return redirect()->intended(Auth::user()->getDashboardUrl());
         }
         return view('auth.login');
     }
@@ -22,36 +26,35 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'username' => ['required', 'string'],
-            'password_hash' => ['required', 'string'],
+            'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $user = User::findByCredentials($request->username);
+
+        if ($user && Hash::check($request->password, $user->password_hash)) {
+            // Verificar si el usuario está activo
+            if ($user->status !== User::STATUS_ACTIVO) {
+                return back()->withErrors([
+                    'username' => 'Tu cuenta no se encuentra activa en el sistema.',
+                ])->onlyInput('username');
+            }
+
+            Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
 
-            return $this->authenticated($request, Auth::user());
+            return redirect()->intended($user->getDashboardUrl());
         }
 
         return back()->withErrors([
-            'username' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
+            'username' => 'Las credenciales no coinciden con nuestros registros.',
         ])->onlyInput('username');
     }
 
     /**
-     * Lógica de redirección basada en roles tras la autenticación.
+     * Cierra la sesión.
      */
-    protected function authenticated(Request $request, $user)
-    {
-
-        switch ($user->id_rol) {
-            case 1:
-                return redirect()->intended('/admin/');
-            default:
-                return redirect()->intended('/admin/');
-        }
-    }
-
     public function logout(Request $request)
     {
         Auth::logout();

@@ -13,15 +13,25 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    // Constantes de estado
+    public const STATUS_ACTIVO = 1;
+    public const STATUS_INACTIVO = 0;
+
+    protected $table = 'usuario';
+    protected $primaryKey = 'usuario_id';
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'username',
+        'persona_id',
+        'password_hash',
+        'id_rol',
+        'status',
     ];
 
     /**
@@ -30,20 +40,67 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
+        'password_hash',
         'remember_token',
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Busca un usuario por username o por la cédula de su persona vinculada.
      */
-    protected function casts(): array
+    public static function findByCredentials($login)
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return self::where('username', $login)
+            ->orWhereHas('persona', function($query) use ($login) {
+                $query->where('cedula', $login);
+            })
+            ->first();
+    }
+
+    /**
+     * Obtiene la URL del dashboard correspondiente según el rol.
+     */
+    public function getDashboardUrl()
+    {
+        return match ($this->id_rol) {
+            1 => route('admin.index'),
+            2 => route('medico.index'),
+            default => route('admin.index'),
+        };
+    }
+
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    /**
+     * Get the column name for the "username" field.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'username';
+    }
+
+    /**
+     * Relación con el rol.
+     */
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class, 'id_rol', 'rol_id');
+    }
+
+    /**
+     * Relación con la persona.
+     */
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class, 'persona_id', 'persona_id');
     }
 }
