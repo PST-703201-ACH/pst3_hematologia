@@ -321,7 +321,6 @@ return [
             'url' => '#',
             'icon' => 'fas fa-fw fa-user',
             'id' => 'btnUsuarios',
-            'can' => 'es-admin'
         ],
         /*[
             'text' => 'change_password',

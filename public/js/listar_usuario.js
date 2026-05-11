@@ -20,7 +20,7 @@ async function listarUsuarios() {
                     <td>${usu.rol.nombre}</td>
                     <td>${usu.persona.cedula}</td>
                     <td>${usu.persona.telefono}</td>
-                    <td id="status">${usu.status}</td>
+                    <td class="status">${usu.status}</td>
                     <td class="text-center">
                         <button class="btn btn-warning" data-id="${usu.persona_id}" onclick="cambiarStatus(this);">Cambiar status</button>
                         <button onclick="cargarDetalle(this)" class="btn btn-secondary" data-id="${usu.persona_id}">Detalles</button>

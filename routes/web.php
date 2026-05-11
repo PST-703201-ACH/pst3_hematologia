@@ -18,7 +18,6 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/logout', [LoginController::class, 'logout']);
 
 // Rutas protegidas
-Route::middleware(['auth'])->group(function () {
     Route::get('/admin/', function () {
         return view('administrador.index');
     })->name('admin.index');
@@ -45,4 +44,3 @@ Route::get('/medico/pacientes/crear', [MedicoPacienteController::class, 'create'
 Route::post('/medico/pacientes/crear', [MedicoPacienteController::class, 'store'])->name('medico.pacientes.store');
 Route::get('/medico/pacientes', [MedicoPacienteController::class, 'index'])->name('medico.pacientes.index');
 Route::delete('/medico/pacientes/{id}', [MedicoPacienteController::class, 'destroy'])->name('medico.pacientes.destroy');
-});

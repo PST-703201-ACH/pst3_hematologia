@@ -1,12 +1,15 @@
 async function cambiarStatus(boton){	
 	const id = boton.getAttribute('data-id');
-	const actual = document.getElementById('status');
+	const fila = boton.closest('tr');
+	const celdaStatus = fila.querySelector('.status');
+
+
 	try {
 		const respuesta = await fetch(`/cambiar-status/${id}`);
 		const nuevo = await respuesta.json();
 
 		if (nuevo.status == "exito") {
-			listarUsuarios();
+			celdaStatus.innerHTML = nuevo.contenido;
 		}
 
 		} catch (error) { 

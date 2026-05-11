@@ -93,7 +93,7 @@
 			<input type="hidden" name="tipo_reg" value="usuario" autocomplete="off">
 		</form>
 
-		<div class="modal fade" id="registrandoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+		<div class="modal fade" id="registrandoModal" data-backdrop="static" data-bs-backdrop="static" data-keyboard="false" data-bs-keyboard="false" tabindex="-1">
 		  <div class="modal-dialog modal-dialog-centered">
 		    <div class="modal-content">
 		      <div class="modal-body text-center p-4">

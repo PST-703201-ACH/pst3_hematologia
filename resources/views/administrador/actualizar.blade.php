@@ -82,7 +82,7 @@
 			<input type="hidden" name="tipo_up" value="usuario" autocomplete="off">
 			<input type="hidden" name="persona" id="X" autocomplete="off">
 		</form>
-		<div class="modal fade" id="actualizandoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+		<div class="modal fade" id="actualizandoModal" data-backdrop="static" data-bs-backdrop="static" data-keyboard="false" data-bs-keyboard="false" tabindex="-1">
 		  <div class="modal-dialog modal-dialog-centered">
 		    <div class="modal-content">
 		      <div class="modal-body text-center p-4">

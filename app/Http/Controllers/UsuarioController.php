@@ -35,14 +35,14 @@ class UsuarioController extends Controller
                         $usuario->update([
                             'status' => '0'
                         ]);
-                        return response()->json(['status' => 'exito']);
+                        return response()->json(['status' => 'exito', 'contenido' => '<p class="text-danger">Inactivo</p>']);
                     break;
 
                     case '0':
                         $usuario->update([
                             'status' => '1'
                         ]);
-                        return response()->json(['status' => 'exito']);
+                        return response()->json(['status' => 'exito', 'contenido' => '<p class="text-success">Activo</p>']);
                     break;
                 }
             } catch (\Exception $e) {

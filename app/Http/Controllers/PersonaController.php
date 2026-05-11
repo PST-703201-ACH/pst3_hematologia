@@ -33,9 +33,7 @@ class PersonaController extends Controller
             $errores['0'] = "El primer nombre solo puede tener letras";
         }
 
-        if (empty($request->nombre2)) {
-            $errores['0.5'] = "Debe escribir segundo nombre del nuevo usuario";
-        } else if (!preg_match("/^[\p{L}\s]+$/u", $request->nombre2)) {
+        if (!empty($request->nombre2) && !preg_match("/^[\p{L}\s]+$/u", $request->nombre2)) {
             $errores['0.5'] = "El segundo nombre solo puede tener letras";
         }
 
@@ -45,11 +43,10 @@ class PersonaController extends Controller
             $errores['1'] = "El primer apellido solo puede tener letras";
         }
 
-        if (empty($request->apellido2)) {
-            $errores['1.5'] = "Debe escribir el segundo apellido del nuevo usuario";
-        } else if (!preg_match("/^[\p{L}\s]+$/u", $request->apellido2)) {
-            $errores['1.5'] = "El segundo apellido no puede contener caracteres especiales";
+        if (!empty($request->apellido2) && !preg_match("/^[\p{L}\s]+$/u", $request->apellido2)) {
+            $errores['0.5'] = "El segundo apellido solo puede tener letras";
         }
+
         switch ($request->tipo_reg){
             case 'usuario':
                 $nacimiento = new DateTime($request->fecha_nac);
@@ -74,6 +71,12 @@ class PersonaController extends Controller
             $errores['4.5'] = "Solo se permiten numeros";
         } else if (strlen($request->cedula) < 7 || strlen($request->cedula) > 8) {
             $errores['4.5'] = "El numero de cedula debe tener de 7 a 8 digitos";
+        }
+
+        $existente = Usuario::where('username', $request->cedula)->first();
+
+        if ($existente) {
+            $errores['4.5'] = "Este usuario ya esta registrado";
         }
 
         $cedula = $request->nacionalidad.'-'.$request->cedula; 
@@ -130,7 +133,17 @@ class PersonaController extends Controller
         try{
             $persona = new Persona();
 
-            $persona->nombres = $request->nombre1." ".$request->nombre2;
+            if (!empty($request->nombre2)) {
+                $persona->nombres = $request->nombre1." ".$request->nombre2;
+            } else {
+                $persona->nombres = $request->nombre1;
+            }
+
+            if (!empty($request->apellido2)) {
+                $persona->apellidos = $request->apellido1." ".$request->apellido2;
+            } else {
+                $persona->apellidos = $request->apellido1;
+            }
             $persona->apellidos = $request->apellido1." ".$request->apellido2;
             $persona->fecha_nacimiento = $request->fecha_nac;
             $persona->sexo = $request->sexo;
@@ -193,9 +206,7 @@ class PersonaController extends Controller
             $errores['actualizar0'] = "El primer nombre solo puede tener letras";
         }
 
-        if (empty($request->nombre2)) {
-            $errores['actualizar0.5'] = "Debe escribir segundo nombre del nuevo usuario";
-        } else if (!preg_match("/^[\p{L}\s]+$/u", $request->nombre2)) {
+        if (!preg_match("/^[\p{L}\s]+$/u", $request->nombre2)) {
             $errores['actualizar0.5'] = "El segundo nombre solo puede tener letras";
         }
 
@@ -205,9 +216,7 @@ class PersonaController extends Controller
             $errores['actualizar1'] = "El primer apellido solo puede tener letras";
         }
 
-        if (empty($request->apellido2)) {
-            $errores['actualizar1.5'] = "Debe escribir el segundo apellido del nuevo usuario";
-        } else if (!preg_match("/^[\p{L}\s]+$/u", $request->apellido2)) {
+        if (!preg_match("/^[\p{L}\s]+$/u", $request->apellido2)) {
             $errores['actualizar1.5'] = "El segundo apellido no puede contener caracteres especiales";
         }
         switch ($request->tipo_reg){
@@ -281,9 +290,21 @@ class PersonaController extends Controller
         try{
             $persona = Persona::find($request->persona);
 
+            if (!empty($request->nombre2)) {
+                $nombres = $request->nombre1;
+            } else {
+                $nombres = $request->nombre1." ".$request->nombre2;
+            }
+
+            if (!empty($request->apellido2)) {
+                $apellidos = $request->apellido1." ".$request->apellido2;
+            } else {
+                $apellidos = $request->apellido1;
+            }
+
             if($persona->update([
-                'nombres' => $request->nombre1." ".$request->nombre2,
-                'apellidos' => $request->apellido1." ".$request->apellido2,
+                'nombres' => $nombres,
+                'apellidos' => $apellidos,
                 'fecha_nacimiento' => $request->fecha_nac,
                 'sexo' => $request->sexo,
                 'telefono' => $telefono,
