@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Persona;
-use App\Models\Usuario;
+use App\Models\User;
 use App\Mail\UsuarioActualizado;
 use App\Mail\UsuarioNuevo;
 use Illuminate\Support\Facades\Mail;
@@ -73,7 +73,7 @@ class PersonaController extends Controller
             $errores['4.5'] = "El numero de cedula debe tener de 7 a 8 digitos";
         }
 
-        $existente = Usuario::where('username', $request->cedula)->first();
+        $existente = User::where('username', $request->cedula)->first();
 
         if ($existente) {
             $errores['4.5'] = "Este usuario ya esta registrado";
@@ -161,7 +161,7 @@ class PersonaController extends Controller
                 switch ($request->tipo_reg) {
                     
                     case 'usuario':
-                        $usuario = new Usuario();
+                        $usuario = new User();
                         $clave = $this->generarPassword(12);
                         $usuario->password_hash = password_hash($clave, PASSWORD_DEFAULT);
                         $usuario->persona_id = $persona->persona_id;
@@ -179,8 +179,15 @@ class PersonaController extends Controller
 
                             Mail::to($persona->email)->send(new UsuarioNuevo($infoUsu));
 
-                            return response()->json(['status' => 'exito', 'mensaje' => 'Usuario registrado con exito']);    
-                        }               
+                            return response()->json(['status' => 'exito', 'mensaje' => 'Usuario registrado con exito']);
+
+
+
+                            
+                        } else {
+                            return response()->json(['status' => 'error', 'mensaje' => 'No se ha podido registrar el usuario']);
+
+                        }
                     break;
                 }
             }
@@ -192,7 +199,6 @@ class PersonaController extends Controller
                 'mensaje' => 'Error de servidor o base de datos: '. $e->getMessage()
             ]);
         }
-
     }
 
     public function actualizar(Request $request)
@@ -317,7 +323,7 @@ class PersonaController extends Controller
                     switch ($request->tipo_up) {
                         
                         case 'usuario':
-                            $usuario = Usuario::where('persona_id', $persona->persona_id)->first();
+                            $usuario = User::where('persona_id', $persona->persona_id)->first();
                             if ($usuario) {
                                 $clave = $this->generarPassword(12);
                                 if ($usuario->update([
