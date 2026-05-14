@@ -23,3 +23,8 @@ document.getElementById('btnRegistrarUsu').addEventListener('click', function(re
     registro.preventDefault();
     intercambiarVista('registro-usuario');
 });
+
+document.getElementById('btnCancelarUp').addEventListener('click', function(listado) {
+    listado.preventDefault();
+    intercambiarVista('seccion-usuarios');
+});

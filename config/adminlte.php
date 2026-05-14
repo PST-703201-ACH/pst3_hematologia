@@ -257,7 +257,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => 'admin',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -321,9 +321,8 @@ return [
             'url' => '#',
             'icon' => 'fas fa-fw fa-user',
             'id' => 'btnUsuarios',
-            'can' => 'es-admin'
         ],
-        [
+        /*[
             'text' => 'change_password',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
@@ -369,6 +368,7 @@ return [
             ],
         ],
         ['header' => 'labels', 'can' => 'es-admin'],
+
         [
             'text' => 'important',
             'icon_color' => 'red',
@@ -385,8 +385,7 @@ return [
             'text' => 'information',
             'icon_color' => 'cyan',
             'url' => '#',
-            'can' => 'es-admin',
-        ],
+        ],*/
         [
             'text' => 'Panel de Control',
             'icon' => 'fas fa-fw fa-tachometer-alt',
@@ -418,7 +417,6 @@ return [
             'icon_color' => 'light',
         ],
     ],
-
 
     /*
     |--------------------------------------------------------------------------

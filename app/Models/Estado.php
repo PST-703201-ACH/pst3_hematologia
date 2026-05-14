@@ -11,4 +11,5 @@ class Estado extends Model
     protected $fillable = ['nombre'];
     public $incrementing = true;
     public $timestamps = false;
+
 }

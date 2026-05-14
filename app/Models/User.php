@@ -20,6 +20,9 @@ class User extends Authenticatable
     protected $table = 'usuario';
     protected $primaryKey = 'usuario_id';
     public $timestamps = false;
+    public $incrementing = true;
+    protected $keyType = 'int';
+    
 
     /**
      * The attributes that are mass assignable.
@@ -44,6 +47,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
     /**
      * Busca un usuario por username o por la cédula de su persona vinculada.
      */
@@ -56,14 +60,11 @@ class User extends Authenticatable
             ->first();
     }
 
-    /**
-     * Obtiene la URL del dashboard correspondiente según el rol.
-     */
     public function getDashboardUrl()
     {
         return match ($this->id_rol) {
             1 => route('admin.index'),
-            2 => route('medico.index'),
+            3 => route('medico.index'),
             default => route('admin.index'),
         };
     }
