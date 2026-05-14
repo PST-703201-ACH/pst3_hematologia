@@ -4,9 +4,41 @@
 	</div>
 
 	<div class="card-body">
-		<button id="btnRegistrarUsu" class="btn btn-success">Nuevo</button>
-		<button id="btnRefrescarUsu" onclick="listarUsuarios()" class="btn btn-primary"><i class="fas fa-undo" aria-hidden="true"></i>
-</button>
+
+		<div class="d-flex align-items-center justify-content-between mb-3">
+
+		    <div>
+				<button id="btnRegistrarUsu" class="btn btn-success">Nuevo</button>
+				<button id="btnRefrescarUsu" onclick="listarUsuarios()" class="btn btn-primary"><i class="fas fa-undo" aria-hidden="true"></i>
+				</button>
+		    </div>
+
+		    <form onsubmit="event.preventDefault();" class="d-flex align-items-center m-0" id="formBusqueda">
+		        <input 
+		            type="text" 
+		            name="busqueda"
+		            id="inputBuscar" 
+		            placeholder="Buscar..." 
+		            class="form-control me-2" 
+		            style="width: 250px;"
+		            autocomplete="off" 
+		        >
+		        <select name="filtroRol" class="form-control">
+		        	<option value="">Todos los roles</option>
+		        	<option value="1">Gerente</option>
+		        	<option value="2">Administrativo</option>
+		        	<option value="3">Medico</option>
+		        	<option value="4">Enfermero</option>
+		        </select>
+		        <select name="filtroStatus" class="form-control">
+		        	<option value="">Todos los status</option>
+		        	<option value="1">Activos</option>
+		        	<option value="0">Inactivos</option>
+		        </select>
+		        <button type="button" id="btnLimpiar" class="btn btn-danger d-none">Limpiar</button>
+		    </form>
+		</div>
+
 		<div class="table-responsive">
 			<table class="card-table table">
 				<caption>Usuarios del sistema</caption>

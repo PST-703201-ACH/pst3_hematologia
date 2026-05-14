@@ -1,7 +1,72 @@
+document.addEventListener('DOMContentLoaded', () => {
+    listarUsuarios();
+    const selectStatus = document.querySelector('select[name="filtroStatus"]');
+    const selectRol = document.querySelector('select[name="filtroRol"]');
+    const btnLimpiar = document.getElementById('btnLimpiar');
+    const inputBusqueda = document.querySelector('input[name="busqueda"]');
 
-async function listarUsuarios() {
+    function buscarCombinado() {
+        const texto = inputBusqueda ? inputBusqueda.value.trim() : '';
+        const status = selectStatus ? selectStatus.value : '';
+        const rol = selectRol ? selectRol.value : '';
+
+        if (btnLimpiar) {
+            if (texto.length > 0 || status !== '' || rol !== '') {
+                btnLimpiar.classList.remove('d-none');
+            } else {
+                btnLimpiar.classList.add('d-none');
+            }
+        }
+
+        listarUsuarios(texto, status, rol); 
+    }
+
+    if (inputBusqueda) {
+        inputBusqueda.addEventListener('input', buscarCombinado);
+    }
+
+    if (selectStatus) {
+        selectStatus.addEventListener('change', buscarCombinado);
+    }
+
+    if (selectRol) {
+        selectRol.addEventListener('change', buscarCombinado);
+    }
+
+    if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', function() {
+            if (inputBusqueda) inputBusqueda.value = '';
+            if (selectStatus) selectStatus.value = '';
+            if (selectRol) selectRol.value = '';
+            this.classList.add('d-none');
+            listarUsuarios('', '', '');
+        });
+    }
+});
+
+
+
+async function listarUsuarios(termino = '', status = '', rol = '') {
     try {
-        const respuesta = await fetch('/obtener-usuarios');
+
+        let parametros = [];
+                
+            if (termino) {
+                parametros.push(`busqueda=${encodeURIComponent(termino)}`);
+            }
+            
+            if (status !== '') {
+                parametros.push(`status=${encodeURIComponent(status)}`);
+            }
+
+            if (rol !== '') {
+                parametros.push(`rol=${encodeURIComponent(rol)}`);
+            }
+
+            const url = parametros.length > 0 ? `/obtener-usuarios?${parametros.join('&')}` : '/obtener-usuarios';
+
+
+        const respuesta = await fetch(url);
         const usuarios = await respuesta.json();
 
         let filas = '';
@@ -36,5 +101,3 @@ async function listarUsuarios() {
         console.error("Error al listar:", error);
     }
 }
-
-document.addEventListener('DOMContentLoaded', listarUsuarios);

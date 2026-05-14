@@ -14,7 +14,7 @@ class GerenteController extends Controller
         //Usuarios
         $totalUsuarios = User::count();
         $gerentes = User::where('id_rol', '1')->count();
-        $administrativos = Usuario::where('id_rol', '2')->count();
+        $administrativos = User::where('id_rol', '2')->count();
         $medicos = User::where('id_rol', '3')->count();
         $enfermeros = User::where('id_rol', '4')->count();
         

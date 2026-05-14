@@ -9,11 +9,40 @@ use App\Models\Rol;
 
 class UsuarioController extends Controller
 {
-    public function listar(){
-        $usuarios = User::with('persona', 'rol')->get();
+public function listar(Request $request){
+    $query = User::with('persona', 'rol');
 
-        return response()->json($usuarios);
+    if ($request->filled('busqueda')) {
+        $termino = $request->input('busqueda');
+        
+        $query->where(function($q) use ($termino) {
+            $q->where('username', 'ILIKE', "%{$termino}%")
+              ->orWhereHas('persona', function($subQuery) use ($termino) {
+                  $subQuery->where('nombres', 'ILIKE', "%{$termino}%")
+                           ->orWhere('apellidos', 'ILIKE', "%{$termino}%")
+                           ->orWhereRaw("CONCAT(nombres, ' ', apellidos) ILIKE ?", ["%{$termino}%"])
+                           ->orWhere('telefono', 'ILIKE', "%{$termino}%")
+                           ->orWhere('cedula', 'ILIKE', "%{$termino}%");
+              });
+        });     
     }
+
+    if ($request->filled('status')) {
+        $status = $request->input('status');
+        
+        $query->where('status', (int)$status); 
+    }
+
+    if ($request->filled('rol')) {
+        $rol = $request->input('rol');
+        
+        $query->where('id_rol', (int)$rol); 
+    }
+
+    return response()->json($query->get());
+}
+
+        
 
     public function ver($id){
         $usuario = User::with('persona.estado', 'persona.municipio', 'persona.parroquia', 'rol')->where('persona_id', $id)->first();
