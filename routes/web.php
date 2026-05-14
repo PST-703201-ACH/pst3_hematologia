@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ParroquiaController;
@@ -40,4 +41,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/obtener-municipios', [MunicipioController::class, 'getMunicipios'])->name('municipios.json');
     Route::get('/obtener-parroquias', [ParroquiaController::class, 'getParroquias'])->name('parroquias.json');
     Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.json');
+    Route::get('/obtener-clave', [UsuarioController::class, 'olvide_clave'])->name('clave.json');
 });
