@@ -8,6 +8,8 @@ async function cargarDetalle(boton){
 			detalle.status = '<p class="text-success">Activo</p>';
 		} else if (detalle.status == 0) {
 			detalle.status = '<p class="text-danger">Inactivo</p>';
+		} else if (detalle.status == 2) {
+			detalle.status = '<p class="text-warning">Verificar</p>';
 		}
 
 			document.getElementById('detalleStatus').innerHTML = detalle.status;

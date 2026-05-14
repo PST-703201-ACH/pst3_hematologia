@@ -86,11 +86,6 @@
 
             {{-- Login button --}}
             <div class="row justify-content-end">
-                <div class="input-group mb-3">
-                    <button type="button" class="btn btn-block btn btn-primary" id="olBtn">
-                        {{ __('adminlte::adminlte.i_forgot_my_password') }}
-                    </button>
-                </div>
                 <div class="col-md-4">
                     <button type="submit" class="btn btn-block {{ config('adminlte.classes_auth_btn') }}">
                         <span class="fas fa-sign-in-alt"></span>
@@ -111,6 +106,7 @@
             <div class="modal-body">
                 <form id="modalOlvido">
                     <input type="text" name="olClave" id="olCedula" placeholder="Cedula" class="form-control">
+                    <button class="btn btn-success" type="button" id="btnOlvide"></button>
                     <p id="olEmail"></p>
                 </form>
             </div>

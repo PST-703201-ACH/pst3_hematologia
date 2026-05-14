@@ -81,5 +81,72 @@ public function listar(Request $request){
             }
         }
     }
+    public function generarPassword($longitud = 12) {
+        $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $password = '';
+        $max = strlen($caracteres) - 1;
+            for ($i = 0; $i < $longitud; $i++) {
+                $password .= $caracteres[random_int(0, $max)];
+            }
+        return $password;
+    }
+
+    public function olvide_clave($username){
+        $usuario = User::where('username', $username)->first();
+
+        if ($usuario) {
+            try{
+                    $email = $usuario->persona?->email;
+
+                    $clave = $this->generarPassword(12);
+
+                    $usuario->update([
+                        'password_hash' => $clave
+                    ]);
+                    v
+                        $infoUsu = [
+                        'cedula' => $usuario->username,
+                        'clave' => $clave,
+                        ];
+
+                    Mail::to($email)->send(new ClaveOlvidada($infoUsu));
+
+                    return response()->json(['status' => 'exito', 'aviso' => 'Se ha cambiado tu contraseña y se ha enviado a'.$email;
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'error'
+                ]);
+            }
+        }
+    }
+
+    public function nueva_clave($username){
+        $usuario = User::where('username', $username)->first();
+
+        if ($usuario) {
+            try{
+                switch ($usuario->status) {
+                    case '1':
+                        $usuario->update([
+                            'status' => '0'
+                        ]);
+                        return response()->json(['status' => 'exito', 'contenido' => '<p class="text-danger">Inactivo</p>']);
+                    break;
+
+                    case '0':
+                        $usuario->update([
+                            'status' => '1'
+                        ]);
+                        return response()->json(['status' => 'exito', 'contenido' => '<p class="text-success">Activo</p>']);
+                    break;
+                }
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'error'
+                ]);
+            }
+        }
+    }
+
     
 }

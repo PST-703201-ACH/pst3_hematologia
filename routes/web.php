@@ -35,7 +35,7 @@ Route::get('/dashboard-admin', [GerenteController::class, 'dashboards']);
 Route::get('/obtener-detalles/{id}', [UsuarioController::class, 'ver']);
 Route::get('/precargar-usu/{id}', [UsuarioController::class, 'precargar']);
 Route::get('/cambiar-status/{id}', [UsuarioController::class, 'nuevo_status']);
-Route::get('/obtener-clave', [UsuarioController::class, 'olvide_clave'])->name('clave.json');
+Route::get('/olvide-clave/{username}', [UsuarioController::class, 'olvide_clave']);
 
 //Medico
 Route::get('/medico/', function () {
