@@ -6,7 +6,7 @@ return [
     'email' => 'Email',
     'password' => 'Contraseña',
     'retype_password' => 'Confirmar la contraseña',
-    'remember_me' => 'Recordarme',
+    'remember_me' => 'Recordar usuario',
     'register' => 'Registrarse',
     'register_a_new_membership' => 'Crear una nueva cuenta',
     'i_forgot_my_password' => 'Olvidé mi contraseña',

@@ -15,6 +15,7 @@ class User extends Authenticatable
 
     // Constantes de estado
     public const STATUS_ACTIVO = 1;
+    public const STATUS_VERIFICAR = 2;
     public const STATUS_INACTIVO = 0;
 
     protected $table = 'usuario';

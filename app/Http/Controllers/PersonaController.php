@@ -167,7 +167,7 @@ class PersonaController extends Controller
                         $usuario->persona_id = $persona->persona_id;
                         $usuario->username = $request->cedula;
                         $usuario->id_rol = $request->rol;
-                        $usuario->status = 1;
+                        $usuario->status = 2;
 
                         if($usuario->save()){
 
@@ -331,7 +331,7 @@ class PersonaController extends Controller
                                 'password_hash' => password_hash($clave, PASSWORD_DEFAULT),
                                 'persona_id' => $persona->persona_id,
                                 'id_rol' => $request->rol,
-                                'status' => 1,
+                                'status' => 2,
                                 ])){
                                     $infoUsu = [
                                         'usuario' => $persona->nombres.' '.$persona->apellidos,

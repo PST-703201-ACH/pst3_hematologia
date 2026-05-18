@@ -24,33 +24,76 @@ class LoginController extends Controller
     /**
      * Maneja el intento de autenticación.
      */
-    public function login(Request $request)
-    {
-        $request->validate([
-            'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
-        ]);
+   
 
-        $user = User::findByCredentials($request->username);
+public function login(Request $request)
+{
 
-        if ($user && Hash::check($request->password, $user->password_hash)) {
-            // Verificar si el usuario está activo
-            if ($user->status !== User::STATUS_ACTIVO) {
-                return back()->withErrors([
-                    'username' => 'Tu cuenta no se encuentra activa en el sistema.',
-                ])->onlyInput('username');
-            }
+    $errores = [];
 
-            Auth::login($user, $request->boolean('remember'));
-            $request->session()->regenerate();
+    if (!$request->filled('username')) {
+        $errores['cedula'] = 'Ingrese su numero de cedula';
+    } elseif (strlen($request->username) < 7 || strlen($request->username) > 8) {
+        $errores['cedula'] = 'Debe tener de 7 a 8 digitos';
+    }
 
-            return redirect()->intended($user->getDashboardUrl());
+    if (!$request->filled('password')) {
+        $errores['clave'] = 'Ingrese su contraseña de acceso';
+    }
+    
+    if (!empty($errores)) {
+        return response()->json([
+            "status" => "errores",
+            "errores" => $errores
+        ], 422);
+    }
+
+    $user = User::findByCredentials($request->username);
+
+    if ($user && !Hash::check($request->password, $user->password_hash)){
+        $errores['clave'] = 'La contraseña es incorrecta.';
+    }
+
+    if (!$user) {
+        $errores['cedula'] = 'Usuario no existente';
+    }
+
+    if (!empty($errores)) {
+        return response()->json([
+            "status" => "errores",
+            "errores" => $errores
+        ], 422);
+    }
+
+
+
+    if ($user && Hash::check($request->password, $user->password_hash)) {
+        
+        if ($user->status === User::STATUS_INACTIVO) {
+            return response()->json([
+                'status' => 'error',
+                'mensaje' => 'Tu cuenta no se encuentra activa en el sistema'
+            ], 422);
         }
 
-        return back()->withErrors([
-            'username' => 'Las credenciales no coinciden con nuestros registros.',
-        ])->onlyInput('username');
-    }
+        if ($user->status === User::STATUS_VERIFICAR) {
+            return response()->json([
+                'status' => 'verificar'
+            ], 422);
+        }
+
+        Auth::login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
+
+        return response()->json([
+            'status' => 'success',
+            'redirect' => $user->getDashboardUrl()
+        ]);
+    } 
+
+}
+
+
 
     /**
      * Cierra la sesión.

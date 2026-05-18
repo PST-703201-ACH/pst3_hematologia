@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ParroquiaController;
 use App\Http\Controllers\RolController;
-use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\GerenteController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Medico\PacienteController as MedicoPacienteController;
@@ -16,6 +16,9 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/logout', [LoginController::class, 'logout']);
+Route::get('/olvide-clave/{username}', [UsuarioController::class, 'olvide_clave']);
+Route::get('/nueva-clave/', [UsuarioController::class, 'nueva_clave']);
+
 
 // Rutas protegidas
     Route::get('/admin/', function () {
@@ -44,3 +47,4 @@ Route::get('/medico/pacientes/crear', [MedicoPacienteController::class, 'create'
 Route::post('/medico/pacientes/crear', [MedicoPacienteController::class, 'store'])->name('medico.pacientes.store');
 Route::get('/medico/pacientes', [MedicoPacienteController::class, 'index'])->name('medico.pacientes.index');
 Route::delete('/medico/pacientes/{id}', [MedicoPacienteController::class, 'destroy'])->name('medico.pacientes.destroy');
+

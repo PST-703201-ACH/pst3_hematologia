@@ -77,6 +77,8 @@ async function listarUsuarios(termino = '', status = '', rol = '') {
                 usu.status = '<p class="text-success">Activo</p>';
             } else if (usu.status == 0) {
                 usu.status = '<p class="text-danger">Inactivo</p>';
+            } else if (usu.status == 2) {
+                usu.status = '<p class="text-warning">Verificar</p>';
             }
             filas += `
                 <tr>
