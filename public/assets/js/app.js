@@ -1,0 +1,1 @@
+console.log('HireDesk Laravel AdminLTE starter loaded.');

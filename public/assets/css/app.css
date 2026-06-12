@@ -1,0 +1,44 @@
+:root {
+    --hiredesk-primary: #2563eb;
+    --hiredesk-dark: #111827;
+    --hiredesk-muted: #6b7280;
+}
+
+.content-wrapper {
+    background: #f4f6f9;
+}
+
+.brand-link .brand-text {
+    font-weight: 700 !important;
+    letter-spacing: 0.2px;
+}
+
+.main-sidebar {
+    background: #111827 !important;
+}
+
+.nav-sidebar .nav-link.active {
+    background-color: var(--hiredesk-primary) !important;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.small-box {
+    border-radius: 12px;
+}
+
+.small-box .icon > i {
+    font-size: 64px;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+.todo-list > li {
+    border-radius: 8px;
+    margin-bottom: 8px;
+}

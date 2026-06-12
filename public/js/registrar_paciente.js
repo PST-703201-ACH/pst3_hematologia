@@ -1,0 +1,148 @@
+document.addEventListener('DOMContentLoaded', function() {
+    async function cargarParroquias() {
+        const select = document.getElementById('reg_parroquia');
+
+        try {
+            const respuesta = await fetch('/obtener-parroquias');
+            const parroquias = await respuesta.json();
+
+
+            parroquias.forEach(parroquia => {
+                const option = document.createElement('option');
+                option.value = parroquia.parroquia_id;
+                option.textContent = parroquia.nombre;
+                select.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error("Error al cargar parroquias:", error);
+        }
+    }
+
+    async function cargarMunicipios() {
+        const select = document.getElementById('reg_municipio');
+
+        try {
+            const respuesta = await fetch('/obtener-municipios');
+            const municipios = await respuesta.json();
+
+
+            municipios.forEach(municipio => {
+                const option = document.createElement('option');
+                option.value = municipio.municipio_id;
+                option.textContent = municipio.nombre;
+                select.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error("Error al cargar municipios:", error);
+        }
+    }
+
+    async function cargarEstados() {
+        const select = document.getElementById('reg_estado');
+
+        try {
+            const respuesta = await fetch('/obtener-estados');
+            const estados = await respuesta.json();
+
+
+            estados.forEach(estado => {
+                const option = document.createElement('option');
+                option.value = estado.estado_id;
+                option.textContent = estado.nombre;
+                select.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error("Error al cargar estados:", error);
+        }
+    }
+
+    cargarEstados();
+    cargarMunicipios();
+    cargarParroquias();
+
+    const formulario = document.getElementById('formReg');
+    const registroModal = new bootstrap.Modal(document.getElementById('registrandoModal'));
+
+    if (formulario) {
+        formulario.addEventListener('submit', async function(e) {
+            const confirmacion = confirm("¿Está seguro de registrar este nuevo paciente?");
+            e.preventDefault();
+            if (confirmacion) {
+
+                const datos = new FormData(formulario);
+                registroModal.show();
+
+                try {
+                    const respuesta = await fetch(formulario.action, {
+                        method: 'POST',
+                        body: datos,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    const resultado = await respuesta.json();
+
+                    if(resultado.status === "exito") {
+                        let alertaUsu = `
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="icon fas fa-check"></i> 
+                                ${resultado.mensaje}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `;
+                        document.getElementById('alertCreate').innerHTML = alertaUsu;
+                        
+                        setTimeout(function (){
+                            document.getElementById('alertCreate').innerHTML = "";
+                        }, 3000);
+
+                        formulario.reset();
+                    }else if(resultado.status === "error") {
+                        let alertaUsu = `
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="icon fas fa-xmark"></i> 
+                                ${resultado.mensaje}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `;
+                        document.getElementById('alertCreate').innerHTML = alertaUsu;
+                        setTimeout(function (){
+                            document.getElementById('alertCreate').innerHTML = "";
+                        }, 3000);
+
+                    }else if (resultado.status === "errores") {
+                        for (let campo in resultado.errores) {
+                        const elemento = document.getElementById(campo);
+                            if (elemento) {
+                            const originalValue = elemento.value;
+                            elemento.className = 'form-control border border-danger text-danger';
+                            elemento.value = resultado.errores[campo]; 
+                            elemento.style.pointerEvents = 'none';
+
+                                setTimeout(function(){
+                                  elemento.className = 'form-control';
+                                  elemento.style.pointerEvents = '';
+                                  elemento.value = originalValue;
+                                }, 3000);
+                            }
+                        }
+                    }     
+                } catch (error) {
+                    console.error("Error:", error);
+                } finally {
+                    setTimeout(() => {
+                    registroModal.hide();
+                    }, 500);
+                }
+            }
+        });
+    }
+});
