@@ -11,6 +11,9 @@
     <!-- AdminLTE -->
     <link rel="stylesheet" href="{{ asset('assets/adminlte/css/adminlte.min.css') }}">
 
+    <!--Estilos del calendario-->
+    <link rel="stylesheet" href="{{ asset('assets/adminlte/plugins/fullcalendar/main.css') }}">
+
     <!-- Custom App CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
 
@@ -55,6 +58,10 @@
 <!-- Bootstrap 4 -->
 <script src="{{ asset('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
+<!-- Javascript de funcionamiento del calendario-->
+<script src="{{ asset('assets/adminlte/plugins/fullcalendar/main.js') }}"></script>
+<script src="{{ asset('assets/adminlte/plugins/fullcalendar/locales/es.js') }}"></script>
+
 <!-- AdminLTE -->
 <script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
 
@@ -62,6 +69,7 @@
 <script src="{{ asset('assets/js/app.js') }}"></script>
 
 <script src="{{ asset('js/botones_admvo.js') }}"></script>
+<script src="{{ asset('js/citas.js') }}"></script>
 
 @stack('scripts')
 </body>
