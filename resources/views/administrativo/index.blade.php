@@ -1,29 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Administrativo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@yield('title', 'Asistente administrativo')</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('assets/adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+
+    <!-- AdminLTE -->
+    <link rel="stylesheet" href="{{ asset('assets/adminlte/css/adminlte.min.css') }}">
+
+    <!-- Custom App CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+
+    @stack('styles')
 </head>
-<body>
-@extends('adminlte::page')
 
-@section('title', 'Panel de Control')
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
 
-@section('content')
-    <div class="card">
-        <div class="card-body">
-        @include('administrativo.dashboard')    
-        </div>
+    @include('partials.navbar_admvo')
+
+    @include('partials.sidebar_admvo')
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                @yield('content_header')
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="container-fluid">
+                @yield('content')
+                <div class="card">
+                    <div class="card-body">
+                    @include('administrativo.dashboard')    
+                    </div>
+                </div>
+
+                <div id="seccion-citas" class="vista_admvo d-none">
+                    @include('administrativo.citas')
+                </div>
+            </div>
+        </section>
     </div>
 
-    <div id="seccion-citas" class="vista_admvo d-none">
-        @include('administrativo.citas')
-    </div>
-@stop
+</div>
 
-@section('js')
+<!-- jQuery -->
+<script src="{{ asset('assets/adminlte/plugins/jquery/jquery.min.js') }}"></script>
+
+<!-- Bootstrap 4 -->
+<script src="{{ asset('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- AdminLTE -->
+<script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
+
+<!-- Custom App JS -->
+<script src="{{ asset('assets/js/app.js') }}"></script>
+
 <script src="{{ asset('js/botones_admvo.js') }}"></script>
-@stop
+
+@stack('scripts')
 </body>
 </html>
