@@ -34,7 +34,7 @@
 						<th scope="col">Nombre</th>
 						<th scope="col">Representante</th>
 						<th scope="col">Cedula</th>
-						<th scope="col">Nºo de H.C</th>
+						<th scope="col">Nº de H.C</th>
 						<th scope="col">Status</th>
 					</tr>
 				</thead>
