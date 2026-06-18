@@ -69,7 +69,7 @@
 <script src="{{ asset('assets/js/app.js') }}"></script>
 
 <script src="{{ asset('js/botones_admvo.js') }}"></script>
-<script src="{{ asset('js/citas.js') }}"></script>
+<script src="{{ asset('js/calendario.js') }}"></script>
 
 @stack('scripts')
 </body>

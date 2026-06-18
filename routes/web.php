@@ -55,3 +55,6 @@ Route::post('/medico/pacientes/crear', [PacienteController::class, 'store'])->na
 
 //ARREGLADO
 Route::get('/obtener-pacientes', [PacienteController::class, 'listar']);
+
+//Administrativo
+Route::post('/cita-agendar', [PersonaController::class, 'agendar'])->name('cita.agendar');
