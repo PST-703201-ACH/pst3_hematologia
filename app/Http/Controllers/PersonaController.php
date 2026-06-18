@@ -180,10 +180,7 @@ class PersonaController extends Controller
                             Mail::to($persona->email)->send(new UsuarioNuevo($infoUsu));
 
                             return response()->json(['status' => 'exito', 'mensaje' => 'Usuario registrado con exito']);
-
-
-
-                            
+                                        
                         } else {
                             return response()->json(['status' => 'error', 'mensaje' => 'No se ha podido registrar el usuario']);
 

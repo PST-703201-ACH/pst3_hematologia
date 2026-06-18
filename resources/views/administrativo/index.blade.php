@@ -70,6 +70,7 @@
 
 <script src="{{ asset('js/botones_admvo.js') }}"></script>
 <script src="{{ asset('js/calendario.js') }}"></script>
+<script src="{{ asset('js/registrar_cita.js') }}"></script>
 
 @stack('scripts')
 </body>

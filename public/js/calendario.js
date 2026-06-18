@@ -24,7 +24,7 @@
             let fechaExtraida = info.date.toLocaleDateString('sv');
             let vistaActual = info.view.type;
             document.getElementById('fechaHora').readOnly = false;
-            document.getElementById('formCita').reset();
+            document.getElementById('formReg').reset();
             if (vistaActual === 'dayGridMonth') {
                 document.getElementById('fechaCita').value = fechaExtraida;
                 document.getElementById('fechaHora').value = horaExtraida;

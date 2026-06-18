@@ -74,6 +74,13 @@ class CitaController extends Controller
             $cita->numero_hc = $request->hc;
             $cita->fecha_hora = $request->fechaHora;
             $cita->estatus = 1;
+            $cita->consulta_id = 1;
+
+            if ($cita->save()) {
+                return response()->json(['status' => 'exito', 'mensaje' => 'Cita agendada con exito']);
+            } else {
+                return response()->json(['status' => 'error', 'mensaje' => 'No se ha podido agendar la cita']);
+            }
             
         } catch (\Exception $e) {
             return response()->json([
