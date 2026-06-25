@@ -17,6 +17,7 @@
 		      </div>
 		      <div class="modal-body">
 		        <form id="formReg" action="{{ route('cita.agendar') }}" method="POST">
+		        	@csrf
 		        	<h4 style="text-align: center;">DATOS DE PACIENTE</h4>
 			        <div class="row">	
 					  <div class="form-group col-md-6 mb-3">

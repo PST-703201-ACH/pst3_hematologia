@@ -10,6 +10,7 @@ use App\Http\Controllers\RolController;
 use App\Http\Controllers\GerenteController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Medico\PacienteController;
+use App\Http\Controllers\CitaController;
 
 // Autenticación
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
@@ -57,4 +58,5 @@ Route::post('/medico/pacientes/crear', [PacienteController::class, 'store'])->na
 Route::get('/obtener-pacientes', [PacienteController::class, 'listar']);
 
 //Administrativo
-Route::post('/cita-agendar', [PersonaController::class, 'agendar'])->name('cita.agendar');
+Route::post('/cita-agendar', [CitaController::class, 'agendar'])->name('cita.agendar');
+Route::get('/obtener-citas', [CitaController::class, 'getCitas'])->name('citas.json');

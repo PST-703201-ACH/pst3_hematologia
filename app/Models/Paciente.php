@@ -11,9 +11,6 @@ class Paciente extends Model
     public $timestamps = false;
     protected $fillable = ['paciente_id', 'persona_id', 'hc', 'status'];
 
-    /**
-     * Relación con la persona vinculada al paciente.
-     */
     public function persona()
     {
         return $this->belongsTo(Persona::class, 'persona_id', 'persona_id');

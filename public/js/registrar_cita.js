@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </button>
                             </div>
                         `;
+                        calendar.refetchEvents();
+
                         document.getElementById('alertaRegCita').innerHTML = alertaCita;
                         
                         setTimeout(function (){
