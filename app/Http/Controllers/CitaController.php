@@ -16,23 +16,23 @@ class CitaController extends Controller
         $errores = [];
 
         if (empty($request->pacienteNombre1)) {
-            $errores['pacienteNombre1'] = "Debe ingresar el primer nombre del paciente";
+            $errores['pacienteNombre1'] = "Solo debe ingresar el primer nombre";
         }
 
         if (empty($request->pacienteApellido1)) {
-            $errores['pacienteApellido1'] = "Debe ingresar el primer apellido del paciente";
+            $errores['pacienteApellido1'] = "Solo debe ingresar el segundo nombre";
         }
 
         if (empty($request->represNombre1)) {
-            $errores['represNombre1'] = "Debe ingresar el primer nombre del representante";
+            $errores['represNombre1'] = "Solo debe ingresar el primer apellido";
         }
 
         if (empty($request->represApellido1)) {
-            $errores['represApellido1'] = "Debe ingresar el primer apellido del representante";
+            $errores['represApellido1'] = "Solo debe ingresar el segundo apellido";
         }
 
         if (empty($request->hc)) {
-            $errores['hc'] = "Debe ingresar el nº de historia clinica del nuevo paciente";
+            $errores['hc'] = "Debe ingresar el Nº de historia clinica del nuevo paciente";
         }
 
         if (empty($request->fechaHora)) {
@@ -100,7 +100,7 @@ class CitaController extends Controller
 
                         $cita->numero_hc = $request->hc;
                         $cita->fecha_hora = $request->fechaCita.' '.$request->fechaHora.':00';
-                        $cita->estatus = 1;
+                        $cita->status = 1;
                         $cita->consulta_id = 1;
 
                         if ($cita->save()) {

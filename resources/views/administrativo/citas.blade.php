@@ -22,24 +22,24 @@
 			        <div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteNombre1">Primer nombre del paciente</label>
-					    <input type="text" class="form-control" name="pacienteNombre1" id="pacienteNombre1" placeholder="Ingrese el primer nombre del paciente" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteNombre1" id="pacienteNombre1" placeholder="" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteNombre2">Segundo nombre del paciente</label>
-					    <input type="text" class="form-control" name="pacienteNombre2" id="pacienteNombre2" placeholder="Ingrese el segundo nombre del paciente" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteNombre2" id="pacienteNombre2" placeholder="(OPCIONAL)" autocomplete="off">
 					  </div>
 					</div>
 
 					<div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteApellido1">Primer apellido del paciente</label>
-					    <input type="text" class="form-control" name="pacienteApellido1" id="pacienteApellido1" placeholder="Ingrese el primer apellido del paciente" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteApellido1" id="pacienteApellido1" placeholder="" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteApellido2">Segundo apellido del paciente</label>
-					    <input type="text" class="form-control" name="pacienteApellido2" id="pacienteApellido2" placeholder="Ingrese el segundo apellido del paciente" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteApellido2" id="pacienteApellido2" placeholder="(OPCIONAL)" autocomplete="off">
 					  </div>
 					</div>
 
@@ -47,24 +47,24 @@
 					<div class="row">
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represNombre1">Primer nombre del representante</label>
-					    <input type="text" class="form-control" name="represNombre1" id="represNombre1" placeholder="Ingrese el primer nombre del representante" autocomplete="off">
+					    <input type="text" class="form-control" name="represNombre1" id="represNombre1" placeholder="" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represNombre2">Segundo nombre del representante</label>
-					    <input type="text" class="form-control" name="represNombre2" id="represNombre2" placeholder="Ingrese el segundo nombre del representante" autocomplete="off">
+					    <input type="text" class="form-control" name="represNombre2" id="represNombre2" placeholder="(OPCIONAL)" autocomplete="off">
 					  </div>
 					</div>
 
 					<div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represApellido1">Primer apellido del representante</label>
-					    <input type="text" class="form-control" name="represApellido1" id="represApellido1" placeholder="Ingrese el primer apellido del representante" autocomplete="off">
+					    <input type="text" class="form-control" name="represApellido1" id="represApellido1" placeholder="" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represApellido2">Segundo apellido del representante</label>
-					    <input type="text" class="form-control" name="represApellido2" id="represApellido2" placeholder="Ingrese el segundo apellido del representante" autocomplete="off">
+					    <input type="text" class="form-control" name="represApellido2" id="represApellido2" placeholder="(OPCIONAL)" autocomplete="off">
 					  </div>
 					</div>
 
@@ -72,7 +72,7 @@
 
 		          <div class="form-group">
 		            <label for="hc">Nº de Historia Clinica</label>
-		            <input type="number" class="form-control" name="hc" id="hc" placeholder="Ingrese el nº de historia clinica correspondiente al paciente" autocomplete="off">
+		            <input type="text" onfocus="(this.type='number')" placeholder="Ingrese el Nº de historia clinica" onblur="(this.type='text')" class="form-control" name="hc" id="hc" autocomplete="off">
 		          </div>
 
 		          <div class="form-group">

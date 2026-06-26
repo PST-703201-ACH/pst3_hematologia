@@ -10,11 +10,29 @@
         let eventos = [];
 
         citas.forEach(cita => {
+            let fechaCita = new Date(cita.fecha_hora.replace(" ", "T"));
+            let fechaActual = new Date();
+            let Status = "";
+
+            let difFecha = fechaCita - fechaActual;
+            if (difFecha < 0) {
+                Status = "Incumplida"; 
+            } else {
+                Status = "Programada";
+            }
+            let nombre1 = cita.nombres_paciente.split(' ');
+            let apellido1 = cita.apellidos_paciente.split(' ');
+            let titulo = nombre1[0] + ' ' + apellido1[0];
             eventos.push({
                 id: String(id++),
-                title: `Cita de ${cita.nombres_paciente} ${cita.apellidos_paciente}`,
+                title: titulo,
                 start: cita.fecha_hora,
-                color: '#3788d8'
+                color: '#3788d8',
+
+                extendedProps: {
+                    status: Status
+                }
+
             });
 
         });
@@ -45,6 +63,27 @@
                 console.error("Error cargando eventos:", error);
                 failureCallback(error);
             }
+        },
+        eventContent: function(cita) {
+        let statusCita = cita.event.extendedProps.status;
+        let claseStatus = "";
+
+        if (statusCita == "Programada") {
+            claseStatus = "badge badge-success";
+        }
+        else if (statusCita == "Incumplida") {
+            claseStatus = "badge badge-danger";
+        }
+
+        let contenedor = document.createElement('div');
+        contenedor.className = 'evento-personalizado';
+        
+        contenedor.innerHTML = `
+            <span class="fc-event-title">${cita.event.title}</span>
+            <span class="fc-event-title ${claseStatus}">${statusCita}</span>
+        `;
+
+        return { domNodes: [contenedor] };
         },
         dateClick: function(info) {
             const formCita = new bootstrap.Modal(modalCita);
