@@ -44,7 +44,7 @@
                 </div>
 
                 <div id="seccion-citas" class="vista_admvo d-none">
-                    @include('administrativo.citas')
+                    @include('administrativo.registrar')
                 </div>
             </div>
         </section>
