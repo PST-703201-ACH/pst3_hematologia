@@ -8,7 +8,7 @@ class Cita extends Model
 {
     protected $table = 'cita';
     protected $primaryKey = 'cita_id';
-    protected $fillable = ['nombres_paciente', 'apellidos_paciente', 'nombres_representante', 'apellidos_representante', 'numero_hc', 'fecha_hora', 'status', 'consulta_id'];
+    protected $fillable = ['nombres_paciente', 'apellidos_paciente', 'nombres_representante', 'apellidos_representante', 'numero_hc', 'fecha_hora', 'consulta_id'];
     public $incrementing = true;
     public $timestamps = false;
 

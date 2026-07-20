@@ -1,11 +1,71 @@
+async function precargarCita(boton){    
+    const id = boton.getAttribute('data-id');
+    const modalReprogramar = document.getElementById('modalReprogramar');
+    try {
+        document.getElementById('formRep').reset();
+        const respuesta = await fetch(`/precargar-cita/${id}`);
+        const cita = await respuesta.json();
+
+        const [nombre1P, nombre2P] = cita.nombres_paciente.split(" ");
+        const [apellido1P, apellido2P] = cita.apellidos_paciente.split(" ");
+        const [nombre1R, nombre2R] = cita.nombres_representante.split(" ");
+        const [apellido1R, apellido2R] = cita.apellidos_representante.split(" ");
+
+        document.getElementById('pacienteNombreRep1').value = nombre1P;
+        
+        if (nombre2P) {
+            document.getElementById('pacienteNombreRep2').value = nombre2P;    
+        }
+
+        document.getElementById('pacienteApellidoRep1').value = apellido1P;
+        
+        if (apellido2P) {
+            document.getElementById('pacienteApellidoRep2').value = apellido2P;
+        }
+
+        document.getElementById('represNombreRep1').value = nombre1R;
+        
+        if (nombre2R) {
+            document.getElementById('represNombreRep2').value = nombre2R;
+        }
+
+        document.getElementById('represApellidoRep1').value = apellido1R;
+        
+        if (apellido2R) {
+            document.getElementById('represApellidoRep2').value = apellido2R;
+        }
+
+        document.getElementById('hcRep').value = cita.numero_hc;
+
+            const info = new bootstrap.Modal(modalReprogramar);
+            info.show();
+        } catch (error) { 
+            console.error("Error al cargar datos:", error);
+        }
+}
+
+const inputFecha = document.getElementById('fechaCitaRep');
+
+const hoy = new Date().toISOString().split('T')[0];
+
+inputFecha.min = hoy;
+
+inputFecha.addEventListener('change', (e) => {
+    const fechaSeleccionada = e.target.value;
+    if (fechaSeleccionada < hoy) {
+        alert("No puedes seleccionar una fecha pasada.");
+        e.target.value = "";
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
 
-    const formulario = document.getElementById('formUp');
-    const citaModal = new bootstrap.Modal(document.getElementById('actualizandoCita'));
+    const formulario = document.getElementById('formRep');
+    const citaModal = new bootstrap.Modal(document.getElementById('reprogramandoCita'));
 
     if (formulario) {
         formulario.addEventListener('submit', async function(e) {
-            const confirmacion = confirm("¿Está seguro de actualizar esta cita?");
+            const confirmacion = confirm("¿Está seguro de reprogramar esta cita?");
             e.preventDefault();
             if (confirmacion) {
 
@@ -35,10 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         `;
                         calendar.refetchEvents();
 
-                        document.getElementById('alertaUpCita').innerHTML = alertaCita;
+                        document.getElementById('alertaRepCita').innerHTML = alertaCita;
                         
                         setTimeout(function (){
-                            document.getElementById('alertaUpCita').innerHTML = "";
+                            document.getElementById('alertaRepCita').innerHTML = "";
                         }, 3000);
 
                         formulario.reset();
@@ -52,9 +112,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </button>
                             </div>
                         `;
-                        document.getElementById('alertaUpCita').innerHTML = alertaCita;
+                        document.getElementById('alertaRepCita').innerHTML = alertaCita;
                         setTimeout(function (){
-                            document.getElementById('alertaUpCita').innerHTML = "";
+                            document.getElementById('alertaRepCita').innerHTML = "";
                         }, 3000);
 
                     }else if (resultado.status === "errores") {

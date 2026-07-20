@@ -10,7 +10,7 @@
 		  <div class="modal-dialog modal-lg" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title" id="eventModalLabel">Agendar/Reprogramar cita</h5>
+		        <h5 class="modal-title" id="eventModalLabel">Agendar cita</h5>
 		        <button type="button" class="close" data-dismiss="modal">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
@@ -108,13 +108,121 @@
 				    </div>
 				  </div>
 				</div>
-
-
-		      </div>
-		      				
+		      </div>		
 		    </div>
 		  </div>
 		</div>
+
+		<div class="modal fade" id="modalReprogramar" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-lg" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="eventModalLabel">Reprogramar cita</h5>
+		        <button type="button" class="close" data-dismiss="modal">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <form id="formRep" action="{{ route('cita.rep') }}" method="POST">
+		        	@csrf
+		        	<h4 style="text-align: center;">DATOS DE PACIENTE</h4>
+			        <div class="row">	
+					  <div class="form-group col-md-6 mb-3">
+					    <label for="pacienteNombreRep1">Primer nombre del paciente</label>
+					    <input type="text" class="form-control" name="pacienteNombreRep1" id="pacienteNombreRep1" placeholder="" autocomplete="off">
+					  </div>
+
+					  <div class="form-group col-md-6 mb-3">
+					    <label for="pacienteNombreRep2">Segundo nombre del paciente</label>
+					    <input type="text" class="form-control" name="pacienteNombreRep2" id="pacienteNombreRep2" placeholder="(OPCIONAL)" autocomplete="off">
+					  </div>
+					</div>
+
+					<div class="row">	
+					  <div class="form-group col-md-6 mb-3">
+					    <label for="pacienteApellidoRep1">Primer apellido del paciente</label>
+					    <input type="text" class="form-control" name="pacienteApellidoRep1" id="pacienteApellidoRep1" placeholder="" autocomplete="off">
+					  </div>
+
+					  <div class="form-group col-md-6 mb-3">
+					    <label for="pacienteApellidoRep2">Segundo apellido del paciente</label>
+					    <input type="text" class="form-control" name="pacienteApellidoRep2" id="pacienteApellidoRep2" placeholder="(OPCIONAL)" autocomplete="off">
+					  </div>
+					</div>
+
+					<h4 style="text-align: center;">DATOS DE REPRESENTANTE</h4>
+					<div class="row">
+					  <div class="form-group col-md-6 mb-3">
+					    <label for="represNombreRep1">Primer nombre del representante</label>
+					    <input type="text" class="form-control" name="represNombreRep1" id="represNombreRep1" placeholder="" autocomplete="off">
+					  </div>
+
+					  <div class="form-group col-md-6 mb-3">
+					    <label for="represNombreRep2">Segundo nombre del representante</label>
+					    <input type="text" class="form-control" name="represNombreRep2" id="represNombreRep2" placeholder="(OPCIONAL)" autocomplete="off">
+					  </div>
+					</div>
+
+					<div class="row">	
+					  <div class="form-group col-md-6 mb-3">
+					    <label for="represApellidoRep1">Primer apellido del representante</label>
+					    <input type="text" class="form-control" name="represApellidoRep1" id="represApellidoRep1" placeholder="" autocomplete="off">
+					  </div>
+
+					  <div class="form-group col-md-6 mb-3">
+					    <label for="represApellidoRep2">Segundo apellido del representante</label>
+					    <input type="text" class="form-control" name="represApellidoRep2" id="represApellidoRep2" placeholder="(OPCIONAL)" autocomplete="off">
+					  </div>
+					</div>
+
+					<h4 style="text-align: center;">DATOS DE CITA</h4>
+
+		          <div class="form-group">
+		            <label for="hcRep">Nº de Historia Clinica</label>
+		            <input type="text" onfocus="(this.type='number')" placeholder="Ingrese el Nº de historia clinica" onblur="(this.type='text')" class="form-control" name="hcRep" id="hcRep" autocomplete="off" readonly>
+		          </div>
+
+		          <div class="form-group">
+		            <label for="fechaCitaRep">Fecha</label>
+		            <input type="date" class="form-control" name="fechaCitaRep" id="fechaCitaRep" autocomplete="off">
+		          </div>
+
+		          <div class="form-group">
+		            <label for="fechaHoraRep">Hora</label>
+		            <input type="time" class="form-control" name="fechaHoraRep" id="fechaHoraRep" autocomplete="off">
+		          </div>
+		          <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+			          <i class="fas fa-times mr-1"></i> Cerrar
+			        </button>
+			        <button type="button" class="btn btn-danger" style="display:none">
+			          <i class="fas fa-trash mr-1"></i> Eliminar
+			        </button>
+			        <button type="submit" class="btn btn-primary">
+			          <i class="fas fa-save mr-1"></i> Guardar
+			        </button>
+			      </div>
+			      <div id="alertaRepCita"></div>
+		        </form>
+		        <div class="modal fade" id="reprogramandoCita" data-backdrop="static" data-bs-backdrop="static" data-keyboard="false" data-bs-keyboard="false" tabindex="-1">
+				  <div class="modal-dialog modal-dialog-centered">
+				    <div class="modal-content">
+				      <div class="modal-body text-center p-4">
+				        <div class="spinner-border text-primary" role="status"></div>
+				        <h5 class="mt-3">Reprogramando cita...</h5>
+				        <p class="text-muted">Por favor, no cierres la ventana.</p>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+		      </div>		
+		    </div>
+		  </div>
+		</div>
+
+
+
+
 	</div>
 </div>
 

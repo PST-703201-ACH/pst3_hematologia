@@ -71,6 +71,7 @@ class CitaController extends Controller
                 if ($paciente->save()) {
                     $consulta = new Consulta();
                     $consulta->paciente_id = $paciente->paciente_id;
+                    $consulta->status = 0;
                     if ($consulta->save()) {
                         $cita = new Cita();
 
@@ -100,8 +101,7 @@ class CitaController extends Controller
 
                         $cita->numero_hc = $request->hc;
                         $cita->fecha_hora = $request->fechaCita.' '.$request->fechaHora.':00';
-                        $cita->status = 1;
-                        $cita->consulta_id = 1;
+                        $cita->consulta_id = $consulta->consulta_id;
 
                         if ($cita->save()) {
                             return response()->json(['status' => 'exito', 'mensaje' => 'Cita agendada con exito']);
@@ -113,6 +113,114 @@ class CitaController extends Controller
             }
 
             
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error', 
+                'mensaje' => 'Error de servidor o base de datos: '. $e->getMessage()
+            ]);
+        }
+    }
+
+    public function precargar($id){
+        $cita = Cita::where('cita_id', $id)->first();
+        return response()->json($cita);
+    }
+
+    public function reprogramar(Request $request)
+    {
+        $errores = [];
+
+        if (empty($request->pacienteNombreRep1)) {
+            $errores['pacienteNombreRep1'] = "Solo debe ingresar el primer nombre";
+        }
+
+        if (empty($request->pacienteApellidoRep1)) {
+            $errores['pacienteApellidoRep1'] = "Solo debe ingresar el segundo nombre";
+        }
+
+        if (empty($request->represNombreRep1)) {
+            $errores['represNombreRep1'] = "Solo debe ingresar el primer apellido";
+        }
+
+        if (empty($request->represApellidoRep1)) {
+            $errores['represApellidoRep1'] = "Solo debe ingresar el segundo apellido";
+        }
+
+        if (empty($request->hcRep)) {
+            $errores['hcRep'] = "Debe ingresar el Nº de historia clinica del nuevo paciente";
+        }
+
+        if (empty($request->fechaHoraRep)) {
+            $errores['fechaHoraRep'] = "Debe ingresar la hora para la cita";
+        }
+
+        if (!empty($errores)) {
+            return response()->json([
+                "status" => "errores",
+                "errores" => $errores
+            ]);
+            exit;
+        }
+
+        try {
+            $hc = $request->hcRep;
+
+            $persona = Persona::whereHas('paciente', function ($query) use ($hc) {
+                $query->where('hc', $hc);
+            })
+            ->first();
+
+            if ($persona) {
+                $pacienteId = $persona->paciente->paciente_id;
+            }
+
+            if (!empty($request->pacienteNombreRep2)) {
+                $nombres = $request->pacienteNombreRep1." ".$request->pacienteNombreRep2;
+            } else {
+                $nombres = $request->pacienteNombreRep1;
+            }
+
+            if (!empty($request->pacienteApellidoRep2)) {
+                $apellidos = $request->pacienteApellidoRep1." ".$request->pacienteApellidoRep2;
+            } else {
+                $apellidos = $request->pacienteApellidoRep1;
+            }
+
+            if ($persona->update([
+                'nombres' => $nombres,
+                'apellidos' => $apellidos
+            ])) {
+                $consulta = Consulta::where('paciente_id', $pacienteId)->first();
+                $consultaId = $consulta->consulta_id;
+            }
+
+            if ($consulta->update([
+                'fecha_hora' => $request->fechaCitaRep.' '.$request->fechaHoraRep.':00'])) {
+                $cita = Cita::where('consulta_id', $consultaId);
+            }
+
+            if (!empty($request->represNombreRep2)) {
+                $nombresR = $request->represNombreRep1." ".$request->represNombreRep2;
+            } else {
+                $nombresR = $request->represNombreRep1;
+            }
+
+            if (!empty($request->represApellidoRep2)) {
+                $apellidosR = $request->represApellidoRep1." ".$request->represApellidoRep2;
+            } else {
+                $apellidosR = $request->represApellidoRep1;
+            }
+
+            if ($cita->update([
+                'nombres_paciente' => $nombres,
+                'apellidos_paciente' => $apellidos,
+                'nombres_representante' => $nombresR,
+                'apellidos_representante' => $apellidosR,
+                'fecha_hora' => $request->fechaCitaRep.' '.$request->fechaHoraRep.':00'])) {
+                return response()->json(['status' => 'exito', 'mensaje' => 'Cita reprogramada con exito']);
+            } else {
+                return response()->json(['status' => 'error', 'mensaje' => 'No se ha podido reprogramar la cita']);
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error', 

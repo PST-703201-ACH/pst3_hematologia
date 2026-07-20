@@ -44,7 +44,7 @@
                 </div>
 
                 <div id="seccion-citas" class="vista_admvo d-none">
-                    @include('administrativo.registrar')
+                    @include('administrativo.calendario')
                 </div>
             </div>
         </section>
@@ -71,6 +71,7 @@
 <script src="{{ asset('js/botones_admvo.js') }}"></script>
 <script src="{{ asset('js/calendario.js') }}"></script>
 <script src="{{ asset('js/registrar_cita.js') }}"></script>
+<script src="{{ asset('js/modificar_cita.js') }}"></script>
 
 @stack('scripts')
 </body>

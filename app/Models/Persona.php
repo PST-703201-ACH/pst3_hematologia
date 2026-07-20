@@ -23,4 +23,9 @@ class Persona extends Model
     public function parroquia(){
     return $this->belongsTo(Parroquia::class, 'parroquia_id', 'parroquia_id');
     }
+
+    public function paciente()
+    {
+        return $this->hasOne(Paciente::class, 'persona_id', 'persona_id');
+    }
 }

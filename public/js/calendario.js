@@ -6,7 +6,7 @@ async function precargarEventos(){
     const respuesta = await fetch('/obtener-citas');
     const citas = await respuesta.json();
 
-    let id = 1;
+    let idEvento = 1;
     let eventos = [];
 
     citas.forEach(cita => {
@@ -16,23 +16,24 @@ async function precargarEventos(){
 
         let difFecha = fechaCita - fechaActual;
         if (difFecha < 0) {
-            Status = "Incumplida"; 
+            Status = "Incumplida";
         } else {
             Status = "Programada";
         }
-        let nombre1 = cita.nombres_paciente.split(' ');
-        let apellido1 = cita.apellidos_paciente.split(' ');
-        let titulo = nombre1[0] + ' ' + apellido1[0];
+        const [nombre1P, nombre2P] = cita.nombres_paciente.split(" ");
+        const [apellido1P, apellido2P] = cita.apellidos_paciente.split(" ");
+        let titulo = nombre1P+ ' ' + apellido1P;
+        let id = cita.cita_id;
         eventos.push({
-            id: String(id++),
+            id: String(idEvento++),
             title: titulo,
             start: cita.fecha_hora,
             color: '#3788d8',
 
             extendedProps: {
-                status: Status
+                status: Status,
+                id: id
             }
-
         });
 
     });
@@ -66,13 +67,14 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     },
     eventContent: function(cita) {
     let statusCita = cita.event.extendedProps.status;
-    let claseStatus = "";
+    let elemento = "";
+    let id = cita.event.extendedProps.id;
 
     if (statusCita == "Programada") {
-        claseStatus = "badge badge-success";
+        elemento = `<span class="fc-event-title badge badge-success">${statusCita}</span>`;
     }
     else if (statusCita == "Incumplida") {
-        claseStatus = "badge badge-danger";
+        elemento = `<button type="button" data-id="${id}" onclick="precargarCita(this);" class="fc-event-title badge badge-danger">${statusCita}</button>`;
     }
 
     let contenedor = document.createElement('div');
@@ -80,7 +82,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     
     contenedor.innerHTML = `
         <span class="fc-event-title">${cita.event.title}</span>
-        <span class="fc-event-title ${claseStatus}">${statusCita}</span>
+        ${elemento}
     `;
 
     return { domNodes: [contenedor] };

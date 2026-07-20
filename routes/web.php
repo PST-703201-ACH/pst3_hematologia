@@ -60,3 +60,5 @@ Route::get('/obtener-pacientes', [PacienteController::class, 'listar']);
 //Administrativo
 Route::post('/cita-agendar', [CitaController::class, 'agendar'])->name('cita.agendar');
 Route::get('/obtener-citas', [CitaController::class, 'getCitas'])->name('citas.json');
+Route::get('/precargar-cita/{id}', [CitaController::class, 'precargar']);
+Route::post('/cita-rep', [CitaController::class, 'reprogramar'])->name('cita.rep');
