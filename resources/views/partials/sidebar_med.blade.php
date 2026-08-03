@@ -13,7 +13,7 @@
         <!-- User Panel -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="mr-3">
-                <i class="fas fa-user fa-3x text-secondary"></i>
+                <i class="fas fa-user-md fa-3x text-secondary"></i>
             </div>
 
             <div class="d-flex flex-column">

@@ -47,6 +47,8 @@ Route::get('/dashboard-admin', [GerenteController::class, 'dashboards']);
 Route::get('/obtener-detalles/{id}', [UsuarioController::class, 'ver']);
 Route::get('/precargar-usu/{id}', [UsuarioController::class, 'precargar']);
 Route::get('/cambiar-status/{id}', [UsuarioController::class, 'nuevo_status']);
+Route::get('/obtener-auditoria', [UsuarioController::class, 'auditar']);
+
 
 //Medico
 

@@ -45,6 +45,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="#"
+                       class="nav-link" 
+                       onclick="event.preventDefault();" 
+                       id="btnAuditoria">
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <p>Auditoria</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="logout"
                        class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt"></i>

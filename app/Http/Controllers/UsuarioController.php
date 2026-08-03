@@ -8,44 +8,53 @@ use App\Models\Persona;
 use App\Models\User;
 use App\Models\Rol;
 use App\Mail\ClaveOlvidada;
+use App\Models\Auditoria;
 
 
 class UsuarioController extends Controller
 {
-public function listar(Request $request){
-    $query = User::with('persona', 'rol');
 
-    if ($request->filled('busqueda')) {
-        $termino = $request->input('busqueda');
-        
-        $query->where(function($q) use ($termino) {
-            $q->where('username', 'ILIKE', "%{$termino}%")
-              ->orWhereHas('persona', function($subQuery) use ($termino) {
-                  $subQuery->where('nombres', 'ILIKE', "%{$termino}%")
-                           ->orWhere('apellidos', 'ILIKE', "%{$termino}%")
-                           ->orWhereRaw("CONCAT(nombres, ' ', apellidos) ILIKE ?", ["%{$termino}%"])
-                           ->orWhere('telefono', 'ILIKE', "%{$termino}%")
-                           ->orWhere('cedula', 'ILIKE', "%{$termino}%");
-              });
-        });     
-    }
+    public function listar(Request $request){
+        $query = User::with('persona', 'rol');
 
-    if ($request->filled('status')) {
-        $status = $request->input('status');
-        
-        $query->where('status', (int)$status); 
-    }
+        if ($request->filled('busqueda')) {
+            $termino = $request->input('busqueda');
+            
+            $query->where(function($q) use ($termino) {
+                $q->where('username', 'ILIKE', "%{$termino}%")
+                  ->orWhereHas('persona', function($subQuery) use ($termino) {
+                      $subQuery->where('nombres', 'ILIKE', "%{$termino}%")
+                               ->orWhere('apellidos', 'ILIKE', "%{$termino}%")
+                               ->orWhereRaw("CONCAT(nombres, ' ', apellidos) ILIKE ?", ["%{$termino}%"])
+                               ->orWhere('telefono', 'ILIKE', "%{$termino}%")
+                               ->orWhere('cedula', 'ILIKE', "%{$termino}%");
+                  });
+            });     
+        }
 
-    if ($request->filled('rol')) {
-        $rol = $request->input('rol');
-        
-        $query->where('id_rol', (int)$rol); 
-    }
+        if ($request->filled('status')) {
+            $status = $request->input('status');
+            
+            $query->where('status', (int)$status); 
+        }
 
-    return response()->json($query->get());
-}
+        if ($request->filled('rol')) {
+            $rol = $request->input('rol');
+            
+            $query->where('id_rol', (int)$rol); 
+        }
 
-        
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Ingreso al listado de usuarios en el sistema';
+        $aud->modulo = 'Usuarios';
+        $aud->id_usuario = 1;
+        $aud->accion = "Listado";
+
+        if ($aud->save()) {
+            return response()->json($query->get());
+        }
+    }    
 
     public function ver($id){
         $usuario = User::with('persona.estado', 'persona.municipio', 'persona.parroquia', 'rol')->where('persona_id', $id)->first();
@@ -84,6 +93,7 @@ public function listar(Request $request){
             }
         }
     }
+
     public function generarPassword($longitud = 12) {
         $caracteres = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $password = '';
@@ -221,5 +231,33 @@ public function listar(Request $request){
         ]);
     }
 
-    
+    public function auditar(Request $request){
+        $query = Auditoria::with([
+            'usuario:usuario_id,persona_id',
+            'usuario.persona:persona_id,nombres,apellidos'
+        ]);
+
+        if ($request->filled('busqueda')) {
+            $termino = $request->input('busqueda');
+            
+            $query->where(function($q) use ($termino) {
+                $q->where('descripcion', 'ILIKE', "%{$termino}%")
+                  ->orWhere('modulo', 'ILIKE', "%{$termino}%")
+                  ->orWhere('fecha_hora', 'ILIKE', "%{$termino}%");
+            });     
+        }
+
+        if ($request->filled('mod')) {
+            $mod = $request->input('mod');
+            $query->where('modulo', $mod);
+        }
+
+        if ($request->filled('acc')) {
+            $acc = $request->input('acc');
+            $query->where('accion', $acc);
+        }
+
+        return response()->json($query->get());
+    }
+
 }

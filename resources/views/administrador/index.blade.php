@@ -51,6 +51,11 @@
                     @include('administrador.actualizar')
                 </div>
 
+                <div id="seccion-auditoria" class="vista_admin d-none">
+                    @include('administrador.auditoria')
+                </div>
+
+
                     @include('administrador.ver')
             </div>
         </section>
@@ -70,13 +75,14 @@
 <!-- Custom App JS -->
 <script src="{{ asset('assets/js/app.js') }}"></script>
 
-<script src="{{ asset('js/botones_admin.js') }}"></script>
-<script src="{{ asset('js/registrar_usuario.js') }}"></script>
-<script src="{{ asset('js/listar_usuario.js') }}"></script>
-<script src="{{ asset('js/dashboards_admin.js') }}"></script>
-<script src="{{ asset('js/ver_usuario.js') }}"></script>
-<script src="{{ asset('js/actualizar_usuario.js') }}"></script>
-<script src="{{ asset('js/status_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/botones_admin.js') }}"></script>
+<script src="{{ asset('assets/js/registrar_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/listar_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/dashboards_admin.js') }}"></script>
+<script src="{{ asset('assets/js/ver_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/actualizar_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/status_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/listar_auditoria.js') }}"></script>
 
 @stack('scripts')
 </body>
