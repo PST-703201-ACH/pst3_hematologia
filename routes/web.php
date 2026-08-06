@@ -11,6 +11,7 @@ use App\Http\Controllers\GerenteController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Medico\PacienteController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\ProtocoloTratamientoController;
 
 // Autenticación
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
@@ -64,3 +65,39 @@ Route::post('/cita-agendar', [CitaController::class, 'agendar'])->name('cita.age
 Route::get('/obtener-citas', [CitaController::class, 'getCitas'])->name('citas.json');
 Route::get('/precargar-cita/{id}', [CitaController::class, 'precargar']);
 Route::post('/cita-rep', [CitaController::class, 'reprogramar'])->name('cita.rep');
+
+
+
+// Rutas temporales de desarrollo aislado - Módulos de Tratamientos y Laboratorios
+Route::middleware(['auth'])->prefix('sandbox-mis-modulos')->group(function () {
+    
+    // Rutas para Soporte Transfusional (Médico/Enfermera)
+    Route::get('transfusiones', [App\Http\Controllers\TransfusionController::class, 'index']);
+    Route::post('transfusiones', [App\Http\Controllers\TransfusionController::class, 'store']);
+    Route::get('transfusiones/{id}', [App\Http\Controllers\TransfusionController::class, 'show']);
+    Route::put('transfusiones/{id}', [App\Http\Controllers\TransfusionController::class, 'update']);
+
+    // Rutas para Resultados de Laboratorio (Médico/Enfermera/Administrativo)
+    Route::get('examenes', [App\Http\Controllers\ExamenController::class, 'index']);
+    Route::post('examenes', [App\Http\Controllers\ExamenController::class, 'store']);
+    Route::get('examenes/{id}', [App\Http\Controllers\ExamenController::class, 'show']);
+    Route::put('examenes/{id}', [App\Http\Controllers\ExamenController::class, 'update']);
+
+    use App\Http\Controllers\TransfusionHemocomponenteController;
+
+
+         
+    Route::resource('transfusiones', TransfusionHemocomponenteController::class)
+         ->except(['create', 'edit', 'destroy']);
+
+use App\Http\Controllers\ProtocoloTratamientoController;
+
+Route::middleware(['auth', 'role:medico|enfermera'])->group(function () {
+    
+    // Rutas estándar para el CRUD (Listar, Crear, Consultar, Actualizar)
+    Route::resource('protocolos', ProtocoloTratamientoController::class);
+
+    // Nuestra ruta especial para reprogramar la semana
+    Route::post('/protocolos/sesiones/{sesion_id}/reprogramar', [ProtocoloTratamientoController::class, 'reprogramarSemana'])
+         ->name('protocolos.sesiones.reprogramar');
+});
