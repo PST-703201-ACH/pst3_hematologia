@@ -49,3 +49,9 @@ Homestead.yaml
 # Optional local files
 *.swp
 *.swo
+
+# mis datos 
+.atl/
+docs/
+openspec/
+pst3_hematologia/

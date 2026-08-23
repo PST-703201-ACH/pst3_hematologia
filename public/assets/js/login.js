@@ -10,6 +10,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const formClave = document.getElementById('formClave')
     const cargandoModal = new bootstrap.Modal(document.getElementById('modalCarga'));
 
+     // ==========================================
+    // AGREGUE UN BOTON PARA MOSTRAR Y OCULTAR LA CONTRASEÑA EN EL CAMPO DE CONTRASEÑA SIN EL BOTON DE OJO,
+    // PARA QUE FUNCIONE EL BOTON DE OJO, SE DEBE AGREGAR EL SIGUIENTE HTML EN EL CAMPO DE CONTRASEÑA:
+    // ==========================================
+    const togglePassword = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+        if (togglePassword && eyeIcon && avisoClave) {
+            togglePassword.addEventListener('click', function () {
+                if (avisoClave.type === 'password') {
+                    avisoClave.type = 'text';
+                    eyeIcon.className = 'fas fa-eye-slash';
+                } else {
+                    avisoClave.type = 'password';
+                    eyeIcon.className = 'fas fa-eye';
+                }
+            });
+        }
+    // ==========================================
+
+
     botonClave.addEventListener('click', function() {
         if (this.className == "btn btn-secondary fas fa-eye-slash") {
             this.className = "btn btn-secondary fas fa-eye";
