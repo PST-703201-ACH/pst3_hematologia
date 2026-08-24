@@ -73,6 +73,8 @@ Route::get('/obtener-estados', [EstadoController::class, 'getEstados'])->name('e
 Route::get('/obtener-municipios', [MunicipioController::class, 'getMunicipios'])->name('municipios.json');
 Route::get('/obtener-parroquias', [ParroquiaController::class, 'getParroquias'])->name('parroquias.json');
 Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.json');
+
+
 // ---------------------------------------------------------------------
     // 3.1. ROL: ADMINISTRADOR (role:1)
     // ---------------------------------------------------------------------

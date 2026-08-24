@@ -65,8 +65,7 @@ class User extends Authenticatable
     {
         return match ($this->id_rol) {
             1 => route('admin.index'),
-            2 => route('admvo.index'),
-            3 => route('medico.index'),
+            2 => route('medico.index'),
             default => route('admin.index'),
         };
     }

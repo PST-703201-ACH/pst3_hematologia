@@ -108,9 +108,9 @@
 
 <!-- Custom App JS -->
 <script src="{{ asset('assets/js/app.js') }}"></script>
-<script src="{{ asset('js/botones_med.js') }}"></script>
-<script src="{{ asset('js/listar_paciente.js') }}"></script>
-<script src="{{ asset('js/registrar_paciente.js') }}"></script>
+<script src="{{ asset('assets/js/botones_med.js') }}"></script>
+<script src="{{ asset('assets/js/listar_paciente.js') }}"></script>
+<script src="{{ asset('assets/js/registrar_paciente.js') }}"></script>
 
 @stack('scripts')
 </body>
