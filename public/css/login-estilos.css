@@ -1,7 +1,7 @@
 /* Fondo Dinámico y Suave */
 body.login-page,
 body.register-page {
-    background: url("../img/fondo-login.png") no-repeat center center fixed !important;
+    background: url("../img/fondo-login.jpeg") no-repeat center center fixed !important;
     background-size: cover !important;
     transition: background 0.5s ease;
 }

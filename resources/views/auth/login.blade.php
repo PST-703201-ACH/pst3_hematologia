@@ -4,12 +4,14 @@
     @stop
 
     @section('css')
+        <link rel="stylesheet" href="{{ asset('assets/adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/adminlte/css/adminlte.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/login-estilos.css') }}">
     @endsection
 
     @section('auth_body')
     <div class="text-center mb-4">
-    <img src="{{ asset('images/logo.png') }}" alt="Logo" height="100" width="100" class="mb-2 rounded-circle bg-white p-1 shadow-sm" style="object-fit: contain;">
+    <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" height="100" width="100" class="mb-2 rounded-circle bg-white p-1 shadow-sm" style="object-fit: contain;">
     <h4 class="font-weight-bold text-dark">Iniciar sesion</h4>
 </div>
     <form action="{{ route('login') }}" method="post" id="formLogin">
@@ -132,7 +134,10 @@
     </div>
 
     @section('js')
-    <script src="{{ asset('js/login.js') }}"></script>
+    <script src="{{ asset('assets/adminlte/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
+    <script src="{{ asset('assets/js/login.js') }}"></script>
     @stop
 
     @section('auth_footer')

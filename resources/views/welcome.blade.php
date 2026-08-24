@@ -17,7 +17,7 @@
 <body>
     <header>
         <a href="/" class="brand">
-            <img src="{{ asset('images/logo.png') }}" alt="Hospital Logo">
+            <img src="{{ asset('assets/images/logo.png') }}">
             <span>JM de los Ríos</span>
         </a>
         <div class="nav-actions">
@@ -53,7 +53,7 @@
 
         <div class="hero-image-container">
             <div class="card-logo">
-                <img src="{{ asset('images/logo.png') }}" alt="Hematología Logo">
+                <img src="{{ asset('assets/images/logo.png') }}">
                 <h2>Hospital J. M. de los Ríos</h2>
                 <p>Unidad de Hematología y Oncología Pediatrica</p>
             </div>
