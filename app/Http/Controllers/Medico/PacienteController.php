@@ -24,12 +24,17 @@ class PacienteController extends Controller
         return view('medico.pacientes.index', compact('pacientes'));
     }
 
-    /**
-     * Devuelve un JSON con los pacientes para compatibilidad de API.
-     */
+
     public function listar()
     {
         $pacientes = Paciente::with('persona')->get();
+
+        return response()->json($pacientes);
+    }
+
+    public function listarCon()
+    {
+        $pacientes = Paciente::with('persona')->where()->get();
 
         return response()->json($pacientes);
     }

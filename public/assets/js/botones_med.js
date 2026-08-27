@@ -12,6 +12,7 @@ function intercambiarVista(mostrar) {
 document.getElementById('btnListar').addEventListener('click', function(listado) {
     listado.preventDefault();
     intercambiarVista('seccion-pacientes_listados');
+    listarPacientes();
 });
 
 document.getElementById('btnRegistrar').addEventListener('click', function(registrar) {

@@ -42,11 +42,15 @@
                 </div>
 
                 <div id="seccion-pacientes_listados" class="vista_med d-none">
-                    @include('medico.pacientes.index')
+                    @include('medico.pacientes.listado')
                 </div>
 
                 <div id="seccion-registrar_paciente" class="vista_med d-none">
                     @include('medico.pacientes.crear')
+                </div>
+
+                <div id="seccion-listar_consulta" class="vista_med d-none">
+                    @include('medico.consultas.listado')
                 </div>
             </div>
         </section>

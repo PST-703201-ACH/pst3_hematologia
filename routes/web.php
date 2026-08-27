@@ -119,6 +119,7 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             Route::delete('/pacientes/{id}', 'destroy')->name('medico.pacientes.destroy');
 
             Route::get('/obtener-pacientes', 'listar')->name('medico.pacientes.listar');
+            Route::get('/obtener-pacientes', 'listarCon')->name('medico.pacientes.consultas');
             Route::get('/representantes/buscar', 'getRepresentantes')->name('medico.representantes.buscar');
         });
     });
