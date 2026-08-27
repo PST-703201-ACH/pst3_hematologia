@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    listarUsuarios();
     const selectStatus = document.querySelector('select[name="filtroStatus_usu"]');
     const selectRol = document.querySelector('select[name="filtroRol_usu"]');
     const btnLimpiar = document.getElementById('btnLimpiar_usu');
@@ -46,74 +45,134 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+let paginaActualUsu = 1;
+const elementosPorPaginaUsu = 5; 
+
 async function listarUsuarios(termino = '', status = '', rol = '') {
     try {
+        paginaActualUsu = 1;
 
         let parametros = [];
                 
-            if (termino) {
-                parametros.push(`busqueda=${encodeURIComponent(termino)}`);
-            }
-            
-            if (status !== '') {
-                parametros.push(`status=${encodeURIComponent(status)}`);
-            }
+        if (termino) {
+            parametros.push(`busqueda=${encodeURIComponent(termino)}`);
+        }
+        
+        if (status !== '') {
+            parametros.push(`status=${encodeURIComponent(status)}`);
+        }
 
-            if (rol !== '') {
-                parametros.push(`rol=${encodeURIComponent(rol)}`);
-            }
+        if (rol !== '') {
+            parametros.push(`rol=${encodeURIComponent(rol)}`);
+        }
 
-            const url = parametros.length > 0 ? `/obtener-usuarios?${parametros.join('&')}` : '/obtener-usuarios';
-
+        const url = parametros.length > 0 ? `/admin/obtener-usuarios?${parametros.join('&')}` : '/admin/obtener-usuarios';
 
         const respuesta = await fetch(url);
-        const usuarios = await respuesta.json();
+        
+        const datosServidor = await respuesta.json();
+        const usuarios = JSON.parse(JSON.stringify(datosServidor));
 
-        let filas = '';
-        let id = 1;
+        function renderizarPaginador() {
+            const inicio = (paginaActualUsu - 1) * elementosPorPaginaUsu;
+            const fin = inicio + elementosPorPaginaUsu;
+            const itemsVisibles = usuarios.slice(inicio, fin);
 
-        usuarios.forEach(usu => {
-            if (usu.status == 1) {
-                usu.status = '<p class="text-success">Activo</p>';
-            } else if (usu.status == 0) {
-                usu.status = '<p class="text-danger">Inactivo</p>';
-            } else if (usu.status == 2) {
-                usu.status = '<p class="text-warning">Verificar</p>';
-            }
-            filas += `
-                <tr>
-                    <td>${id++}</td>
-                    <td>${usu.persona.nombres} ${usu.persona.apellidos}</td>
-                    <td>${usu.rol.nombre}</td>
-                    <td>${usu.persona.cedula}</td>
-                    <td>${usu.persona.telefono}</td>
-                    <td class="status">${usu.status}</td>
-                    <td class="text-center">
-                        <button class="btn btn-warning btnStatus" data-id="${usu.persona_id}" onclick="cambiarStatus(this);">Cambiar status</button>
-                        <button onclick="cargarDetalle(this)" class="btn btn-secondary" data-id="${usu.persona_id}">Detalles</button>
-                        <button onclick="intercambiarVista('actualizar-usuario'); precargarDatos(this);" class="btn btn-primary" data-id="${usu.persona_id}">Actualizar</button>
-                    </td>
-                </tr>
-            `;
-        });
+            let filas = '';
+            let id = (paginaActualUsu - 1) * elementosPorPaginaUsu + 1;
 
-        document.getElementById('cuerpoTablaUsuarios').innerHTML = filas;
+            itemsVisibles.forEach(usu => {
+                if (usu.status == 1) {
+                    usu.status = '<p class="text-success">Activo</p>';
+                } else if (usu.status == 0) {
+                    usu.status = '<p class="text-danger">Inactivo</p>';
+                } else if (usu.status == 2) {
+                    usu.status = '<p class="text-warning">Verificar</p>';
+                }
+                filas += `
+                    <tr>
+                        <td>${id++}</td>
+                        <td>${usu.persona.nombres} ${usu.persona.apellidos}</td>
+                        <td>${usu.rol.nombre}</td>
+                        <td>${usu.persona.cedula}</td>
+                        <td>${usu.persona.telefono}</td>
+                        <td class="status">${usu.status}</td>
+                        <td class="text-center">
+                            <button class="btn btn-warning btnStatus" data-id="${usu.persona_id}" onclick="cambiarStatus(this);">Cambiar status</button>
+                            <button onclick="cargarDetalle(this)" class="btn btn-secondary" data-id="${usu.persona_id}">Detalles</button>
+                            <button onclick="intercambiarVista('actualizar-usuario'); precargarDatos(this);" class="btn btn-primary" data-id="${usu.persona_id}">Actualizar</button>
+                        </td>
+                    </tr>
+                `;
+            });
 
-        const columnas = document.querySelectorAll('.status');
-        columnas.forEach(col => {
-            if (col.textContent == "Verificar") {
-                const fila = col.closest('tr');
-                if (col) {
-                    const boton = col.querySelector('.btnStatus');
-                    if (boton) {
-                        boton.readonly = true;
+            document.getElementById('cuerpoTablaUsuarios').innerHTML = filas;
+
+            const columnas = document.querySelectorAll('.status');
+            columnas.forEach(col => {
+                if (col.textContent == "Verificar") {
+                    const fila = col.closest('tr');
+                    if (fila) {
+                        const boton = fila.querySelector('.btnStatus');
+                        if (boton) {
+                            boton.disabled = true;
+                        }
                     }
                 }
-            }
-        });
+            });
 
+            const contenedorBotones = document.getElementById('btnPagUsu'); 
+            contenedorBotones.innerHTML = '';
+
+            const totalPaginas = Math.ceil(usuarios.length / elementosPorPaginaUsu);
+
+                const maximoBotonesVisibles = 5;
+                let paginaInicio = Math.max(1, paginaActualUsu - Math.floor(maximoBotonesVisibles / 2));
+                let paginaFin = paginaInicio + maximoBotonesVisibles - 1;
+
+                if (paginaFin > totalPaginas) {
+                    paginaFin = totalPaginas;
+                    paginaInicio = Math.max(1, paginaFin - maximoBotonesVisibles + 1);
+                }
+
+                if (paginaInicio > 1) {
+                    const btnPrimero = document.createElement('button');
+                    btnPrimero.textContent = '«';
+                    btnPrimero.className = 'btn btn-outline-primary m-1';
+                    btnPrimero.addEventListener('click', () => { paginaActualUsu = 1; renderizarPaginador(); });
+                    contenedorBotones.appendChild(btnPrimero);
+                }
+
+                for (let i = paginaInicio; i <= paginaFin; i++) {
+                    const boton = document.createElement('button');
+                    boton.textContent = i;
+                    boton.className = 'btn btn-outline-primary m-1';
+
+                    if (i === paginaActualUsu) {
+                        boton.classList.replace('btn-outline-primary', 'btn-primary');
+                    }
+
+                    boton.addEventListener('click', () => {
+                        paginaActualUsu = i;
+                        renderizarPaginador();
+                    });
+
+                    contenedorBotones.appendChild(boton);
+                }
+
+                if (paginaFin < totalPaginas) {
+                    const btnUltimo = document.createElement('button');
+                    btnUltimo.textContent = '»';
+                    btnUltimo.className = 'btn btn-outline-primary m-1';
+                    btnUltimo.addEventListener('click', () => { paginaActualUsu = totalPaginas; renderizarPaginador(); });
+                    contenedorBotones.appendChild(btnUltimo);
+                }
+        }
+
+        renderizarPaginador();
 
     } catch (error) {
         console.error("Error al listar:", error);
     }
 }
+

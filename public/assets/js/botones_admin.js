@@ -10,6 +10,8 @@ function intercambiarVista(mostrar) {
 
 
 document.getElementById('btnUsuarios').addEventListener('click', function(listado0) {
+    listarUsuarios();
+
     listado0.preventDefault();
     intercambiarVista('seccion-usuarios');
 });
@@ -30,6 +32,7 @@ document.getElementById('btnCancelarReg').addEventListener('click', function(can
 });
 
 document.getElementById('btnAuditoria').addEventListener('click', function(auditoria0) {
+    listarAuditoria()
     auditoria0.preventDefault();
     intercambiarVista('seccion-auditoria');
 });

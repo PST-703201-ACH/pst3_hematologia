@@ -233,7 +233,8 @@ class UsuarioController extends Controller
 
     public function auditar(Request $request){
         $query = Auditoria::with([
-            'usuario:usuario_id,persona_id',
+            // Asegúrate de incluir la Clave Primaria real de Usuario (ej. id)
+            'usuario:usuario_id,persona_id', 
             'usuario.persona:persona_id,nombres,apellidos'
         ]);
 
@@ -243,9 +244,19 @@ class UsuarioController extends Controller
             $query->where(function($q) use ($termino) {
                 $q->where('descripcion', 'ILIKE', "%{$termino}%")
                   ->orWhere('modulo', 'ILIKE', "%{$termino}%")
-                  ->orWhere('fecha_hora', 'ILIKE', "%{$termino}%");
-            });     
+                  ->orWhereRaw('fecha_hora::text ILIKE ?', ["%{$termino}%"]);
+                  
+                // Corrección de orWhereHas anidado correctamente
+                $q->orWhereHas('usuario', function ($uQ) use ($termino) {
+                    $uQ->whereHas('persona', function ($pQ) use ($termino) {
+                        $pQ->where('nombres', 'ILIKE', "%{$termino}%")
+                           ->orWhere('apellidos', 'ILIKE', "%{$termino}%")
+                           ->orWhereRaw("CONCAT(nombres, ' ', apellidos) ILIKE ?", ["%{$termino}%"]);
+                    });
+                });
+            });    
         }
+
 
         if ($request->filled('mod')) {
             $mod = $request->input('mod');
@@ -255,6 +266,11 @@ class UsuarioController extends Controller
         if ($request->filled('acc')) {
             $acc = $request->input('acc');
             $query->where('accion', $acc);
+        }
+
+        if ($request->filled('fecha')) {
+            $fecha = $request->input('fecha');
+            $query->whereDate('fecha_hora', $request->input('fecha'));
         }
 
         return response()->json($query->get());

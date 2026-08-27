@@ -1,12 +1,3 @@
-@extends('adminlte::page')
-
-@section('title', 'Dashboard Médico')
-
-@section('content_header')
-<h1>Panel de Control - Médico</h1>
-@stop
-
-@section('content')
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Bienvenido, Dr. {{ Auth::user()->persona->nombres }} {{ Auth::user()->persona->apellidos }}</h3>
@@ -57,19 +48,3 @@
         </div>
     </div>
 </div>
-@stop
-
-@section('css')
-<link rel="stylesheet" href="{{ asset('assets/adminlte/plugins/fontawesome-free/css/all.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/adminlte/css/adminlte.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
-@stop
-
-@section('js')
-<script src="{{ asset('assets/adminlte/plugins/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
-<script>
-    console.log('Dashboard Médico Cargado');
-</script>
-@stop

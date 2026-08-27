@@ -34,14 +34,6 @@
                 data-accordion="false">
 
                 <li class="nav-header">OPCIONES</li>
-
-                <li class="nav-item">
-                    <a href="/medico"
-                       class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>Panel de Control</p>
-                    </a>
-                </li>
                 
                 <li class="nav-item has-treeview">
                     <a href="medico/"

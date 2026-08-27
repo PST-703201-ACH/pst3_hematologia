@@ -17,7 +17,7 @@ class LoginController extends Controller
     {
         if (Auth::check()) {
             /** @var User $user */
-            $user = Auth::user();
+            $user = Auth::User();
 
             if ($user->primer_ingreso) {
                 return redirect()->route('primer.ingreso.datos');

@@ -17,14 +17,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // =========================================================================
-// 1. RUTAS PÚBLICAS Y DE BIENVENIDA
+// RUTAS PÚBLICAS Y DE BIENVENIDA
 // =========================================================================
 Route::get('/', function () {
     return view('welcome');
 });
 
 // =========================================================================
-// 2. AUTENTICACIÓN Y RECUPERACIÓN DE CONTRASEÑA
+// AUTENTICACIÓN Y RECUPERACIÓN DE CONTRASEÑA
 // =========================================================================
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
@@ -41,7 +41,7 @@ Route::controller(UsuarioController::class)->group(function () {
 });
 
 // =========================================================================
-// 3. RUTAS PROTEGIDAS (SOLO PARA USUARIOS LOGUEADOS)
+// RUTAS PROTEGIDAS (SOLO PARA USUARIOS LOGUEADOS)
 // =========================================================================
 Route::middleware('auth')->group(function () {
 
@@ -76,7 +76,7 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
 
 
 // ---------------------------------------------------------------------
-    // 3.1. ROL: ADMINISTRADOR (role:1)
+    // ADMINISTRADOR
     // ---------------------------------------------------------------------
     Route::middleware('role:1')->prefix('admin')->group(function () {
 
@@ -90,23 +90,24 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             Route::post('/usuario-actualizar', 'actualizar')->name('persona.actualizar');
         });
 
-        // Gestión de Usuarios del Sistema
+        // Gestión de Usuarios
         Route::controller(UsuarioController::class)->group(function () {
             Route::get('/obtener-usuarios', 'listar');
             Route::get('/obtener-detalles/{id}', 'ver');
             Route::get('/precargar-usu/{id}', 'precargar');
             Route::get('/cambiar-status/{id}', 'nuevo_status');
+            Route::get('/obtener-auditoria', 'auditar');
         });
 
         Route::get('/dashboard-admin', [GerenteController::class, 'dashboards']);
     });
 // ---------------------------------------------------------------------
-    // 3.2. ROL: MÉDICO (role:2)
-    // ---------------------------------------------------------------------
+    // MÉDICO
+// ---------------------------------------------------------------------
     Route::middleware('role:2')->prefix('medico')->group(function () {
 
         Route::get('/', function () {
-            return view('medico.dashboard');
+            return view('medico.index');
         })->name('medico.index');
 
         // Gestión de Pacientes por el Médico
@@ -148,7 +149,7 @@ Route::get('/dashboard-admin', [GerenteController::class, 'dashboards']);
 Route::get('/obtener-detalles/{id}', [UsuarioController::class, 'ver']);
 Route::get('/precargar-usu/{id}', [UsuarioController::class, 'precargar']);
 Route::get('/cambiar-status/{id}', [UsuarioController::class, 'nuevo_status']);
-Route::get('/obtener-auditoria', [UsuarioController::class, 'auditar']);
+
 
 
 //Medico

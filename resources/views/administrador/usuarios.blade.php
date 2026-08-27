@@ -7,11 +7,16 @@
 
 		<div class="d-flex align-items-center justify-content-between mb-3">
 
-		    <div>
-				<button id="btnRegistrarUsu" class="btn btn-success">Nuevo</button>
-				<button id="btnRefrescarUsu" onclick="listarUsuarios()" class="btn btn-primary"><i class="fas fa-undo" aria-hidden="true"></i>
-				</button>
-		    </div>
+			<div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+			    <div class="d-flex gap-2">
+			        <button id="btnRegistrarUsu" class="btn btn-success">Nuevo</button>
+			        <button id="btnRefrescarUsu" onclick="listarUsuarios()" class="btn btn-primary">
+			            <i class="fas fa-undo" aria-hidden="true"></i>
+			        </button>
+			    </div>
+
+			    <div id="btnPagEmple" class="d-flex gap-1"></div>
+			</div>
 
 		    <form onsubmit="event.preventDefault();" class="d-flex align-items-center m-0" id="formBusquedaUsu">
 		        <input 
