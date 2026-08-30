@@ -8,7 +8,6 @@ use App\Http\Controllers\Medico\PacienteController as MedicoPacienteController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ParroquiaController;
 use App\Http\Controllers\PersonaController;
-use App\Http\Controllers\PrimerIngresoController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\TipoConsultaController;
 use App\Http\Controllers\UsuarioController;
@@ -52,21 +51,6 @@ Route::get('/dashboard', function () {
     if (! $user instanceof User) abort(403);
     return redirect($user->getDashboardUrl());
 })->name('dashboard');
-
-// Módulos Compartidos (Primer ingreso, Enfermedades, Exámenes, Consultas)
-Route::controller(PrimerIngresoController::class)->group(function () {
-    Route::get('/primer-ingreso/completar-datos', 'show')->name('primer.ingreso.datos');
-    Route::post('/primer-ingreso/completar-datos', 'guardarDatos')->name('primer.ingreso.guardar');
-});
-
-Route::post('/enfermedades', [EnfermedadController::class, 'store'])->name('enfermedad.store');
-Route::get('/enfermedades', [EnfermedadController::class, 'index'])->name('enfermedad.index');
-
-Route::post('/examenes', [ExamenController::class, 'store'])->name('examen.store');
-Route::get('/examenes', [ExamenController::class, 'index'])->name('examen.index');
-
-Route::post('/tipos-consulta', [TipoConsultaController::class, 'store'])->name('tipo_consulta.store');
-Route::get('/tipos-consulta', [TipoConsultaController::class, 'index'])->name('tipo_consulta.index');
 
 // ✨ CORRECCIÓN CRÍTICA: Rutas de carga de datos comunes (Disponibles para Admin y Médicos)
 Route::get('/obtener-estados', [EstadoController::class, 'getEstados'])->name('estados.json');
