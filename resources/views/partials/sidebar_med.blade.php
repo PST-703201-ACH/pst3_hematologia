@@ -1,3 +1,14 @@
+@php
+    $usuarioActual = Auth::user();
+    $personaActual = $usuarioActual?->persona;
+    $nombres = explode(' ', trim($personaActual?->nombres ?? ''));
+    $nombre = $nombres[0] ?: 'Usuario';
+    $apellidos = explode(' ', trim($personaActual?->apellidos ?? ''));
+    $apellido = $apellidos[0] ?: '';
+    $nombreSidebar = trim($nombre . ' ' . $apellido);
+    $cedulaSidebar = $personaActual?->cedula ?? 'Sin cédula';
+@endphp
+
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a class="brand-link">
@@ -18,10 +29,10 @@
 
             <div class="d-flex flex-column">
                 <h5 class="d-block text-success mb-0">
-                    Nombre Apellido
+                    {{ $nombreSidebar }}
                 </h5>
                 <h5 class="d-block text-primary mb-0">
-                    C.I
+                    {{ $cedulaSidebar }}
                 </h5>
             </div>
         </div>
@@ -36,7 +47,7 @@
                 <li class="nav-header">OPCIONES</li>
                 
                 <li class="nav-item has-treeview">
-                    <a href="medico/"
+                    <a href="#"
                        class="nav-link"
                        onclick="event.preventDefault();">
                         <i class="nav-icon fas fa-users"></i>
@@ -45,12 +56,21 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="medico/"
+                            <a href="#"
                                class="nav-link"
-                               id="btnListarPa" 
+                               id="btnListarPa"
                                onclick="event.preventDefault();">
                                 <i class="nav-icon fas fa-list"></i>
                                 <p>Listado de Pacientes</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#"
+                               class="nav-link"
+                               id="btnRegistrar"
+                               onclick="event.preventDefault();">
+                                <i class="nav-icon fas fa-user-plus"></i>
+                                <p>Nuevo Paciente</p>
                             </a>
                         </li>
                     </ul>

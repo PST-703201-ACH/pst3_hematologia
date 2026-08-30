@@ -15,7 +15,7 @@
 			        </button>
 			    </div>
 
-			    <div id="btnPagEmple" class="d-flex gap-1"></div>
+			    <div id="btnPagUsu" class="d-flex gap-1"></div>
 			</div>
 
 		    <form onsubmit="event.preventDefault();" class="d-flex align-items-center m-0" id="formBusquedaUsu">

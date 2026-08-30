@@ -97,6 +97,11 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
 
         Route::get('/', function () {
             return view('medico.index');
+            $pacientes = \App\Models\Paciente::with('persona')->get();
+            $estados = \App\Models\Estado::all();
+            $representantes = collect();
+
+            return view('medico.index', compact('pacientes', 'estados', 'representantes'));
         })->name('medico.index');
 
         // Gestión de Pacientes por el Médico
