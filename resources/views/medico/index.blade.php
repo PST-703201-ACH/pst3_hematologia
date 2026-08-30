@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard Médico</title>
+    <title>@yield('title', 'Médico')</title>
 
     <link rel="stylesheet" href="{{ asset('assets/adminlte/plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/adminlte/css/adminlte.min.css') }}">
@@ -25,6 +25,19 @@
                 <h1>Panel de Control - Médico</h1>
             </div>
         </section>
+        
+        <section class="content">
+            <div class="container-fluid">
+                @yield('content')
+
+                <div class="card">
+                    <div class="card-body">
+                    @include('medico.dashboard')    
+                    </div>
+                </div>
+
+                <div id="seccion-pacientes_listados" class="vista_med d-none">
+                    @include('medico.pacientes.listado')
 
         <section class="content">
             <div class="container-fluid">
@@ -85,6 +98,10 @@
                 <div id="seccion-registrar_paciente" class="vista_med d-none">
                     @include('medico.pacientes.create')
                 </div>
+
+                <div id="seccion-consultas_listadas" class="vista_med d-none">
+                    @include('medico.consultas.listado')
+                </div>
             </div>
         </section>
     </div>
@@ -98,6 +115,9 @@
 <script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/botones_med.js') }}"></script>
+<script src="{{ asset('assets/js/listar_paciente.js') }}"></script>
+<script src="{{ asset('assets/js/listar_consulta.js') }}"></script>
+<script src="{{ asset('assets/js/registrar_paciente.js') }}"></script>
 
 @stack('scripts')
 </body>

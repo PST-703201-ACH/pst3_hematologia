@@ -12,13 +12,19 @@ function intercambiarVista(mostrar) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const btnListar = document.getElementById('btnListar');
+    const btnListarPa = document.getElementById('btnListarPa');
     const btnRegistrar = document.getElementById('btnRegistrar');
     const btnCancelarReg = document.getElementById('btnCancelarReg');
 
-    if (btnListar) {
-        btnListar.addEventListener('click', function (listado) {
-            listado.preventDefault();
+document.getElementById('btnListarPaPa').addEventListener('click', function(listadoPa) {
+    listadoPa.preventDefault();
+    intercambiarVista('seccion-pacientes_listados');
+    listarPacientes();
+});
+
+    if (btnListarPa) {
+        btnListarPa.addEventListener('click', function (listadoPa) {
+            listadoPa.preventDefault();
             intercambiarVista('seccion-pacientes_listados');
         });
     }
@@ -29,6 +35,16 @@ document.addEventListener('DOMContentLoaded', function () {
             intercambiarVista('seccion-registrar_paciente');
         });
     }
+
+document.getElementById('btnCancelarReg').addEventListener('click', function(cancelar) {
+    cancelar.preventDefault();
+    intercambiarVista('seccion-pacientes_listados');
+});
+
+document.getElementById('btnListarCon').addEventListener('click', function(listadoCon) {
+    listadoCon.preventDefault();
+    intercambiarVista('seccion-consultas_listadas');
+});
 
     if (btnCancelarReg) {
         btnCancelarReg.addEventListener('click', function (cancelar) {

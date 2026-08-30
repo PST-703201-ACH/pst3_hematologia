@@ -1,8 +1,12 @@
 @php
     $usuarioActual = Auth::user();
     $personaActual = $usuarioActual?->persona;
-    $nombreSidebar = trim(($personaActual->nombres ?? '') . ' ' . ($personaActual->apellidos ?? '')) ?: 'Usuario';
-    $cedulaSidebar = $personaActual->cedula ?? 'Sin cédula';
+    $nombres = explode(' ', trim($personaActual?->nombres ?? ''));
+    $nombre = $nombres[0] ?: 'Usuario';
+    $apellidos = explode(' ', trim($personaActual?->apellidos ?? ''));
+    $apellido = $apellidos[0] ?: '';
+    $nombreSidebar = trim($nombre . ' ' . $apellido);
+    $cedulaSidebar = $personaActual?->cedula ?? 'Sin cédula';
 @endphp
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -41,14 +45,6 @@
                 data-accordion="false">
 
                 <li class="nav-header">OPCIONES</li>
-
-                <li class="nav-item">
-                    <a href="/medico"
-                       class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>Panel de Control</p>
-                    </a>
-                </li>
                 
                 <li class="nav-item has-treeview">
                     <a href="#"
@@ -62,7 +58,7 @@
                         <li class="nav-item">
                             <a href="#"
                                class="nav-link"
-                               id="btnListar"
+                               id="btnListarPa"
                                onclick="event.preventDefault();">
                                 <i class="nav-icon fas fa-list"></i>
                                 <p>Listado de Pacientes</p>
@@ -75,6 +71,26 @@
                                onclick="event.preventDefault();">
                                 <i class="nav-icon fas fa-user-plus"></i>
                                 <p>Nuevo Paciente</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="medico/"
+                       class="nav-link"
+                       onclick="event.preventDefault();">
+                        <i class="nav-icon fas fa-stethoscope"></i>
+                        <p>Consultas</p>
+                        <i class="right fas fa-angle-left"></i>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="medico/"
+                               class="nav-link"
+                               id="btnListarCon" 
+                               onclick="event.preventDefault();">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>Listado de Consultas</p>
                             </a>
                         </li>
                     </ul>

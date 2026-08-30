@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Medico;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\PacienteRequest;
 use App\Models\Estado;
 use App\Models\Paciente;
+use App\Models\Consulta;
 use App\Models\Persona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class PacienteController extends Controller
+class MedicoController extends Controller
 {
-    /**
-     * Muestra el listado de pacientes registrados.
-     */
+
     public function index()
     {
         $pacientes = Paciente::with('persona')->get();
@@ -23,12 +21,17 @@ class PacienteController extends Controller
         return view('medico.pacientes.index', compact('pacientes'));
     }
 
-    /**
-     * Devuelve un JSON con los pacientes para compatibilidad de API.
-     */
+
     public function listar()
     {
-        $pacientes = Paciente::with('persona')->get();
+        $consultas = Consulta::with('paciente')->get();
+
+        return response()->json($pacientes);
+    }
+
+    public function listarCon()
+    {
+        $pacientes = Consulta::with('paciente.persona', 'enfermedad')->where('status', 0)->get();
 
         return response()->json($pacientes);
     }

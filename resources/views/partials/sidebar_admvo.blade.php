@@ -1,8 +1,12 @@
 @php
     $usuarioActual = Auth::user();
     $personaActual = $usuarioActual?->persona;
-    $nombreSidebar = trim(($personaActual->nombres ?? '') . ' ' . ($personaActual->apellidos ?? '')) ?: 'Usuario';
-    $cedulaSidebar = $personaActual->cedula ?? 'Sin cédula';
+    $nombres = explode(' ', trim($personaActual?->nombres ?? ''));
+    $nombre = $nombres[0] ?: 'Usuario';
+    $apellidos = explode(' ', trim($personaActual?->apellidos ?? ''));
+    $apellido = $apellidos[0] ?: '';
+    $nombreSidebar = trim($nombre . ' ' . $apellido);
+    $cedulaSidebar = $personaActual?->cedula ?? 'Sin cédula';
 @endphp
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">

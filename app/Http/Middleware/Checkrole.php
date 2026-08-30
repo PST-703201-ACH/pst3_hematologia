@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Checkrole
+class CheckRole
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class Checkrole
      */
     public function handle(Request $request, Closure $next, $role)
     {
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = \Illuminate\Support\Facades\Auth::User();
 
         // Verificamos si el id_rol coincide con el que exige la ruta
         if ($user->id_rol != $role) {

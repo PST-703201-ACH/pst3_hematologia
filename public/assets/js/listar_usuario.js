@@ -62,8 +62,7 @@ async function listarUsuarios(termino = '', status = '', rol = '') {
             if (rol !== '') {
                 parametros.push(`rol=${encodeURIComponent(rol)}`);
             }
-            
-            
+
             const url = parametros.length > 0 ? `/admin/obtener-usuarios?${parametros.join('&')}` : '/admin/obtener-usuarios';
 
 

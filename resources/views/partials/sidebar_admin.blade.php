@@ -1,8 +1,16 @@
 @php
     $usuarioActual = Auth::user();
     $personaActual = $usuarioActual?->persona;
-    $nombreSidebar = trim(($personaActual->nombres ?? '') . ' ' . ($personaActual->apellidos ?? '')) ?: 'Usuario';
-    $cedulaSidebar = $personaActual->cedula ?? 'Sin cédula';
+
+    $nombres = explode(' ', trim($personaActual?->nombres ?? ''));
+    $nombre = $nombres[0] ?: 'Usuario';
+
+    $apellidos = explode(' ', trim($personaActual?->apellidos ?? ''));
+    $apellido = $apellidos[0] ?: '';
+
+    $nombreSidebar = trim($nombre . ' ' . $apellido);
+
+    $cedulaSidebar = $personaActual?->cedula ?? 'Sin cédula';
 @endphp
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -49,6 +57,15 @@
                        id="btnUsuarios">
                         <i class="nav-icon fas fa-users"></i>
                         <p>Usuarios</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#"
+                       class="nav-link" 
+                       onclick="event.preventDefault();" 
+                       id="btnCatalogo">
+                        <i class="nav-icon fas fa-book-open"></i>
+                        <p>Catalogo Medico</p>
                     </a>
                 </li>
                 <li class="nav-item">

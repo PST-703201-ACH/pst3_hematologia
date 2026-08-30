@@ -1,5 +1,5 @@
 async function cargarEstadisticas() {
-    const respuesta = await fetch('/dashboard-admin');
+    const respuesta = await fetch('/admin/dashboard-admin');
     const datos = await respuesta.json();
 
     document.getElementById('total-usuarios').innerText = datos.usuarios;
