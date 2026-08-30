@@ -63,6 +63,14 @@
                     @include('administrador.actualizar_enf')
                 </div>
 
+                <div id="registrar-medicina" class="vista_admin d-none">
+                    @include('administrador.registrar_med')
+                </div>
+
+                <div id="actualizar-medicina" class="vista_admin d-none">
+                    @include('administrador.actualizar_med')
+                </div>
+
                 <div id="seccion-auditoria" class="vista_admin d-none">
                     @include('administrador.auditoria')
                 </div>

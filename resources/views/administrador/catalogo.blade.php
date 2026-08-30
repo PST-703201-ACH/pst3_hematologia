@@ -130,6 +130,7 @@
                         </div>
 
                         <form onsubmit="event.preventDefault();" class="d-flex align-items-center m-0" id="formBusquedaMed">
+
                             <input
                                 type="text" 
                                 name="busqueda_med" 
@@ -149,8 +150,6 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Nombre</th>
-                                <th scope="col">Forma farmaceutica</th>
-                                <th scope="col">Status</th>
                                 <th style="text-align: center;">Acciones</th>
                             </tr>
                         </thead>
