@@ -20,9 +20,21 @@ class PersonaController extends Controller
         return trim($firstPart . ($secondPart ? " {$secondPart}" : ''));
     }
 
+    private function normalizeTelefono(?string $telefono): string
+    {
+        return '0' . preg_replace('/^0+/', '', (string) $telefono);
+    }
+
     public function registrar(PersonaRequest $request)
     {
         try {
+            if ($request->tipo_reg !== 'usuario') {
+                return response()->json([
+                    'status' => 'error',
+                    'mensaje' => 'Tipo de registro no soportado',
+                ], 422);
+            }
+
             return DB::transaction(function () use ($request) {
                 $persona = Persona::create([
                     'nombres' => $this->formatName($request->nombre1, $request->nombre2),
@@ -30,7 +42,7 @@ class PersonaController extends Controller
                     'fecha_nacimiento' => $request->fecha_nac,
                     'sexo' => $request->sexo,
                     'cedula' => "{$request->nacionalidad}-{$request->cedula}",
-                    'telefono' => "0{$request->telefono}",
+                    'telefono' => $this->normalizeTelefono($request->telefono),
                     'email' => $request->correo,
                     'estado_id' => $request->estado,
                     'municipio_id' => $request->municipio,
@@ -38,16 +50,11 @@ class PersonaController extends Controller
                     'direccion_exacta' => $request->direccion,
                 ]);
 
-                if ($request->tipo_reg !== 'usuario') {
-                    return response()->json([
-                        'status' => 'error',
-                        'mensaje' => 'Tipo de registro no soportado',
-                    ]);
-                }
-
                 $clave = Str::random(12);
+                $cedulaUsuario = preg_replace('/\D+/', '', (string) $request->cedula);
+
                 $usuario = User::create([
-                    'username' => $request->cedula,
+                    'username' => $cedulaUsuario,
                     'password_hash' => Hash::make($clave),
                     'persona_id' => $persona->persona_id,
                     'id_rol' => $request->rol,
@@ -78,6 +85,13 @@ class PersonaController extends Controller
     public function actualizar(PersonaRequest $request)
     {
         try {
+            if ($request->tipo_up !== 'usuario') {
+                return response()->json([
+                    'status' => 'error',
+                    'mensaje' => 'Tipo de actualizacion no soportado',
+                ], 422);
+            }
+
             return DB::transaction(function () use ($request) {
                 $persona = Persona::findOrFail($request->persona);
 
@@ -86,20 +100,13 @@ class PersonaController extends Controller
                     'apellidos' => $this->formatName($request->apellido1, $request->apellido2),
                     'fecha_nacimiento' => $request->fecha_nac,
                     'sexo' => $request->sexo,
-                    'telefono' => "0{$request->telefono}",
+                    'telefono' => $this->normalizeTelefono($request->telefono),
                     'email' => $request->correo,
                     'estado_id' => $request->estado,
                     'municipio_id' => $request->municipio,
                     'parroquia_id' => $request->parroquia,
                     'direccion_exacta' => $request->direccion,
                 ]);
-
-                if ($request->tipo_up !== 'usuario') {
-                    return response()->json([
-                        'status' => 'error',
-                        'mensaje' => 'Tipo de actualizacion no soportado',
-                    ]);
-                }
 
                 $usuario = User::where('persona_id', $persona->persona_id)->firstOrFail();
                 $usuario->update(['id_rol' => $request->rol]);
