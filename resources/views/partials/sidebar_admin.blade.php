@@ -1,3 +1,10 @@
+@php
+    $usuarioActual = Auth::user();
+    $personaActual = $usuarioActual?->persona;
+    $nombreSidebar = trim(($personaActual->nombres ?? '') . ' ' . ($personaActual->apellidos ?? '')) ?: 'Usuario';
+    $cedulaSidebar = $personaActual->cedula ?? 'Sin cédula';
+@endphp
+
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a class="brand-link">
@@ -18,10 +25,10 @@
 
             <div class="d-flex flex-column">
                 <h5 class="d-block text-success mb-0">
-                    Nombre Apellido
+                    {{ $nombreSidebar }}
                 </h5>
                 <h5 class="d-block text-primary mb-0">
-                    C.I
+                    {{ $cedulaSidebar }}
                 </h5>
             </div>
         </div>

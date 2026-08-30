@@ -7,7 +7,6 @@ use App\Http\Requests\PacienteRequest;
 use App\Models\Estado;
 use App\Models\Paciente;
 use App\Models\Persona;
-use App\Models\Representante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -40,8 +39,10 @@ class PacienteController extends Controller
     public function create()
     {
         $estados = Estado::all();
-        // Cargamos los representantes iniciales para el selector
-        $representantes = Representante::with('persona')->take(50)->get();
+
+        $representantes = class_exists('\\App\\Models\\Representante')
+            ? \App\Models\Representante::with('persona')->take(50)->get()
+            : collect();
 
         return view('medico.pacientes.create', compact('estados', 'representantes'));
     }
@@ -95,8 +96,8 @@ class PacienteController extends Controller
                 throw new \Exception('No se pudo crear el registro de Paciente.');
             }
 
-            // 4. Si se envió representante_id, asociar al paciente en la tabla pivot
-            if ($request->filled('representante_id')) {
+            // 4. Si se envió representante_id y el modelo existe, asociar al paciente en la tabla pivot
+            if ($request->filled('representante_id') && method_exists($paciente, 'representantes')) {
                 $paciente->representantes()->attach($request->representante_id, [
                     'parentesco' => $request->parentesco,
                     'es_principal' => true,
@@ -125,12 +126,13 @@ class PacienteController extends Controller
      */
     public function show($id)
     {
-        $paciente = Paciente::with([
+        $with = [
             'persona.estado',
             'persona.municipio',
             'persona.parroquia',
-            'representantes.persona'
-        ])->findOrFail($id);
+        ];
+
+        $paciente = Paciente::with($with)->findOrFail($id);
 
         return view('medico.pacientes.show', compact('paciente'));
     }
@@ -140,9 +142,13 @@ class PacienteController extends Controller
      */
     public function getRepresentantes(Request $request)
     {
+        if (! class_exists('\\App\\Models\\Representante')) {
+            return response()->json([]);
+        }
+
         $search = $request->get('q');
 
-        $query = Representante::with('persona');
+        $query = \App\Models\Representante::with('persona');
 
         if ($search) {
             $query->whereHas('persona', function ($q) use ($search) {
@@ -175,8 +181,9 @@ class PacienteController extends Controller
             $paciente = Paciente::findOrFail($id);
             $personaId = $paciente->persona_id;
 
-            // Desasociar representantes
-            $paciente->representantes()->detach();
+            if (method_exists($paciente, 'representantes')) {
+                $paciente->representantes()->detach();
+            }
 
             // Eliminamos primero al paciente por la FK
             $paciente->delete();
