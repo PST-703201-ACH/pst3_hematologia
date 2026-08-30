@@ -31,6 +31,27 @@ document.getElementById('btnCancelarReg').addEventListener('click', function(can
     intercambiarVista('seccion-usuarios');
 });
 
+document.getElementById('btnCatalogo').addEventListener('click', function(catalogo) { 
+    catalogo.preventDefault();
+    listarEnfermedad();
+    intercambiarVista('seccion-catalogo');
+});
+
+document.getElementById('btnRegEnf').addEventListener('click', function(registrarEnf) {
+    registrarEnf.preventDefault();
+    intercambiarVista('registrar-enfermedad');
+});
+
+document.getElementById('btnCancelarReg').addEventListener('click', function(cancelarReg) {
+    cancelarReg.preventDefault();
+    intercambiarVista('seccion-usuarios');
+});
+
+document.getElementById('btnSalirUpEnf').addEventListener('click', function(cancelarUpEnf) {
+    cancelarUpEnf.preventDefault();
+    intercambiarVista('seccion-catalogo');
+});
+
 document.getElementById('btnAuditoria').addEventListener('click', function(auditoria0) {
     listarAuditoria()
     auditoria0.preventDefault();

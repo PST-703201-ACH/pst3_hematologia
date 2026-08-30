@@ -2,15 +2,12 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\EstadoController;
-use App\Http\Controllers\ExamenController;
 use App\Http\Controllers\GerenteController;
-use App\Http\Controllers\Medico\PacienteController as MedicoPacienteController;
+use App\Http\Controllers\MedicoController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ParroquiaController;
 use App\Http\Controllers\PersonaController;
-use App\Http\Controllers\PrimerIngresoController;
 use App\Http\Controllers\RolController;
-use App\Http\Controllers\TipoConsultaController;
 use App\Http\Controllers\UsuarioController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -53,22 +50,6 @@ Route::get('/dashboard', function () {
     return redirect($user->getDashboardUrl());
 })->name('dashboard');
 
-// Módulos Compartidos (Primer ingreso, Enfermedades, Exámenes, Consultas)
-Route::controller(PrimerIngresoController::class)->group(function () {
-    Route::get('/primer-ingreso/completar-datos', 'show')->name('primer.ingreso.datos');
-    Route::post('/primer-ingreso/completar-datos', 'guardarDatos')->name('primer.ingreso.guardar');
-});
-
-Route::post('/enfermedades', [EnfermedadController::class, 'store'])->name('enfermedad.store');
-Route::get('/enfermedades', [EnfermedadController::class, 'index'])->name('enfermedad.index');
-
-Route::post('/examenes', [ExamenController::class, 'store'])->name('examen.store');
-Route::get('/examenes', [ExamenController::class, 'index'])->name('examen.index');
-
-Route::post('/tipos-consulta', [TipoConsultaController::class, 'store'])->name('tipo_consulta.store');
-Route::get('/tipos-consulta', [TipoConsultaController::class, 'index'])->name('tipo_consulta.index');
-
-// ✨ CORRECCIÓN CRÍTICA: Rutas de carga de datos comunes (Disponibles para Admin y Médicos)
 Route::get('/obtener-estados', [EstadoController::class, 'getEstados'])->name('estados.json');
 Route::get('/obtener-municipios', [MunicipioController::class, 'getMunicipios'])->name('municipios.json');
 Route::get('/obtener-parroquias', [ParroquiaController::class, 'getParroquias'])->name('parroquias.json');
@@ -96,11 +77,19 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             Route::get('/obtener-detalles/{id}', 'ver');
             Route::get('/precargar-usu/{id}', 'precargar');
             Route::get('/cambiar-status/{id}', 'nuevo_status');
+            Route::get('/obtener-enfermedades', 'listarEnf');
             Route::get('/obtener-auditoria', 'auditar');
         });
 
-        Route::get('/dashboard-admin', [GerenteController::class, 'dashboards']);
+        Route::controller(GerenteController::class)->group(function () {
+            Route::get('/dashboard-admin', 'dashboards');
+            Route::get('/obtener-enfermedades', 'listarEnf');
+            Route::get('/precargar-enf/{id}', 'precargarEnf');
+            Route::post('/enfermedad-guardar', 'registrarEnf')->name('enfermedad.registrar');
+            Route::post('/enfermedad-actualizar', 'actualizarEnf')->name('enfermedad.actualizar');
+        });
     });
+
 // ---------------------------------------------------------------------
     // MÉDICO
 // ---------------------------------------------------------------------
@@ -111,7 +100,7 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
         })->name('medico.index');
 
         // Gestión de Pacientes por el Médico
-        Route::controller(MedicoPacienteController::class)->group(function () {
+        Route::controller(MedicoController::class)->group(function () {
             Route::get('/pacientes', 'index')->name('medico.pacientes.index');
             Route::get('/pacientes/crear', 'create')->name('medico.pacientes.create');
             Route::post('/pacientes/crear', 'store')->name('medico.pacientes.store');
@@ -119,7 +108,7 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             Route::delete('/pacientes/{id}', 'destroy')->name('medico.pacientes.destroy');
 
             Route::get('/obtener-pacientes', 'listar')->name('medico.pacientes.listar');
-            Route::get('/obtener-pacientes', 'listarCon')->name('medico.pacientes.consultas');
+            Route::get('/obtener-consultas', 'listarCon')->name('medico.pacientes.consultas');
             Route::get('/representantes/buscar', 'getRepresentantes')->name('medico.representantes.buscar');
         });
     });

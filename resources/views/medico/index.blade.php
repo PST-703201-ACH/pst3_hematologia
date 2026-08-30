@@ -49,7 +49,7 @@
                     @include('medico.pacientes.crear')
                 </div>
 
-                <div id="seccion-listar_consulta" class="vista_med d-none">
+                <div id="seccion-consultas_listadas" class="vista_med d-none">
                     @include('medico.consultas.listado')
                 </div>
             </div>
@@ -71,6 +71,7 @@
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/botones_med.js') }}"></script>
 <script src="{{ asset('assets/js/listar_paciente.js') }}"></script>
+<script src="{{ asset('assets/js/listar_consulta.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_paciente.js') }}"></script>
 
 @stack('scripts')

@@ -47,10 +47,30 @@
                         <li class="nav-item">
                             <a href="medico/"
                                class="nav-link"
-                               id="btnListar" 
+                               id="btnListarPa" 
                                onclick="event.preventDefault();">
                                 <i class="nav-icon fas fa-list"></i>
                                 <p>Listado de Pacientes</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="medico/"
+                       class="nav-link"
+                       onclick="event.preventDefault();">
+                        <i class="nav-icon fas fa-stethoscope"></i>
+                        <p>Consultas</p>
+                        <i class="right fas fa-angle-left"></i>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="medico/"
+                               class="nav-link"
+                               id="btnListarCon" 
+                               onclick="event.preventDefault();">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>Listado de Consultas</p>
                             </a>
                         </li>
                     </ul>

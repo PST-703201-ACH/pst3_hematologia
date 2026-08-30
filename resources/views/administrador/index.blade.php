@@ -51,6 +51,18 @@
                     @include('administrador.actualizar')
                 </div>
 
+                <div id="seccion-catalogo" class="vista_admin d-none">
+                    @include('administrador.catalogo')
+                </div>
+
+                <div id="registrar-enfermedad" class="vista_admin d-none">
+                    @include('administrador.registrar_enf')
+                </div>
+
+                <div id="actualizar-enfermedad" class="vista_admin d-none">
+                    @include('administrador.actualizar_enf')
+                </div>
+
                 <div id="seccion-auditoria" class="vista_admin d-none">
                     @include('administrador.auditoria')
                 </div>
@@ -82,6 +94,9 @@
 <script src="{{ asset('assets/js/ver_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/actualizar_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/status_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/catalogo_med.js') }}"></script>
+<script src="{{ asset('assets/js/registrar_enf.js') }}"></script>
+<script src="{{ asset('assets/js/actualizar_enf.js') }}"></script>
 <script src="{{ asset('assets/js/listar_auditoria.js') }}"></script>
 
 @stack('scripts')

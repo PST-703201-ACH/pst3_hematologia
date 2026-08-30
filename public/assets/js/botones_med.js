@@ -9,8 +9,8 @@ function intercambiarVista(mostrar) {
 }
 
 
-document.getElementById('btnListar').addEventListener('click', function(listado) {
-    listado.preventDefault();
+document.getElementById('btnListarPa').addEventListener('click', function(listadoPa) {
+    listadoPa.preventDefault();
     intercambiarVista('seccion-pacientes_listados');
     listarPacientes();
 });
@@ -23,4 +23,10 @@ document.getElementById('btnRegistrar').addEventListener('click', function(regis
 document.getElementById('btnCancelarReg').addEventListener('click', function(cancelar) {
     cancelar.preventDefault();
     intercambiarVista('seccion-pacientes_listados');
+});
+
+document.getElementById('btnListarCon').addEventListener('click', function(listadoCon) {
+    listadoCon.preventDefault();
+    intercambiarVista('seccion-consultas_listadas');
+    //listarConsultas();
 });

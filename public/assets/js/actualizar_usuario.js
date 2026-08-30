@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		const id = boton.getAttribute('data-id');
 
 		try {
-			const respuesta = await fetch(`/precargar-usu/${id}`);
+			const respuesta = await fetch(`/admin/precargar-usu/${id}`);
 			const datos = await respuesta.json();
 
 			const [nombre1, nombre2] = datos.persona.nombres.split(" ");
