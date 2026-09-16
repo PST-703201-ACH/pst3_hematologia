@@ -13,7 +13,7 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="nombreMedReg">Nombre</label>
-                                <input type="text" name="nombreMedReg" id="nombreMedReg" class="form-control" autocomplete="off" placeholder="Ingrese el nombre de la enfermedad">
+                                <input type="text" name="nombreMedReg" id="nombreMedReg" class="form-control" autocomplete="off" placeholder="Ingrese el nombre de la medicina">
                             </div>
                         </div>
                     </div>

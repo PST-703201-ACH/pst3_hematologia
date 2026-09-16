@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const registroModal = new bootstrap.Modal(document.getElementById('registrandoModalMed'));
 
     if (formularioMed) {
-        formularioMed.addEventListener('submit', async function(enf) {
-            const confirmacion = confirm("¿Enfstá seguro de registrar esta nueva enfermedad?");
-            enf.preventDefault();
+        formularioMed.addEventListener('submit', async function(med) {
+            const confirmacion = confirm("¿Está seguro de registrar esta nueva medicina?");
+            med.preventDefault();
             if (confirmacion) {
 
                 const datos = new FormData(formularioMed);
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const resultado = await respuesta.json();
 
                     if(resultado.status === "exito") {
-                        let alertaEnf = `
+                        let alertaMed = `
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <i class="icon fas fa-check"></i> 
                                 ${resultado.mensaje}
@@ -32,15 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </button>
                             </div>
                         `;
-                        document.getElementById('alertCreateEnf').innerHTML = alertaEnf;
-                        listarEnfermedad();
+                        document.getElementById('alertCreateMed').innerHTML = alertaMed;
+                        listarMedicina();
                         setTimeout(function (){
-                            document.getElementById('alertCreateEnf').innerHTML = "";
+                            document.getElementById('alertCreateMed').innerHTML = "";
                         }, 3000);
 
                         formularioMed.reset();
                     }else if(resultado.status === "error") {
-                        let alertaEnf = `
+                        let alertaMed = `
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <i class="icon fas fa-xmark"></i> 
                                 ${resultado.mensaje}
@@ -49,9 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </button>
                             </div>
                         `;
-                        document.getElementById('alertCreateEnf').innerHTML = alertaEnf;
+                        document.getElementById('alertCreateMed').innerHTML = alertaMed;
                         setTimeout(function (){
-                            document.getElementById('alertCreateEnf').innerHTML = "";
+                            document.getElementById('alertCreateMed').innerHTML = "";
                         }, 3000);
 
                     }else if (resultado.status === "errores") {

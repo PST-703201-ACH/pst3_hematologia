@@ -7,6 +7,7 @@ use App\Models\Persona;
 use App\Models\User;
 use App\Models\Rol;
 use App\Models\Enfermedad;
+use App\Models\Medicina;
 
 class GerenteController extends Controller
 {
@@ -145,4 +146,97 @@ class GerenteController extends Controller
             }
         }
     }
+
+    public function listarMed(Request $request)
+    {
+        $query = Medicina::query();
+
+        if ($request->filled('busqueda')) {
+            $termino = $request->input('busqueda');
+            
+            $query->where(function($q) use ($termino) {
+                $q->where('descripcion', 'ILIKE', "%{$termino}%");
+            });     
+        }
+
+        return response()->json($query->get());
+    }
+
+    public function registrarMed(Request $request)
+    {
+
+        $errores = [];
+
+        if (empty($request->nombreMedReg)) {
+            $errores['nombreMedReg'] = "Ingrese el nombre de la medicina";
+        }
+        
+
+        if (!empty($errores)) {
+            return response()->json([
+                "status" => "errores",
+                "errores" => $errores
+            ]);
+            exit;
+        } else {
+
+            try {
+
+                $medicina = new Medicina;
+
+                $medicina->descripcion = $request->nombreMedReg;
+
+
+                if ($medicina->save()) {
+                    return response()->json(['status' => 'exito', 'mensaje' => 'Se ha registrado la medicina exitosamente']);    
+                }               
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'error',
+                    'mensaje' => 'Error de servidor o base de datos: '. $e->getMessage()
+                ]);
+            }
+        }
+    }
+
+    public function precargarMed($id){
+        $medicina = Medicina::query()->where('medicina_id', $id)->first();
+        return response()->json($medicina);
+    }
+
+    public function actualizarMed(Request $request)
+    {
+        $errores = [];
+
+        if (empty($request->nombreMedUp)) {
+            $errores['nombreMedUp'] = "Ingrese el nombre de la medicina";
+        }
+
+        if (!empty($errores)) {
+            return response()->json([
+                "status" => "errores",
+                "errores" => $errores
+            ]);
+            exit;
+        } else {
+
+            try {
+
+                $medicina = Medicina::findOrFail($request->medicinaUp);
+
+                $medicina->update([
+                    'descripcion' => $request->nombreMedUp
+                ]);
+
+                return response()->json(['status' => 'exito', 'mensaje' => 'Se ha actualizado la medicina exitosamente']);                   
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'error',
+                    'mensaje' => 'Error de servidor o base de datos: '. $e->getMessage()
+                ]);
+            }
+        }
+    }
+
+
 }

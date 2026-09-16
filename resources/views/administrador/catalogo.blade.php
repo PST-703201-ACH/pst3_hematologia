@@ -122,6 +122,7 @@
 
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <div class="d-flex gap-2">
+                                <button class="btn btn-success" id="btnRegMed">Nueva</button>
                                 <button class="btn btn-primary"><i class="fas fa-undo" aria-hidden="true"></i>
                                 </button>
                             </div>
@@ -153,7 +154,7 @@
                                 <th style="text-align: center;">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="cuerpoTablaMedicamentos">
+                        <tbody id="cuerpoTablaMedicinas">
 
                         </tbody>
                     </table>

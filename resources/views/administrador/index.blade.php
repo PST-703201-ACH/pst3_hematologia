@@ -105,6 +105,7 @@
 <script src="{{ asset('assets/js/catalogo_med.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_enf.js') }}"></script>
 <script src="{{ asset('assets/js/actualizar_enf.js') }}"></script>
+<script src="{{ asset('assets/js/registrar_med.js') }}"></script>
 <script src="{{ asset('assets/js/listar_auditoria.js') }}"></script>
 
 @stack('scripts')

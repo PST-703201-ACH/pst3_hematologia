@@ -87,6 +87,12 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             Route::get('/precargar-enf/{id}', 'precargarEnf');
             Route::post('/enfermedad-guardar', 'registrarEnf')->name('enfermedad.registrar');
             Route::post('/enfermedad-actualizar', 'actualizarEnf')->name('enfermedad.actualizar');
+            Route::get('/obtener-medicinas', 'listarMed');
+            Route::get('/precargar-med/{id}', 'precargarMed');
+            Route::post('/medicina-guardar', 'registrarMed')->name('medicina.registrar');
+            Route::post('/medicina-actualizar', 'actualizarMed')->name('medicina.actualizar');
+        });
+
         });
     });
 
@@ -164,4 +170,3 @@ Route::post('/cita-rep', [CitaController::class, 'reprogramar'])->name('cita.rep
 */
 
 
-});

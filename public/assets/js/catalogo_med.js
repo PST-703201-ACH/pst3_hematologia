@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Enfermedad
     const tipoEnf = document.querySelector('select[name="filtroTip_enf"]');
     const btnLimpiarEnf = document.getElementById('btnLimpiar_enf');
     const busquedaEnf = document.querySelector('input[name="busqueda_enf"]');
@@ -34,10 +35,147 @@ document.addEventListener('DOMContentLoaded', () => {
             listarEnfermedad('', '');
         });
     }
+
+    // Medicina
+    const btnLimpiarMed = document.getElementById('btnLimpiar_med');
+    const busquedaMed = document.querySelector('input[name="busqueda_med"]');
+
+    function buscarCombinadoMed() {
+        const texto = busquedaMed ? busquedaMed.value.trim() : '';
+        
+        if (btnLimpiarMed) {
+            if (texto.length > 0) {
+                btnLimpiarMed.classList.remove('d-none');
+            } else {
+                btnLimpiarMed.classList.add('d-none');
+            }
+        }
+
+        listarMedicina(texto); 
+    }
+
+    if (busquedaMed) {
+        busquedaMed.addEventListener('input', buscarCombinadoMed);
+    }
+
+    if (btnLimpiarMed) {
+        btnLimpiarMed.addEventListener('click', function() {
+            if (busquedaMed) busquedaMed.value = '';
+            this.classList.add('d-none');
+            listarMedicina('');
+        });
+    }
 });
 
+let paginaActualMed = 1;
+const elementosPorPaginaMed = 5; 
+
+async function listarMedicina(termino = '') {
+    try {
+        paginaActualMed = 1; 
+
+        let parametros = [];
+            
+        if (termino) {
+            parametros.push(`busqueda=${encodeURIComponent(termino)}`);
+        }
+
+        const url = parametros.length > 0 ? `/admin/obtener-medicinas?${parametros.join('&')}` : '/admin/obtener-medicinas';
+
+        const respuesta = await fetch(url);
+
+        const datosServidor = await respuesta.json();
+        const medicinas = JSON.parse(JSON.stringify(datosServidor));
+
+        function renderizarPaginador() {
+            const inicio = (paginaActualMed - 1) * elementosPorPaginaMed;
+            const fin = inicio + elementosPorPaginaMed;
+            const itemsVisibles = medicinas.slice(inicio, fin);
+
+            let filas = '';
+            let id = (paginaActualMed - 1) * elementosPorPaginaMed + 1;
+            let nombre = '';
+            let tipo = '';
+            let status = '';
+
+            itemsVisibles.forEach(med => {
+                nombre = med.descripcion;
+                
+                if (med.tipo == 1) {
+                    tipo = `<h6 class="text-warning">Benigna</h6>`;
+                }
+                else if (med.tipo == 2) {
+                    tipo = `<h6 class="text-danger">Maligna</h6>`;
+                }
+                
+                filas += `
+                    <tr>
+                        <td>${id++}</td>
+                        <td>${nombre}</td>
+                        <td class="text-center">
+                            <button class="btn btn-primary" onclick="intercambiarVista('actualizar-medicina'); precargarDatosMed(this);" data-id="${med.medicina_id}">Editar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('cuerpoTablaMedicinas').innerHTML = filas;
+
+            const contenedorBotones = document.getElementById('btnPagMed'); 
+            contenedorBotones.innerHTML = '';
+
+            const totalPaginas = Math.ceil(medicinas.length / elementosPorPaginaMed);
+
+            const maximoBotonesVisibles = 5;
+            let paginaInicio = Math.max(1, paginaActualMed - Math.floor(maximoBotonesVisibles / 2));
+            let paginaFin = paginaInicio + maximoBotonesVisibles - 1;
+
+            if (paginaFin > totalPaginas) {
+                paginaFin = totalPaginas;
+                paginaInicio = Math.max(1, paginaFin - maximoBotonesVisibles + 1);
+            }
+
+            if (paginaInicio > 1) {
+                const btnPrimero = document.createElement('button');
+                btnPrimero.textContent = '«';
+                btnPrimero.className = 'btn btn-outline-primary m-1';
+                btnPrimero.addEventListener('click', () => { paginaActualMed = 1; renderizarPaginador(); });
+                contenedorBotones.appendChild(btnPrimero);
+            }
+
+            for (let i = paginaInicio; i <= paginaFin; i++) {
+                const boton = document.createElement('button');
+                boton.textContent = i;
+                boton.className = 'btn btn-outline-primary m-1';
+
+                if (i === paginaActualMed) {
+                    boton.classList.replace('btn-outline-primary', 'btn-primary');
+                }
+
+                boton.addEventListener('click', () => {
+                    paginaActualMed = i;
+                    renderizarPaginador();
+                });
+
+                contenedorBotones.appendChild(boton);
+            }
+
+            if (paginaFin < totalPaginas) {
+                const btnUltimo = document.createElement('button');
+                btnUltimo.textContent = '»';
+                btnUltimo.className = 'btn btn-outline-primary m-1';
+                btnUltimo.addEventListener('click', () => { paginaActualMed = totalPaginas; renderizarPaginador(); });
+                contenedorBotones.appendChild(btnUltimo);
+            }
+        }
+        renderizarPaginador();
+    } catch (error) {
+        console.error("Error al listar:", error);
+    }
+}
+
 let paginaActualEnf = 1;
-const elementosPorPaginaEnf = 5; 
+const elementosPorPaginaEnf = 5;
 
 async function listarEnfermedad(termino = '', tip = '') {
     try {
