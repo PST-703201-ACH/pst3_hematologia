@@ -36,68 +36,7 @@
                     </div>
                 </div>
 
-                <div id="seccion-pacientes_listados" class="vista_med d-none">
-                    @include('medico.pacientes.listado')
 
-        <section class="content">
-            <div class="container-fluid">
-                @php
-                    $pacientes = $pacientes ?? collect();
-                    $estados = $estados ?? \App\Models\Estado::all();
-                    $representantes = $representantes ?? collect();
-                @endphp
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Bienvenido, Dr. {{ Auth::user()->persona->nombres ?? '' }} {{ Auth::user()->persona->apellidos ?? '' }}</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Desde aquí podrá gestionar historias clínicas, interconsultas y protocolos de tratamiento.</p>
-
-                        <div class="row">
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-info">
-                                    <div class="inner">
-                                        <h3>0</h3>
-                                        <p>Historias Clínicas</p>
-                                    </div>
-                                    <div class="icon"><i class="fas fa-notes-medical"></i></div>
-                                    <a href="#" class="small-box-footer">Ver más <i class="fas fa-arrow-circle-right"></i></a>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-success">
-                                    <div class="inner">
-                                        <h3>0</h3>
-                                        <p>Protocolos Activos</p>
-                                    </div>
-                                    <div class="icon"><i class="fas fa-prescription-bottle-alt"></i></div>
-                                    <a href="#" class="small-box-footer">Ver más <i class="fas fa-arrow-circle-right"></i></a>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box bg-warning">
-                                    <div class="inner">
-                                        <h3>0</h3>
-                                        <p>Interconsultas</p>
-                                    </div>
-                                    <div class="icon"><i class="fas fa-user-md"></i></div>
-                                    <a href="#" class="small-box-footer">Ver más <i class="fas fa-arrow-circle-right"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="seccion-pacientes_listados" class="vista_med">
-                    @include('medico.pacientes.index')
-                </div>
-
-                <div id="seccion-registrar_paciente" class="vista_med d-none">
-                    @include('medico.pacientes.create')
-                </div>
 
                 <div id="seccion-consultas_listadas" class="vista_med d-none">
                     @include('medico.consultas.listado')
@@ -115,9 +54,7 @@
 <script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/botones_med.js') }}"></script>
-<script src="{{ asset('assets/js/listar_paciente.js') }}"></script>
 <script src="{{ asset('assets/js/listar_consulta.js') }}"></script>
-<script src="{{ asset('assets/js/registrar_paciente.js') }}"></script>
 
 @stack('scripts')
 </body>

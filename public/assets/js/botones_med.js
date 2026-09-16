@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnRegistrar = document.getElementById('btnRegistrar');
     const btnCancelarReg = document.getElementById('btnCancelarReg');
 
-document.getElementById('btnListarPaPa').addEventListener('click', function(listadoPa) {
+document.getElementById('btnListarPa').addEventListener('click', function(listadoPa) {
     listadoPa.preventDefault();
     intercambiarVista('seccion-pacientes_listados');
     listarPacientes();
@@ -36,10 +36,6 @@ document.getElementById('btnListarPaPa').addEventListener('click', function(list
         });
     }
 
-document.getElementById('btnCancelarReg').addEventListener('click', function(cancelar) {
-    cancelar.preventDefault();
-    intercambiarVista('seccion-pacientes_listados');
-});
 
 document.getElementById('btnListarCon').addEventListener('click', function(listadoCon) {
     listadoCon.preventDefault();

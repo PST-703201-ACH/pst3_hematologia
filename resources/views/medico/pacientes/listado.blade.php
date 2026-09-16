@@ -33,43 +33,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($pacientes as $paciente)
-                        <tr>
-                            <td>{{ $paciente->hc }}</td>
-                            <td>{{ $paciente->persona->cedula }}</td>
-                            <td>{{ $paciente->persona->nombres }} {{ $paciente->persona->apellidos }}</td>
-                            <td>{{ $paciente->persona->sexo }}</td>
-                            <td>
-                                <span class="badge {{ $paciente->status == 'Activo' ? 'badge-success' : 'badge-danger' }}">
-                                    {{ $paciente->status }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('medico.pacientes.show', $paciente->paciente_id) }}" class="btn btn-primary btn-sm" title="Ver Información">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-success btn-sm" title="Historia Clínica">
-                                        <i class="fas fa-notes-medical"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-info btn-sm" title="Datos de Laboratorio">
-                                        <i class="fas fa-microscope"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-warning btn-sm" title="Actualizar Datos">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
 
-                                    <form action="{{ route('medico.pacientes.destroy', $paciente->paciente_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este registro? Esta acción es irreversible (Temporal)');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" title="Eliminar Registro">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
