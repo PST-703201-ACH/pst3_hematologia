@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const fecha = fechaConP ? fechaConP.value.trim() : '';
 
         if (limpiarConP) {
-            if (texto.length > 0 || mod !== '' || acc !== '' || fecha.length > 0) {
+            if (texto.length > 0 || fecha.length > 0) {
                 limpiarConP.classList.remove('d-none');
             } else {
                 limpiarConP.classList.add('d-none');
@@ -33,6 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
             this.classList.add('d-none');
             listarConsultaP('', '');
         });
+    }
+
+    const pestañaRealizadas = document.querySelector('[data-target="#tabConR"]');
+    if (pestañaRealizadas) {
+        pestañaRealizadas.addEventListener('click', listarConsultaR);
     }
 });
 
@@ -144,5 +149,42 @@ async function listarConsultaP(termino = '', fecha = '') {
         renderizarPaginador();
     } catch (error) {
         console.error("Error al listar:", error);
+    }
+}
+
+async function listarConsultaR() {
+    const cuerpoTabla = document.getElementById('cuerpoTablaConsultasR');
+
+    if (!cuerpoTabla) {
+        return;
+    }
+
+    try {
+        const respuesta = await fetch('/medico/obtener-consultas-realizadas');
+
+        if (!respuesta.ok) {
+            throw new Error(`HTTP ${respuesta.status}`);
+        }
+
+        const consultas = await respuesta.json();
+        cuerpoTabla.innerHTML = consultas.map((consulta, indice) => {
+            const paciente = consulta.paciente?.persona;
+            const nombre = paciente
+                ? `${paciente.nombres} ${paciente.apellidos}`
+                : 'Paciente no disponible';
+            const enfermedad = consulta.enfermedad?.tipo ?? 'No definida';
+
+            return `
+                <tr>
+                    <td>${indice + 1}</td>
+                    <td>${nombre}</td>
+                    <td>${consulta.fecha_hora ?? ''}</td>
+                    <td>${enfermedad}</td>
+                    <td></td>
+                </tr>
+            `;
+        }).join('');
+    } catch (error) {
+        console.error('Error al listar consultas realizadas:', error);
     }
 }

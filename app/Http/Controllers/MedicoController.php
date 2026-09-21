@@ -18,22 +18,49 @@ class MedicoController extends Controller
     {
         $pacientes = Paciente::with('persona')->get();
 
-        return view('medico.pacientes.index', compact('pacientes'));
+        return view('medico.pacientes.listado', compact('pacientes'));
     }
 
 
     public function listar()
     {
-        $consultas = Consulta::with('paciente')->get();
+        $pacientes = Paciente::with('persona')->get();
 
         return response()->json($pacientes);
     }
 
-    public function listarCon()
+    public function listarCon(Request $request)
     {
-        $pacientes = Consulta::with('paciente.persona', 'enfermedad')->where('status', 0)->get();
+        $query = Consulta::with('paciente.persona', 'enfermedad')->where('status', 0);
 
-        return response()->json($pacientes);
+        if ($request->filled('busqueda')) {
+            $busqueda = $request->string('busqueda')->trim();
+            $query->where(function ($consulta) use ($busqueda) {
+                $consulta->whereHas('paciente', function ($paciente) use ($busqueda) {
+                    $paciente->where('hc', 'like', "%{$busqueda}%")
+                        ->orWhereHas('persona', function ($persona) use ($busqueda) {
+                            $persona->where('nombres', 'like', "%{$busqueda}%")
+                                ->orWhere('apellidos', 'like', "%{$busqueda}%")
+                                ->orWhere('cedula', 'like', "%{$busqueda}%");
+                        });
+                });
+            });
+        }
+
+        if ($request->filled('fecha')) {
+            $query->whereDate('fecha_hora', $request->input('fecha'));
+        }
+
+        return response()->json($query->get());
+    }
+
+    public function listarConRealizadas()
+    {
+        $consultas = Consulta::with('paciente.persona', 'enfermedad')
+            ->where('status', '!=', 0)
+            ->get();
+
+        return response()->json($consultas);
     }
 
     /**

@@ -75,7 +75,7 @@
 
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <div class="d-flex gap-2">
-                                <button class="btn btn-primary" onclick="listarConsultaR()"><i class="fas fa-undo" aria-hidden="true"></i>
+                                <button class="btn btn-primary" type="button" onclick="listarConsultaR()"><i class="fas fa-undo" aria-hidden="true"></i>
                                 </button>
                             </div>
                             
@@ -100,8 +100,9 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Stock</th>
+                                <th scope="col">Paciente</th>
+                                <th scope="col">Fecha y hora</th>
+                                <th scope="col">Enfermedad</th>
                                 <th style="text-align: center;">Acciones</th>
                             </tr>
                         </thead>

@@ -19,6 +19,11 @@
     <div class="card card-primary card-outline">
         <div class="card-header">
             <h3 class="card-title">Pacientes en Sistema</h3>
+            <div class="card-tools">
+                <a href="{{ route('medico.pacientes.create') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Nuevo Paciente
+                </a>
+            </div>
         </div>
         <div class="card-body">
             <table id="tabla-pacientes" class="table table-bordered table-striped">
