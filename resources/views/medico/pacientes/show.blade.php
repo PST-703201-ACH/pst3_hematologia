@@ -1,17 +1,3 @@
-@extends('adminlte::page')
-
-@section('title', 'Detalle del Paciente')
-
-@section('content_header')
-    <div class="d-flex justify-content-between align-items-center">
-        <h1>Detalle del Paciente</h1>
-        <a href="{{ route('medico.pacientes.index') }}" class="btn btn-secondary btn-sm">
-            <i class="fas fa-arrow-left mr-1"></i> Volver al Listado
-        </a>
-    </div>
-@stop
-
-@section('content')
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="icon fas fa-check-circle"></i> {{ session('success') }}
@@ -27,6 +13,13 @@
             ? $paciente->representantes
             : collect();
     @endphp
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-0">Información del Paciente</h3>
+        <button type="button" class="btn btn-secondary btn-sm js-volver-pacientes">
+            <i class="fas fa-arrow-left mr-1"></i> Volver al Listado
+        </button>
+    </div>
 
     <div class="row">
         <div class="col-md-4">
@@ -44,7 +37,7 @@
                         <li class="list-group-item"><b>Cédula</b> <span class="float-right">{{ $persona->cedula }}</span></li>
                         <li class="list-group-item"><b>Sexo</b> <span class="float-right">{{ $persona->sexo }}</span></li>
                         <li class="list-group-item"><b>Edad</b> <span class="float-right">{{ \Carbon\Carbon::parse($persona->fecha_nacimiento)->age }} años</span></li>
-                        <li class="list-group-item"><b>Estatus</b> <span class="float-right badge {{ $paciente->status == 'Activo' ? 'badge-success' : 'badge-danger' }}">{{ $paciente->status }}</span></li>
+                        <li class="list-group-item"><b>Estatus</b> <span class="float-right badge {{ (int) $paciente->status === 1 ? 'badge-success' : 'badge-danger' }}">{{ (int) $paciente->status === 1 ? 'Activo' : 'Inactivo' }}</span></li>
                     </ul>
                 </div>
             </div>
@@ -90,4 +83,32 @@
             @endif
         </div>
     </div>
-@stop
+
+    <div class="card card-primary card-outline mt-4">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-history mr-2"></i> Evolución e Historial Médico</h3>
+        </div>
+        <div class="card-body">
+            @forelse($paciente->consultas as $consulta)
+                <div class="border rounded p-3 mb-3">
+                    <div class="d-flex justify-content-between flex-wrap mb-3">
+                        <strong>Consulta del {{ $consulta->fecha_hora ? \Carbon\Carbon::parse($consulta->fecha_hora)->format('d/m/Y H:i') : 'Sin fecha' }}</strong>
+                        <span class="badge badge-info">
+                            {{ $tiposConsulta[$consulta->tipo_id] ?? 'Consulta' }}
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4"><strong>Enfermedad:</strong> {{ $consulta->enfermedad->descripcion ?? 'No definida' }}</div>
+                        <div class="col-md-4"><strong>Peso:</strong> {{ $consulta->peso ?? 'No registrado' }}</div>
+                        <div class="col-md-4"><strong>Talla:</strong> {{ $consulta->talla ?? 'No registrada' }}</div>
+                    </div>
+                    <hr>
+                    <p><strong>Evolución:</strong><br>{{ $consulta->subjetivo ?? 'No registrada' }}</p>
+                    <p><strong>Plan de trabajo:</strong><br>{{ $consulta->plan_trabajo ?? 'No registrado' }}</p>
+                    <p class="mb-0"><strong>Próxima cita:</strong> {{ $consulta->proxima_cita ? \Carbon\Carbon::parse($consulta->proxima_cita)->format('d/m/Y') : 'No registrada' }}</p>
+                </div>
+            @empty
+                <p class="text-muted mb-0">Este paciente todavía no tiene consultas registradas.</p>
+            @endforelse
+        </div>
+    </div>

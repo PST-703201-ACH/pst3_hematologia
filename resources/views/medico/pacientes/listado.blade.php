@@ -45,13 +45,13 @@
                             <td>{{ $paciente->persona->nombres }} {{ $paciente->persona->apellidos }}</td>
                             <td>{{ $paciente->persona->sexo }}</td>
                             <td>
-                                <span class="badge {{ $paciente->status == 'Activo' ? 'badge-success' : 'badge-danger' }}">
-                                    {{ $paciente->status }}
+                                <span class="badge {{ (int) $paciente->status === 1 ? 'badge-success' : 'badge-danger' }}">
+                                    {{ (int) $paciente->status === 1 ? 'Activo' : 'Inactivo' }}
                                 </span>
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="{{ route('medico.pacientes.show', $paciente->paciente_id) }}" class="btn btn-primary btn-sm" title="Ver Información">
+                                    <a href="{{ route('medico.pacientes.show', $paciente->paciente_id) }}" class="btn btn-primary btn-sm js-ver-paciente" data-paciente-id="{{ $paciente->paciente_id }}" title="Ver Información">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <button type="button" class="btn btn-success btn-sm" title="Historia Clínica">

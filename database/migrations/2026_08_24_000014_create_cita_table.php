@@ -14,8 +14,9 @@ return new class extends Migration
             $table->string('apellidos_paciente', 40)->nullable();
             $table->string('nombres_representante', 40)->nullable();
             $table->string('apellidos_representante', 40)->nullable();
-            $table->integer('numero_hc')->nullable();
+            $table->string('numero_hc', 30)->nullable();
             $table->timestamp('fecha_hora')->nullable();
+            $table->string('estatus', 20)->nullable()->default('pendiente');
             $table->unsignedInteger('consulta_id')->nullable();
             $table->foreign('consulta_id')->references('consulta_id')->on('consulta');
         });

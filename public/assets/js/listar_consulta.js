@@ -77,13 +77,19 @@ async function listarConsultaP(termino = '', fecha = '') {
             let enfermedad = '';
 
             itemsVisibles.forEach(con => {
-                paciente = con.paciente.persona.nombres+' '+con.paciente.persona.apellidos;
-                hc = con.paciente.hc;
+                const persona = con.paciente?.persona;
+                const cita = con.cita;
+                paciente = persona
+                    ? `${persona.nombres} ${persona.apellidos}`
+                    : `${cita?.nombres_paciente ?? 'Paciente'} ${cita?.apellidos_paciente ?? 'no disponible'}`;
+                hc = con.paciente?.hc ?? cita?.numero_hc ?? 'Sin HC';
                 enfermedad = con.enfermedad?.tipo;
 
                 if (enfermedad === null || enfermedad === undefined) {
                     enfermedad = 'No definida';
                 }
+
+                const citaId = con.cita?.cita_id ?? con.consulta_id ?? '';
 
                 filas += `
                     <tr>
@@ -92,7 +98,11 @@ async function listarConsultaP(termino = '', fecha = '') {
                         <td>${hc}</td>
                         <td>${con.fecha_hora}</td>
                         <td>${enfermedad}</td>
-                        <td></td>
+                        <td class="text-center">
+                            <a href="/medico/consultas/atender/${citaId}" class="btn btn-sm btn-warning js-atender-consulta" data-cita-id="${citaId}">
+                                <i class="fas fa-notes-medical"></i> Atender
+                            </a>
+                        </td>
                     </tr>
                 `;
             });
@@ -188,3 +198,52 @@ async function listarConsultaR() {
         console.error('Error al listar consultas realizadas:', error);
     }
 }
+
+async function abrirFormularioConsulta(citaId) {
+    const contenedor = document.getElementById('contenedor-consulta-formulario');
+
+    if (!contenedor || !citaId) {
+        return;
+    }
+
+    try {
+        const respuesta = await fetch(`/medico/consultas/atender/${citaId}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+
+        if (!respuesta.ok) {
+            throw new Error(`HTTP ${respuesta.status}`);
+        }
+
+        contenedor.innerHTML = await respuesta.text();
+        intercambiarVista('seccion-consulta_formulario');
+    } catch (error) {
+        console.error('Error al cargar el formulario de consulta:', error);
+    }
+}
+
+function volverAlListadoConsultas() {
+    const formulario = document.getElementById('contenedor-consulta-formulario');
+
+    if (formulario) {
+        formulario.innerHTML = '';
+    }
+
+    intercambiarVista('seccion-consultas_listadas');
+    listarConsultaP();
+}
+
+document.addEventListener('click', function (evento) {
+    const atender = evento.target.closest('.js-atender-consulta');
+    const volver = evento.target.closest('.js-volver-consultas');
+
+    if (atender) {
+        evento.preventDefault();
+        abrirFormularioConsulta(atender.dataset.citaId);
+    }
+
+    if (volver) {
+        evento.preventDefault();
+        volverAlListadoConsultas();
+    }
+});

@@ -143,5 +143,6 @@ class DatabaseSeeder extends Seeder
             ['auditoria_id' => 2, 'descripcion' => 'Actualizacion de consulta', 'modulo' => 'Consultas', 'id_usuario' => 3, 'fecha_hora' => '2026-08-21 10:00:00', 'accion' => 'UPDATE'],
         ]);
 
+        $this->call(ConsultaPendienteSeeder::class);
     }
 }

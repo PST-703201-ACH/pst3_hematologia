@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ConsultaController;
 use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\GerenteController;
@@ -120,6 +121,11 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             Route::get('/obtener-consultas', 'listarCon')->name('medico.pacientes.consultas');
             Route::get('/obtener-consultas-realizadas', 'listarConRealizadas')->name('medico.pacientes.consultas.realizadas');
             Route::get('/representantes/buscar', 'getRepresentantes')->name('medico.representantes.buscar');
+        });
+
+        Route::controller(ConsultaController::class)->group(function () {
+            Route::get('/consultas/atender/{cita_id}', 'atenderCita')->name('medico.consultas.atender');
+            Route::post('/consultas/guardar', 'store')->name('medico.consultas.store');
         });
     });
 

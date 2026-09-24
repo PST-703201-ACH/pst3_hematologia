@@ -239,6 +239,7 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
     $(document).ready(function() {
         $('#representante_id').select2({
@@ -295,3 +296,4 @@
         });
     });
 </script>
+@endpush

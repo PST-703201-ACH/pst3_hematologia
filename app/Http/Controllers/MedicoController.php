@@ -31,7 +31,7 @@ class MedicoController extends Controller
 
     public function listarCon(Request $request)
     {
-        $query = Consulta::with('paciente.persona', 'enfermedad')->where('status', 0);
+        $query = Consulta::with(['paciente.persona', 'enfermedad', 'cita'])->where('status', 0);
 
         if ($request->filled('busqueda')) {
             $busqueda = $request->string('busqueda')->trim();
@@ -43,6 +43,10 @@ class MedicoController extends Controller
                                 ->orWhere('apellidos', 'like', "%{$busqueda}%")
                                 ->orWhere('cedula', 'like', "%{$busqueda}%");
                         });
+                })->orWhereHas('cita', function ($cita) use ($busqueda) {
+                    $cita->where('numero_hc', 'like', "%{$busqueda}%")
+                        ->orWhere('nombres_paciente', 'like', "%{$busqueda}%")
+                        ->orWhere('apellidos_paciente', 'like', "%{$busqueda}%");
                 });
             });
         }
@@ -160,11 +164,14 @@ class MedicoController extends Controller
             'persona.estado',
             'persona.municipio',
             'persona.parroquia',
+            'consultas.enfermedad',
+            'consultas.medico.persona',
         ];
 
         $paciente = Paciente::with($with)->findOrFail($id);
+        $tiposConsulta = DB::table('tipo_consulta')->pluck('nombre', 'tipo_id');
 
-        return view('medico.pacientes.show', compact('paciente'));
+        return view('medico.pacientes.show', compact('paciente', 'tiposConsulta'));
     }
 
     /**
