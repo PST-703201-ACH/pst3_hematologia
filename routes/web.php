@@ -94,7 +94,7 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
 // ---------------------------------------------------------------------
     // MÉDICO
 // ---------------------------------------------------------------------
-    Route::middleware('role:2')->prefix('medico')->group(function () {
+    Route::middleware('role:3')->prefix('medico')->group(function () {
 
         Route::get('/', function (\Illuminate\Http\Request $request) {
                     $pacientes = \App\Models\Paciente::with('persona')->get();

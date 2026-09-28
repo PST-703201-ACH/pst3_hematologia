@@ -6,6 +6,7 @@ use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
@@ -76,12 +77,108 @@ it('creates the person and user when the registration type is valid', function (
     expect($response->getData(true)['status'])->toBe('exito')
         ->and(Persona::count())->toBe(1)
         ->and(User::count())->toBe(1)
-        ->and($persona->cedula)->toBe('V-12345678')
+        ->and($persona->cedula)->toBe('12345678')
         ->and($persona->telefono)->toBe('04141234567')
         ->and($usuario->persona_id)->toBe($persona->persona_id)
         ->and($usuario->id_rol)->toBe(1);
 
     Mail::assertSent(\App\Mail\UsuarioNuevo::class);
+});
+
+it('rejects a registered identity even when no user row exists yet', function () {
+    $personaDuplicada = Persona::create([
+        'nombres' => 'Ana',
+        'apellidos' => 'Pérez',
+        'fecha_nacimiento' => '1995-01-20',
+        'sexo' => 'F',
+        'cedula' => '12345678',
+        'telefono' => '04141234567',
+        'email' => 'ana@example.com',
+        'estado_id' => 1,
+        'municipio_id' => 1,
+        'parroquia_id' => 1,
+        'direccion_exacta' => 'Calle 1',
+    ]);
+
+    $personaAdmin = Persona::create([
+        'nombres' => 'Admin',
+        'apellidos' => 'Prueba',
+        'fecha_nacimiento' => '1980-01-20',
+        'sexo' => 'F',
+        'cedula' => 'V-87654321',
+        'telefono' => '04141234568',
+        'email' => 'admin@example.com',
+        'estado_id' => 1,
+        'municipio_id' => 1,
+        'parroquia_id' => 1,
+        'direccion_exacta' => 'Calle Admin',
+    ]);
+
+    $admin = User::create([
+        'username' => '87654321',
+        'password_hash' => bcrypt('secret'),
+        'persona_id' => $personaAdmin->persona_id,
+        'id_rol' => 1,
+        'status' => 1,
+    ]);
+
+    Auth::login($admin);
+
+    /** @var \Tests\TestCase $this */
+    $this->postJson('/admin/usuario-guardar', [
+        'nombre1' => 'Ana',
+        'apellido1' => 'Pérez',
+        'tipo_reg' => 'usuario',
+        'fecha_nac' => '1995-01-20',
+        'sexo' => 'F',
+        'cedula' => '12345678',
+        'nacionalidad' => 'E',
+        'telefono' => '4141234567',
+        'correo' => 'otra@example.com',
+        'estado' => 1,
+        'municipio' => 1,
+        'parroquia' => 1,
+        'direccion' => 'Calle 2',
+        'rol' => 1,
+    ])
+        ->assertUnprocessable()
+        ->assertJsonPath('status', 'errores')
+        ->assertJsonPath('errores.cedula.0', 'Esta cédula ya está registrada.');
+
+    expect(Persona::count())->toBe(2)
+        ->and(User::where('persona_id', $personaDuplicada->persona_id)->exists())->toBeFalse();
+});
+
+it('rolls back registration and reports an SMTP failure clearly', function () {
+    Mail::shouldReceive('to')
+        ->once()
+        ->with('ana@example.com')
+        ->andThrow(new RuntimeException('SMTP connection failed'));
+
+    $request = new PersonaRequest();
+    $request->merge([
+        'nombre1' => 'Ana',
+        'apellido1' => 'Pérez',
+        'tipo_reg' => 'usuario',
+        'fecha_nac' => '1995-01-20',
+        'sexo' => 'F',
+        'cedula' => '12345678',
+        'nacionalidad' => 'V',
+        'telefono' => '4141234567',
+        'correo' => 'ana@example.com',
+        'estado' => 1,
+        'municipio' => 1,
+        'parroquia' => 1,
+        'direccion' => 'Calle 1',
+        'rol' => 1,
+    ]);
+
+    $response = app(PersonaController::class)->registrar($request);
+
+    expect($response->getStatusCode())->toBe(503)
+        ->and($response->getData(true)['mensaje'])->toContain('configuración SMTP')
+        ->and(Persona::count())->toBe(0)
+        ->and(User::count())->toBe(0);
 });
 
 it('does not update the person or user when the update type is unsupported', function () {

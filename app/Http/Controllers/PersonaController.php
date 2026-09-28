@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Throwable;
 
 class PersonaController extends Controller
 {
@@ -27,6 +28,8 @@ class PersonaController extends Controller
 
     public function registrar(PersonaRequest $request)
     {
+        $mailFailure = false;
+
         try {
             if ($request->tipo_reg !== 'usuario') {
                 return response()->json([
@@ -35,13 +38,13 @@ class PersonaController extends Controller
                 ], 422);
             }
 
-            return DB::transaction(function () use ($request) {
+            return DB::transaction(function () use ($request, &$mailFailure) {
                 $persona = Persona::create([
                     'nombres' => $this->formatName($request->nombre1, $request->nombre2),
                     'apellidos' => $this->formatName($request->apellido1, $request->apellido2),
                     'fecha_nacimiento' => $request->fecha_nac,
                     'sexo' => $request->sexo,
-                    'cedula' => "{$request->nacionalidad}-{$request->cedula}",
+                    'cedula' => $request->cedula,
                     'telefono' => $this->normalizeTelefono($request->telefono),
                     'email' => $request->correo,
                     'estado_id' => $request->estado,
@@ -61,24 +64,31 @@ class PersonaController extends Controller
                     'status' => 2,
                 ]);
 
-                Mail::to($persona->email)->send(new UsuarioNuevo([
-                    'usuario' => "{$persona->nombres} {$persona->apellidos}",
-                    'cedula' => $usuario->username,
-                    'clave' => $clave,
-                ]));
+                try {
+                    Mail::to($persona->email)->send(new UsuarioNuevo([
+                        'usuario' => "{$persona->nombres} {$persona->apellidos}",
+                        'cedula' => $usuario->username,
+                        'clave' => $clave,
+                    ]));
+                } catch (Throwable $e) {
+                    $mailFailure = true;
+                    throw $e;
+                }
 
                 return response()->json([
                     'status' => 'exito',
                     'mensaje' => 'Usuario registrado con exito',
                 ]);
             });
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Log::error('Fallo en PersonaController::registrar: ' . $e->getMessage());
 
             return response()->json([
                 'status' => 'error',
-                'mensaje' => 'Ocurrio un error interno en el servidor. Intente mas tarde.',
-            ], 500);
+                'mensaje' => $mailFailure
+                    ? 'No se pudo enviar el correo de acceso. Revise la configuración SMTP; no se creó el usuario.'
+                    : 'Ocurrio un error interno en el servidor. Intente mas tarde.',
+            ], $mailFailure ? 503 : 500);
         }
     }
 

@@ -17,7 +17,7 @@ class ConsultaMedicaRequest extends FormRequest
             'cita_id' => ['required', 'integer', 'exists:cita,cita_id'],
             'es_primera_consulta' => ['required', 'boolean'],
             'tipo_id' => ['required', 'integer', 'exists:tipo_consulta,tipo_id'],
-            'enfermedad_id' => ['nullable', 'integer', 'exists:enfermedad,enfermedad_id'],
+            'enfermedad_id' => ['nullable', 'integer', 'exists:enfermedad,enfermedad_id', 'required_if:es_primera_consulta,1'],
             'peso' => ['nullable', 'numeric', 'min:0'],
             'talla' => ['nullable', 'numeric', 'min:0'],
             'sc' => ['nullable', 'numeric', 'min:0'],

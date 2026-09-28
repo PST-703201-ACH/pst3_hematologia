@@ -7,9 +7,6 @@
                         <i class="fas fa-arrow-left"></i>
                     </button>
                     <h3 class="card-title mb-0">Consulta Médica</h3>
-                    <span class="badge {{ $esPrimeraConsulta ? 'badge-primary' : 'badge-info' }}">
-                        {{ $esPrimeraConsulta ? 'Primera Consulta' : 'Consulta de Control' }}
-                    </span>
                 </div>
                 <p class="mb-0 text-muted">
                     <strong>Paciente:</strong> {{ trim(($persona->nombres ?? $cita->nombres_paciente ?? '') . ' ' . ($persona->apellidos ?? $cita->apellidos_paciente ?? '')) }}
@@ -55,12 +52,17 @@
 
                         <div class="form-group">
                             <label for="enfermedad_id">Enfermedad</label>
-                            <select name="enfermedad_id" id="enfermedad_id" class="form-control">
-                                <option value="">Seleccione...</option>
-                                @foreach ($enfermedades as $enfermedad)
-                                    <option value="{{ $enfermedad->enfermedad_id }}">{{ $enfermedad->descripcion }}</option>
-                                @endforeach
-                            </select>
+                            @if ($esPrimeraConsulta)
+                                <select name="enfermedad_id" id="enfermedad_id" class="form-control">
+                                    <option value="">Seleccione...</option>
+                                    @foreach ($enfermedades as $enfermedad)
+                                        <option value="{{ $enfermedad->enfermedad_id }}" {{ old('enfermedad_id') == $enfermedad->enfermedad_id ? 'selected' : '' }}>{{ $enfermedad->descripcion }}</option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <input type="hidden" name="enfermedad_id" value="{{ $enfermedadSeleccionada?->enfermedad_id }}">
+                                <input type="text" id="enfermedad_id" class="form-control" value="{{ $enfermedadSeleccionada?->descripcion ?? 'Sin enfermedad asignada' }}" readonly>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -14,7 +14,7 @@ it('loads the medical consultation form from a pending appointment', function ()
     DB::table('estado')->insert(['estado_id' => 1, 'nombre' => 'Distrito Capital']);
     DB::table('municipio')->insert(['municipio_id' => 1, 'estado_id' => 1, 'nombre' => 'Libertador']);
     DB::table('parroquia')->insert(['parroquia_id' => 1, 'municipio_id' => 1, 'nombre' => 'San Bernardino']);
-    DB::table('rol')->insert(['rol_id' => 2, 'nombre' => 'Medico']);
+    DB::table('rol')->insert(['rol_id' => 3, 'nombre' => 'Medico']);
     DB::table('tipo_consulta')->insert(['tipo_id' => 1, 'nombre' => 'Primera Consulta']);
     DB::table('enfermedad')->insert(['enfermedad_id' => 1, 'tipo' => true, 'descripcion' => 'Anemia Falciforme']);
 
@@ -40,7 +40,7 @@ it('loads the medical consultation form from a pending appointment', function ()
         'username' => 'medico.test',
         'password_hash' => bcrypt('Password123!'),
         'status' => 1,
-        'id_rol' => 2,
+        'id_rol' => 3,
     ]);
 
     $consulta = Consulta::create([
@@ -64,6 +64,8 @@ it('loads the medical consultation form from a pending appointment', function ()
     ]);
 
     $usuario = User::find($usuarioId);
+
+    expect($usuario->getDashboardUrl())->toBe(route('medico.index'));
 
     $response = $this->actingAs($usuario)
         ->get('/medico/consultas/atender/' . Cita::first()->cita_id);

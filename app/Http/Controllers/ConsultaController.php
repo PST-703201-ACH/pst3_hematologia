@@ -39,6 +39,12 @@ class ConsultaController extends Controller
             ->where('tipo_id', $tipoConsultaId)
             ->value('nombre') ?? ($esPrimeraConsulta ? 'Primera consulta' : 'Consulta de control');
         $enfermedades = Enfermedad::orderBy('enfermedad_id')->get();
+        $enfermedadSeleccionada = $esPrimeraConsulta
+            ? null
+            : ($cita->consulta?->enfermedad ?? Consulta::where('paciente_id', $paciente?->paciente_id)
+                ->whereNotNull('enfermedad_id')
+                ->latest('fecha_hora')
+                ->first()?->enfermedad);
         $medico = auth()->user();
 
         $vistaData = [
@@ -49,6 +55,7 @@ class ConsultaController extends Controller
             'tipoConsultaId' => $tipoConsultaId,
             'tipoConsultaNombre' => $tipoConsultaNombre,
             'enfermedades' => $enfermedades,
+            'enfermedadSeleccionada' => $enfermedadSeleccionada,
             'medico' => $medico,
             'titulo' => $esPrimeraConsulta ? 'Primera Consulta' : 'Consulta de Control',
         ];
@@ -61,11 +68,21 @@ class ConsultaController extends Controller
         try {
             DB::beginTransaction();
 
-            $cita = Cita::findOrFail($request->cita_id);
+            $cita = Cita::with('consulta')->findOrFail($request->cita_id);
             $paciente = null;
             $paciente = Paciente::where('hc', $cita->numero_hc)->first();
             $esPrimeraConsulta = ! $paciente || ! Consulta::where('paciente_id', $paciente->paciente_id)->exists();
             $tipoConsultaId = $esPrimeraConsulta ? 1 : 2;
+            $enfermedadId = $esPrimeraConsulta
+                ? $request->enfermedad_id
+                : ($cita->consulta?->enfermedad_id ?? Consulta::where('paciente_id', $paciente->paciente_id)
+                    ->whereNotNull('enfermedad_id')
+                    ->latest('fecha_hora')
+                    ->value('enfermedad_id'));
+
+            if (! $enfermedadId) {
+                throw new \RuntimeException('La consulta de control no tiene una enfermedad asignada.');
+            }
 
             if ($esPrimeraConsulta) {
                 $paciente = $this->crearPacienteDesdeCita($cita);
@@ -77,7 +94,7 @@ class ConsultaController extends Controller
                 'paciente_id' => $paciente->paciente_id,
                 'medico_id' => auth()->user()?->usuario_id,
                 'tipo_id' => $tipoConsultaId,
-                'enfermedad_id' => $request->enfermedad_id,
+                'enfermedad_id' => $enfermedadId,
                 'fecha_hora' => now(),
                 'peso' => $request->peso,
                 'talla' => $request->talla,

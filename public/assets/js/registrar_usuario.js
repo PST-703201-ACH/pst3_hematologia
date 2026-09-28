@@ -140,28 +140,32 @@ document.addEventListener('DOMContentLoaded', function() {
                         }, 3000);
 
                     }else if (resultado.status === "errores") {
-                        for (let campo in resultado.errores) {
-                        const elemento = document.getElementById(campo);
-                            if (elemento) {
-                            const originalValue = elemento.value;
-                            elemento.className = 'form-control border border-danger text-danger';
-                            elemento.value = resultado.errores[campo]; 
-                            elemento.style.pointerEvents = 'none';
+                        const alerta = document.createElement('div');
+                        alerta.className = 'alert alert-danger alert-dismissible fade show';
+                        alerta.setAttribute('role', 'alert');
 
-                                setTimeout(function(){
-                                  elemento.className = 'form-control';
-                                  elemento.style.pointerEvents = '';
-                                  elemento.value = originalValue;
-                                }, 3000);
-                            }
-                        }
+                        const listaErrores = document.createElement('ul');
+                        listaErrores.className = 'mb-0';
+
+                        Object.entries(resultado.errores).forEach(([campo, mensajes]) => {
+                            const item = document.createElement('li');
+                            const mensajesCampo = Array.isArray(mensajes) ? mensajes : [mensajes];
+                            item.textContent = `${campo}: ${mensajesCampo.join(', ')}`;
+                            listaErrores.appendChild(item);
+                        });
+
+                        alerta.appendChild(listaErrores);
+                        document.getElementById('alertCreate').replaceChildren(alerta);
                     }     
                 } catch (error) {
                     console.error("Error:", error);
+                    const alerta = document.createElement('div');
+                    alerta.className = 'alert alert-danger';
+                    alerta.setAttribute('role', 'alert');
+                    alerta.textContent = 'No se pudo completar el registro. Verifique los datos e inténtelo nuevamente.';
+                    document.getElementById('alertCreate').replaceChildren(alerta);
                 } finally {
-                    setTimeout(() => {
                     registroModal.hide();
-                    }, 500);
                 }
             }
 

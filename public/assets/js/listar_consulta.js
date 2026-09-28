@@ -83,7 +83,7 @@ async function listarConsultaP(termino = '', fecha = '') {
                     ? `${persona.nombres} ${persona.apellidos}`
                     : `${cita?.nombres_paciente ?? 'Paciente'} ${cita?.apellidos_paciente ?? 'no disponible'}`;
                 hc = con.paciente?.hc ?? cita?.numero_hc ?? 'Sin HC';
-                enfermedad = con.enfermedad?.tipo;
+                enfermedad = con.enfermedad?.descripcion;
 
                 if (enfermedad === null || enfermedad === undefined) {
                     enfermedad = 'No definida';
@@ -182,7 +182,7 @@ async function listarConsultaR() {
             const nombre = paciente
                 ? `${paciente.nombres} ${paciente.apellidos}`
                 : 'Paciente no disponible';
-            const enfermedad = consulta.enfermedad?.tipo ?? 'No definida';
+            const enfermedad = consulta.enfermedad?.descripcion ?? 'No definida';
 
             return `
                 <tr>

@@ -8,65 +8,73 @@ function intercambiarVista(mostrar) {
     document.getElementById(mostrar).classList.remove('d-none');
 }
 
-document.getElementById('btnUsuarios').addEventListener('click', function(listado0) {
+function addClickListener(elementId, handler) {
+    const element = document.getElementById(elementId);
+
+    if (element) {
+        element.addEventListener('click', handler);
+    }
+}
+
+addClickListener('btnUsuarios', function(listado0) {
     listarUsuarios();
 
     listado0.preventDefault();
     intercambiarVista('seccion-usuarios');
 });
 
-document.getElementById('btnRegistrarUsu').addEventListener('click', function(registrarUsu) {
+addClickListener('btnRegistrarUsu', function(registrarUsu) {
     registrarUsu.preventDefault();
     intercambiarVista('registro-usuario');
 });
 
-document.getElementById('btnCancelarUp').addEventListener('click', function(cancelarUp) {
+addClickListener('btnCancelarUp', function(cancelarUp) {
     cancelarUp.preventDefault();
     intercambiarVista('seccion-usuarios');
 });
 
-document.getElementById('btnCancelarReg').addEventListener('click', function(cancelarReg) {
+addClickListener('btnCancelarReg', function(cancelarReg) {
     cancelarReg.preventDefault();
     intercambiarVista('seccion-usuarios');
 });
 
-document.getElementById('btnCatalogo').addEventListener('click', function(catalogo) { 
+addClickListener('btnCatalogo', function(catalogo) {
     catalogo.preventDefault();
     listarEnfermedad();
     intercambiarVista('seccion-catalogo');
 });
 
-document.getElementById('btnRegEnf').addEventListener('click', function(registrarEnf) {
+addClickListener('btnRegEnf', function(registrarEnf) {
     registrarEnf.preventDefault();
     intercambiarVista('registrar-enfermedad');
 });
 
-document.getElementById('btnSalirRegEnf').addEventListener('click', function(cancelarRegEnf) {
+addClickListener('btnSalirRegEnf', function(cancelarRegEnf) {
     cancelarRegEnf.preventDefault();
     intercambiarVista('seccion-catalogo');
 });
 
-document.getElementById('btnSalirUpEnf').addEventListener('click', function(registrarMed) {
+addClickListener('btnSalirUpEnf', function(cancelarUpEnf) {
     cancelarUpEnf.preventDefault();
     intercambiarVista('seccion-catalogo');
 });
 
-document.getElementById('btnRegMed').addEventListener('click', function(registrarEnf) {
+addClickListener('btnRegMed', function(registrarMed) {
     registrarMed.preventDefault();
     intercambiarVista('registrar-medicina');
 });
 
-document.getElementById('btnSalirRegMed').addEventListener('click', function(cancelarRegMed) {
+addClickListener('btnSalirRegMed', function(cancelarRegMed) {
     cancelarRegMed.preventDefault();
     intercambiarVista('seccion-catalogo');
 });
 
-document.getElementById('btnSalirUpMed').addEventListener('click', function(cancelarUpMed) {
+addClickListener('btnSalirUpMed', function(cancelarUpMed) {
     cancelarUpMed.preventDefault();
     intercambiarVista('seccion-catalogo');
 });
 
-document.getElementById('btnAuditoria').addEventListener('click', function(auditoria0) {
+addClickListener('btnAuditoria', function(auditoria0) {
     listarAuditoria()
     auditoria0.preventDefault();
     intercambiarVista('seccion-auditoria');
