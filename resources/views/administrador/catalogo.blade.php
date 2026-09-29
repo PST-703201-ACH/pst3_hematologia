@@ -29,7 +29,8 @@
 
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <div class="d-flex gap-2">
-                                <button class="btn btn-primary"><i class="fas fa-undo" aria-hidden="true"></i>
+                                <button class="btn btn-success" id="btnRegProt">Nuevo</button>
+                                <button class="btn btn-primary" onclick="listarProtocolo()"><i class="fas fa-undo" aria-hidden="true"></i>
                                 </button>
                             </div>
                             
@@ -39,11 +40,11 @@
                         <form onsubmit="event.preventDefault();" class="d-flex align-items-center m-0" id="formBusquedaProt">
                             <input
                                 type="text" 
-                                name="busqueda_prot" 
-                                placeholder="Buscar..." 
-                                class="form-control me-2" 
+                                name="busqueda_prot"
+                                placeholder="Buscar..."
+                                class="form-control me-2"
                                 style="width: 250px;"
-                                autocomplete="off" 
+                                autocomplete="off"
                             >
 
                             <button type="button" id="btnLimpiar_prot" class="btn btn-danger d-none">Limpiar</button>
@@ -59,7 +60,7 @@
                             </tr>
                         </thead>
                         <tbody id="cuerpoTablaProtocolos">
-
+                            
                         </tbody>
                     </table>
                 </div>

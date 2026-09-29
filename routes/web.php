@@ -83,6 +83,11 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
 
         Route::controller(GerenteController::class)->group(function () {
             Route::get('/dashboard-admin', 'dashboards');
+            Route::get('/obtener-medicinas-disponibles', 'listarMedDis');
+            Route::get('/obtener-protocolos', 'listarProt');
+            Route::post('/protocolo-guardar', 'registrarProt')->name('protocolo.registrar');
+            Route::get('/obtener-protocolo-fases/{id}', 'verFases');
+
             Route::get('/obtener-enfermedades', 'listarEnf');
             Route::get('/precargar-enf/{id}', 'precargarEnf');
             Route::post('/enfermedad-guardar', 'registrarEnf')->name('enfermedad.registrar');

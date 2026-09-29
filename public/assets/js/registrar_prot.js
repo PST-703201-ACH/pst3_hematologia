@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const formularioEnf = document.getElementById('formRegEnf');
-    const registroModal = new bootstrap.Modal(document.getElementById('registrandoModalEnf'));
+    const formularioProt = document.getElementById('formRegProt');
+    const registroModal = new bootstrap.Modal(document.getElementById('registrandoModalProt'));
 
-    if (formularioEnf) {
-        formularioEnf.addEventListener('submit', async function(enf) {
-            const confirmacion = confirm("¿Está seguro de registrar esta nueva enfermedad?");
-            enf.preventDefault();
+    if (formularioProt) {
+        formularioProt.addEventListener('submit', async function(prot) {
+            const confirmacion = confirm("¿Está seguro de registrar este nuevo protocolo?");
+            prot.preventDefault();
             if (confirmacion) {
 
-                const datos = new FormData(formularioEnf);
+                const datos = new FormData(formularioProt);
                 registroModal.show();
 
                 try {
-                    const respuesta = await fetch(formularioEnf.action, {
+                    const respuesta = await fetch(formularioProt.action, {
                         method: 'POST',
                         body: datos,
                         headers: {
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const resultado = await respuesta.json();
 
                     if(resultado.status === "exito") {
-                        let alertaEnf = `
+                        let alertaProt = `
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <i class="icon fas fa-check"></i> 
                                 ${resultado.mensaje}
@@ -32,15 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </button>
                             </div>
                         `;
-                        document.getElementById('alertCreateEnf').innerHTML = alertaEnf;
-                        listarEnfermedad();
+                        document.getElementById('alertCreateProt').innerHTML = alertaProt;
+                        listarProtocolo();
                         setTimeout(function (){
-                            document.getElementById('alertCreateEnf').innerHTML = "";
+                            document.getElementById('alertCreateProt').innerHTML = "";
                         }, 3000);
 
-                        formularioEnf.reset();
+                        formularioProt.reset();
                     }else if(resultado.status === "error") {
-                        let alertaEnf = `
+                        let alertaProt = `
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <i class="icon fas fa-xmark"></i> 
                                 ${resultado.mensaje}
@@ -49,9 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </button>
                             </div>
                         `;
-                        document.getElementById('alertCreateEnf').innerHTML = alertaEnf;
+                        document.getElementById('alertCreateProt').innerHTML = alertaProt;
                         setTimeout(function (){
-                            document.getElementById('alertCreateEnf').innerHTML = "";
+                            document.getElementById('alertCreateProt').innerHTML = "";
                         }, 3000);
 
                     }else if (resultado.status === "errores") {
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }, 3000);
                             }
                         }
-                    }     
+                    }
                 } catch (error) {
                     console.error("Error:", error);
                 } finally {
@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, 500);
                 }
             }
-
         });
     }
 });

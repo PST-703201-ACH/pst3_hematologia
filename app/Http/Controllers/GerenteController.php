@@ -8,6 +8,9 @@ use App\Models\User;
 use App\Models\Rol;
 use App\Models\Enfermedad;
 use App\Models\Medicina;
+use App\Models\Fase;
+use App\Models\MedicinaProt;
+use App\Models\Protocolo;
 
 class GerenteController extends Controller
 {
@@ -40,6 +43,87 @@ class GerenteController extends Controller
             'hombres' => $hombres,
             'mujeres' => $mujeres
         ]);
+    }
+
+    public function registrarProt(Request $request)
+    {
+
+        $errores = [];
+
+        if (empty($request->nombreProtReg)) {
+            $errores['nombreProtReg'] = "Ingrese el nombre del protocolo";
+        }
+
+        if (!empty($errores)) {
+            return response()->json([
+                "status" => "errores",
+                "errores" => $errores
+            ]);
+            exit;
+        } else {
+
+            try {
+
+                $nombre = $request->nombreProtReg;
+
+                $protocolo = Protocolo::create([
+                    'nombre' => $nombre
+                ]);
+
+                $datos = $request->all();
+
+                // Recorrer todos los datos para organizar las fases
+                foreach ($datos as $clave => $valoresSelect) {
+                    if (str_starts_with($clave, 'fase-')) {
+                        
+                        // Extraccion de numero de fase
+                        $numeroFase = str_replace('fase-', '', $clave);
+                        
+                        // Registro de la fase
+                        $fase = Fase::create([
+                            'numero' => $numeroFase
+                        ]);
+
+                        // Recorrer los datos de medicamentos para esta fase
+                        foreach ($valoresSelect as $medicina) {
+                            
+                            MedicinaProt::create([
+                                'id_protocolo' => $protocolo->protocolo_id, // Vinculamos con el protocolo creado
+                                'id_fase' => $fase->fase_id, // Vinculamos con la fase creada
+                                'id_medicina'   => $medicina   // Guardamos cada medicamento
+                            ]);                }
+
+                    }
+                }
+
+                return response()->json(['status' => 'exito', 'mensaje' => 'Se ha registrado el protocolo exitosamente']);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'error',
+                    'mensaje' => 'Error de servidor o base de datos: '. $e->getMessage()
+                ]);
+            }
+        }
+    }
+
+    public function listarProt(Request $request)
+    {
+        $query = Protocolo::query();
+
+        if ($request->filled('busqueda')) {
+            $termino = $request->input('busqueda');
+            
+            $query->where(function($q) use ($termino) {
+                $q->where('descripcion', 'ILIKE', "%{$termino}%");
+            });     
+        }
+
+        return response()->json($query->get());
+    }
+
+    public function verFases($id){
+        $fases = MedicinaProt::with('protocolo', 'medicina', 'fase')->where('id_protocolo', $id)->get();
+        return response()->json($fases);
     }
 
     public function listarEnf(Request $request)
@@ -161,6 +245,14 @@ class GerenteController extends Controller
 
         return response()->json($query->get());
     }
+
+    public function listarMedDis()
+    {
+        $query = Medicina::all('medicina_id', 'descripcion');
+
+        return response()->json($query);
+    }
+
 
     public function registrarMed(Request $request)
     {

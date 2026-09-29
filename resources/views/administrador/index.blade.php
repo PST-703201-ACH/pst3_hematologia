@@ -21,7 +21,6 @@
 <div class="wrapper">
 
     @include('partials.navbar_admin')
-
     @include('partials.sidebar_admin')
 
     <div class="content-wrapper">
@@ -47,12 +46,17 @@
                 <div id="registro-usuario" class="vista_admin d-none">
                     @include('administrador.registrar')
                 </div>
+                
                 <div id="actualizar-usuario" class="vista_admin d-none">
                     @include('administrador.actualizar')
                 </div>
 
                 <div id="seccion-catalogo" class="vista_admin d-none">
                     @include('administrador.catalogo')
+                </div>
+
+                <div id="registrar-protocolo" class="vista_admin d-none">
+                    @include('administrador.registrar_prot')
                 </div>
 
                 <div id="registrar-enfermedad" class="vista_admin d-none">
@@ -77,6 +81,7 @@
 
 
                     @include('administrador.ver')
+                    @include('administrador.ver_fases')
             </div>
         </section>
     </div>
@@ -103,6 +108,8 @@
 <script src="{{ asset('assets/js/actualizar_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/status_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/catalogo_med.js') }}"></script>
+<script src="{{ asset('assets/js/registrar_prot.js') }}"></script>
+<script src="{{ asset('assets/js/ver_fases.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_enf.js') }}"></script>
 <script src="{{ asset('assets/js/actualizar_enf.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_med.js') }}"></script>

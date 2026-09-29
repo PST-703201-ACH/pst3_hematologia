@@ -8,8 +8,6 @@ function intercambiarVista(mostrar) {
     document.getElementById(mostrar).classList.remove('d-none');
 }
 
-const formularioEnf = new bootstrap.Modal(document.getElementById('modalEnfermedad'));
-
 document.getElementById('btnUsuarios').addEventListener('click', function(listado0) {
     listarUsuarios();
 
@@ -34,25 +32,34 @@ document.getElementById('btnCancelarReg').addEventListener('click', function(can
 
 document.getElementById('btnCatalogo').addEventListener('click', function(catalogo) { 
     catalogo.preventDefault();
+    listarProtocolo();
     listarEnfermedad();
     listarMedicina();
     intercambiarVista('seccion-catalogo');
 });
 
+
+document.getElementById('btnRegProt').addEventListener('click', function(registrarProt) {
+    registrarProt.preventDefault();
+    intercambiarVista('registrar-protocolo');
+});
+
+document.getElementById('btnSalirRegProt').addEventListener('click', function(cancelarRegProt) {
+    cancelarRegProt.preventDefault();
+    intercambiarVista('seccion-catalogo');
+});
+
 document.getElementById('btnRegEnf').addEventListener('click', function(registrarEnf) {
     registrarEnf.preventDefault();
-
-    document.getElementById('formRegEnf').reset();
-    formularioEnf.show();
+    intercambiarVista('registrar-enfermedad');
 });
 
 document.getElementById('btnSalirRegEnf').addEventListener('click', function(cancelarRegEnf) {
     cancelarRegEnf.preventDefault();
-
-    formularioEnf.hide();
+    intercambiarVista('seccion-catalogo');
 });
 
-document.getElementById('btnSalirUpEnf').addEventListener('click', function(registrarMed) {
+document.getElementById('btnSalirUpEnf').addEventListener('click', function(cancelarUpEnf) {
     cancelarUpEnf.preventDefault();
     intercambiarVista('seccion-catalogo');
 });
