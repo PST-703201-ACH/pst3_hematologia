@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ConsultaController;
 use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\GerenteController;
@@ -104,28 +105,38 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
 // ---------------------------------------------------------------------
     // MÉDICO
 // ---------------------------------------------------------------------
-    Route::middleware('role:2')->prefix('medico')->group(function () {
+    Route::middleware('role:3')->prefix('medico')->group(function () {
 
-        Route::get('/', function () {
-            return view('medico.index');
-            $pacientes = \App\Models\Paciente::with('persona')->get();
-            $estados = \App\Models\Estado::all();
-            $representantes = collect();
+        Route::get('/', function (\Illuminate\Http\Request $request) {
+                    $pacientes = \App\Models\Paciente::with('persona')->get();
+                    $estados = \App\Models\Estado::all();
+                    $representantes = collect();
+                    $vistaInicial = $request->query('vista');
 
-            return view('medico.index', compact('pacientes', 'estados', 'representantes'));
+                    return view('medico.index', compact('pacientes', 'estados', 'representantes', 'vistaInicial'));
         })->name('medico.index');
 
         // Gestión de Pacientes por el Médico
         Route::controller(MedicoController::class)->group(function () {
-            Route::get('/pacientes', 'index')->name('medico.pacientes.index');
-            Route::get('/pacientes/crear', 'create')->name('medico.pacientes.create');
+            Route::get('/pacientes', function () {
+                return redirect()->route('medico.index', ['vista' => 'pacientes']);
+            })->name('medico.pacientes.index');
+            Route::get('/pacientes/crear', function () {
+                return redirect()->route('medico.index', ['vista' => 'registrar']);
+            })->name('medico.pacientes.create');
             Route::post('/pacientes/crear', 'store')->name('medico.pacientes.store');
             Route::get('/pacientes/{id}', 'show')->name('medico.pacientes.show');
             Route::delete('/pacientes/{id}', 'destroy')->name('medico.pacientes.destroy');
 
             Route::get('/obtener-pacientes', 'listar')->name('medico.pacientes.listar');
             Route::get('/obtener-consultas', 'listarCon')->name('medico.pacientes.consultas');
+            Route::get('/obtener-consultas-realizadas', 'listarConRealizadas')->name('medico.pacientes.consultas.realizadas');
             Route::get('/representantes/buscar', 'getRepresentantes')->name('medico.representantes.buscar');
+        });
+
+        Route::controller(ConsultaController::class)->group(function () {
+            Route::get('/consultas/atender/{cita_id}', 'atenderCita')->name('medico.consultas.atender');
+            Route::post('/consultas/guardar', 'store')->name('medico.consultas.store');
         });
     });
 

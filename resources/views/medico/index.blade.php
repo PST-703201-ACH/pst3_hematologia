@@ -28,19 +28,51 @@
         
         <section class="content">
             <div class="container-fluid">
-                @yield('content')
+                @php
+                    $pacientes = $pacientes ?? collect();
+                    $estados = $estados ?? \App\Models\Estado::all();
+                    $representantes = $representantes ?? collect();
+                @endphp
 
-                <div class="card">
-                    <div class="card-body">
-                    @include('medico.dashboard')    
-                    </div>
+                <div id="seccion-dashboard" class="vista_med">
+                    @include('medico.dashboard')
                 </div>
 
+                <div id="seccion-pacientes_listados" class="vista_med">
+                    @include('medico.pacientes.listado')
+                </div>
 
+                <div id="seccion-paciente_detalle" class="vista_med d-none">
+                    <div id="contenedor-paciente-detalle"></div>
+                </div>
+
+                <div id="seccion-registrar_paciente" class="vista_med d-none">
+                    @include('medico.pacientes.create')
+                </div>
 
                 <div id="seccion-consultas_listadas" class="vista_med d-none">
                     @include('medico.consultas.listado')
                 </div>
+
+                <div id="seccion-consulta_formulario" class="vista_med d-none">
+                    <div id="contenedor-consulta-formulario"></div>
+                </div>
+
+                @if(($vistaInicial ?? null) === 'pacientes')
+                    <script>document.getElementById('seccion-dashboard').classList.add('d-none');</script>
+                @elseif(($vistaInicial ?? null) === 'registrar')
+                    <script>
+                        document.getElementById('seccion-dashboard').classList.add('d-none');
+                        document.getElementById('seccion-pacientes_listados').classList.add('d-none');
+                        document.getElementById('seccion-registrar_paciente').classList.remove('d-none');
+                    </script>
+                @elseif(($vistaInicial ?? null) === 'consultas')
+                    <script>
+                        document.getElementById('seccion-dashboard').classList.add('d-none');
+                        document.getElementById('seccion-pacientes_listados').classList.add('d-none');
+                        document.getElementById('seccion-consultas_listadas').classList.remove('d-none');
+                    </script>
+                @endif
             </div>
         </section>
     </div>

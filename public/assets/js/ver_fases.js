@@ -5,6 +5,9 @@ async function verFases(boton){
 		const respuesta = await fetch(`/admin/obtener-protocolo-fases/${id}`);
 		const protocolo = await respuesta.json();
 
+		var nombreProtocolo = protocolo[0].protocolo.nombre;
+		document.getElementById('protocoloNombre').innerHTML = nombreProtocolo;
+
 		var fasesAgrupadas = {};
 		for (var p of protocolo) {
 		    

@@ -32,7 +32,13 @@ class PersonaRequest extends FormRequest
             'tipo_up' => $isUpdate ? 'required|string' : 'nullable',
             'fecha_nac' => 'required|date|before_or_equal:-18 years', // Controla los 18 años automáticamente
             'sexo' => 'required|string',
-            'cedula' => $isUpdate ? 'nullable' : 'required|numeric|digits_between:7,8|unique:usuario,username',
+            'cedula' => $isUpdate ? 'nullable' : [
+                'required',
+                'numeric',
+                'digits_between:7,8',
+                'unique:usuario,username',
+                Rule::unique('persona', 'cedula'),
+            ],
             'nacionalidad' => $isUpdate ? 'nullable' : 'required|string',
             'telefono' => ['required', 'numeric', 'digits:10', 'regex:/^(424|414|412|416|426)/'], // Valida la longitud y los códigos venezolanos
             'correo' => $isUpdate ? ['required', 'email', Rule::unique('persona', 'email')->ignore($this->input('persona'), 'persona_id')]
@@ -52,7 +58,7 @@ class PersonaRequest extends FormRequest
         return [
             'fecha_nac.before_or_equal' => 'El nuevo usuario es menor de edad.',
             'telefono.regex' => 'Código de número telefónico inválido.',
-            'cedula.unique' => 'Este usuario ya está registrado.',
+            'cedula.unique' => 'Esta cédula ya está registrada.',
             // Puedes agregar el resto de tus mensajes personalizados aquí... que si te pica la nariz o x cosa
         ];
     }

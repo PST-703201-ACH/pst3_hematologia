@@ -15,4 +15,10 @@ class Paciente extends Model
     {
         return $this->belongsTo(Persona::class, 'persona_id', 'persona_id');
     }
+
+    public function consultas()
+    {
+        return $this->hasMany(Consulta::class, 'paciente_id', 'paciente_id')
+            ->orderByDesc('fecha_hora');
+    }
 }

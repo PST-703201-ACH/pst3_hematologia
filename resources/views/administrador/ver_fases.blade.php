@@ -10,8 +10,8 @@
         <div class="modal-body">
           <div class="container-fluid">
             <div class="col-6">
-              <small class="text-muted d-block">Nombre de protocolo</small>
-              <strong id="protocoloNombre"></strong>
+              <h5 class="text-muted d-block">Nombre de protocolo</h5>
+              <p id="protocoloNombre"></p>
             </div>
           </div>
 

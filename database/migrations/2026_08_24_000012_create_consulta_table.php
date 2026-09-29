@@ -20,6 +20,9 @@ return new class extends Migration
             $table->double('sc')->nullable();
             $table->double('fc')->nullable();
             $table->double('fr')->nullable();
+            $table->text('antecedentes_personales')->nullable();
+            $table->text('antecedentes_familiares')->nullable();
+            $table->text('signos_sintomas_iniciales')->nullable();
             $table->text('subjetivo')->nullable();
             $table->text('plan_trabajo')->nullable();
             $table->date('proxima_cita')->nullable();
