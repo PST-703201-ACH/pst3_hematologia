@@ -64,15 +64,6 @@
                                 <p>Listado de Pacientes</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#"
-                               class="nav-link"
-                               id="btnRegistrar"
-                               onclick="event.preventDefault();">
-                                <i class="nav-icon fas fa-user-plus"></i>
-                                <p>Nuevo Paciente</p>
-                            </a>
-                        </li>
                     </ul>
                 </li>
                 <li class="nav-item has-treeview">

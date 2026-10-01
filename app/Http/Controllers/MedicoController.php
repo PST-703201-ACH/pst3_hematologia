@@ -41,12 +41,15 @@ class MedicoController extends Controller
                         ->orWhereHas('persona', function ($persona) use ($busqueda) {
                             $persona->where('nombres', 'like', "%{$busqueda}%")
                                 ->orWhere('apellidos', 'like', "%{$busqueda}%")
+                                ->orWhereRaw("CONCAT(nombres, ' ', apellidos) ILIKE ?", ["%{$busqueda}%"])
                                 ->orWhere('cedula', 'like', "%{$busqueda}%");
                         });
                 })->orWhereHas('cita', function ($cita) use ($busqueda) {
                     $cita->where('numero_hc', 'like', "%{$busqueda}%")
                         ->orWhere('nombres_paciente', 'like', "%{$busqueda}%")
-                        ->orWhere('apellidos_paciente', 'like', "%{$busqueda}%");
+                        ->orWhere('apellidos_paciente', 'like', "%{$busqueda}%")
+                        ->orWhereRaw("CONCAT(nombres_paciente, ' ', apellidos_paciente) ILIKE ?", ["%{$busqueda}%"]);
+
                 });
             });
         }
