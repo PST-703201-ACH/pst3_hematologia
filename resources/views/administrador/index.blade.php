@@ -67,6 +67,14 @@
                     @include('administrador.actualizar_enf')
                 </div>
 
+                <div id="registrar-medicina" class="vista_admin d-none">
+                    @include('administrador.registrar_med')
+                </div>
+
+                <div id="actualizar-medicina" class="vista_admin d-none">
+                    @include('administrador.actualizar_med')
+                </div>
+
                 <div id="seccion-auditoria" class="vista_admin d-none">
                     @include('administrador.auditoria')
                 </div>
@@ -105,6 +113,7 @@
 <script src="{{ asset('assets/js/registrar_enf.js') }}"></script>
 <script src="{{ asset('assets/js/actualizar_enf.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_med.js') }}"></script>
+<script src="{{ asset('assets/js/actualizar_med.js') }}"></script>
 <script src="{{ asset('assets/js/listar_auditoria.js') }}"></script>
 
 @stack('scripts')

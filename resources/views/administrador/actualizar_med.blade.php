@@ -5,7 +5,7 @@
                 <h3 class="card-title">Actualizacion de medicina</h3>
             </div>
             
-            <form action="{{ route('medicina.actualizar') }}" id="formRegMed" method="POST">
+            <form action="{{ route('medicina.actualizar') }}" id="formUpMed" method="POST">
                 @csrf
                 <div class="card-body">
                     <h4>Datos de medicina</h4>
