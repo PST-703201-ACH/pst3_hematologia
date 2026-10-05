@@ -68,10 +68,10 @@
 <!-- Custom App JS -->
 <script src="{{ asset('assets/js/app.js') }}"></script>
 
-<script src="{{ asset('js/botones_admvo.js') }}"></script>
-<script src="{{ asset('js/calendario.js') }}"></script>
-<script src="{{ asset('js/registrar_cita.js') }}"></script>
-<script src="{{ asset('js/modificar_cita.js') }}"></script>
+<script src="{{ asset('assets/js/botones_admvo.js') }}"></script>
+<script src="{{ asset('assets/js/calendario.js') }}"></script>
+<script src="{{ asset('assets/js/registrar_cita.js') }}"></script>
+<script src="{{ asset('assets/js/modificar_cita.js') }}"></script>
 
 @stack('scripts')
 </body>

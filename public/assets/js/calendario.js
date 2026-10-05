@@ -3,7 +3,7 @@ const modalCita = document.getElementById('modalCita');
 const campoHc = document.getElementById('hc');
 
 async function precargarEventos(){
-    const respuesta = await fetch('/obtener-citas');
+    const respuesta = await fetch('/admvo/obtener-citas');
     const citas = await respuesta.json();
 
     let idEvento = 1;

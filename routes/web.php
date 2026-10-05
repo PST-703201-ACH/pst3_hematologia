@@ -10,6 +10,7 @@ use App\Http\Controllers\ParroquiaController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\CitaController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -140,6 +141,21 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
         });
     });
 
+// ---------------------------------------------------------------------
+    // ADMINISTRATIVO
+// ---------------------------------------------------------------------
+
+    Route::middleware('role:2')->prefix('admvo')->group(function () {
+        Route::get('/', function () {
+            return view('administrativo.index');
+        })->name('admvo.index');
+
+        Route::post('/cita-agendar', [CitaController::class, 'agendar'])->name('cita.agendar');
+        Route::get('/obtener-citas', [CitaController::class, 'getCitas'])->name('citas.json');
+        Route::get('/precargar-cita/{id}', [CitaController::class, 'precargar']);
+        Route::post('/cita-rep', [CitaController::class, 'reprogramar'])->name('cita.rep');
+    });
+
 /*
 // Rutas protegidas
     Route::get('/admin/', function () {
@@ -179,10 +195,6 @@ Route::post('/medico/pacientes/crear', [PacienteController::class, 'store'])->na
 Route::get('/obtener-pacientes', [PacienteController::class, 'listar']);
 
 //Administrativo
-Route::post('/cita-agendar', [CitaController::class, 'agendar'])->name('cita.agendar');
-Route::get('/obtener-citas', [CitaController::class, 'getCitas'])->name('citas.json');
-Route::get('/precargar-cita/{id}', [CitaController::class, 'precargar']);
-Route::post('/cita-rep', [CitaController::class, 'reprogramar'])->name('cita.rep');
 */
 
 

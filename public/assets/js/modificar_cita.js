@@ -3,7 +3,7 @@ async function precargarCita(boton){
     const modalReprogramar = document.getElementById('modalReprogramar');
     try {
         document.getElementById('formRep').reset();
-        const respuesta = await fetch(`/precargar-cita/${id}`);
+        const respuesta = await fetch(`/admvo/precargar-cita/${id}`);
         const cita = await respuesta.json();
 
         const [nombre1P, nombre2P] = cita.nombres_paciente.split(" ");
