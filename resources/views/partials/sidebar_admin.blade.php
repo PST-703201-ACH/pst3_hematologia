@@ -35,7 +35,7 @@
                 <h5 class="d-block text-success mb-0">
                     {{ $nombreSidebar }}
                 </h5>
-                <h5 class="d-block text-primary mb-0">
+                <h5 class="d-block text-primary mb-0" id="user">
                     {{ $cedulaSidebar }}
                 </h5>
             </div>

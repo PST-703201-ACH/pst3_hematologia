@@ -152,6 +152,7 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
         });
     });
 
+<<<<<<< HEAD
 /*
 // Rutas protegidas
     Route::get('/admin/', function () {
@@ -194,3 +195,19 @@ Route::get('/obtener-pacientes', [PacienteController::class, 'listar']);
 
 
 });
+=======
+// ---------------------------------------------------------------------
+    // ADMINISTRATIVO
+// ---------------------------------------------------------------------
+
+    Route::middleware('role:2')->prefix('admvo')->group(function () {
+        Route::get('/', function () {
+            return view('administrativo.index');
+        })->name('admvo.index');
+
+        Route::post('/cita-agendar', [CitaController::class, 'agendar'])->name('cita.agendar');
+        Route::get('/obtener-citas', [CitaController::class, 'getCitas'])->name('citas.json');
+        Route::get('/precargar-cita/{id}', [CitaController::class, 'precargar']);
+        Route::post('/cita-rep', [CitaController::class, 'reprogramar'])->name('cita.rep');
+    });
+>>>>>>> 9ab1159ca1eb992e492da0e8875cebc67e9a864b
