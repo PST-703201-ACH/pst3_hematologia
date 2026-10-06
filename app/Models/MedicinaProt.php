@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MedicinaProt extends Model
 {
-    protected $table = 'medicina_pro';
+    protected $table = 'logistica.medicina_pro';
     protected $primaryKey = 'id';
     protected $fillable = ['id_protocolo', 'id_medicina', 'id_fase'];
     public $incrementing = true;

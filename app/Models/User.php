@@ -18,7 +18,7 @@ class User extends Authenticatable
     public const STATUS_VERIFICAR = 2;
     public const STATUS_INACTIVO = 0;
 
-    protected $table = 'usuario';
+    protected $table = 'usuarios.usuario';
     protected $primaryKey = 'usuario_id';
     public $timestamps = false;
     public $incrementing = true;

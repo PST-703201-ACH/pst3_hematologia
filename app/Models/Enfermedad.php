@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Enfermedad extends Model
 {
-    protected $table = 'enfermedad';
+    protected $table = 'logistica.enfermedad';
     protected $primaryKey = 'enfermedad_id';
     protected $fillable = ['tipo', 'descripcion', 'status'];
     public $incrementing = true;

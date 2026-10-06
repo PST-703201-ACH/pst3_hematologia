@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cita extends Model
 {
-    protected $table = 'cita';
+    protected $table = 'logistica.cita';
     protected $primaryKey = 'cita_id';
     protected $fillable = [
         'nombres_paciente',

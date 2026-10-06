@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Fase extends Model
 {
-    protected $table = 'fase';
+    protected $table = 'logistica.fase';
     protected $primaryKey = 'fase_id';
     protected $fillable = ['numero'];
     public $incrementing = true;

@@ -1,0 +1,242 @@
+CREATE SCHEMA "usuarios";
+
+CREATE SCHEMA "logistica";
+
+CREATE SCHEMA "desechable";
+
+CREATE TABLE "usuarios"."usuario" (
+  "usuario_id" integer PRIMARY KEY NOT NULL,
+  "persona_id" integer,
+  "username" varchar(50) UNIQUE,
+  "password_hash" varchar(255),
+  "status" integer,
+  "id_rol" integer
+);
+
+CREATE TABLE "usuarios"."rol" (
+  "rol_id" integer PRIMARY KEY NOT NULL,
+  "nombre" varchar(50)
+);
+
+CREATE TABLE "usuarios"."auditoria" (
+  "auditoria_id" integer PRIMARY KEY NOT NULL,
+  "descripcion" varchar(200),
+  "modulo" varchar(50),
+  "id_usuario" integer,
+  "fecha_hora" timestamp(0) DEFAULT (now()),
+  "accion" text
+);
+
+CREATE TABLE "logistica"."cita" (
+  "cita_id" integer PRIMARY KEY NOT NULL,
+  "nombres_paciente" varchar(60),
+  "apellidos_paciente" varchar(60),
+  "nombres_representante" varchar(60),
+  "apellidos_representante" varchar(60),
+  "numero_hc" integer,
+  "fecha_hora" timestamp,
+  "consulta_id" integer
+);
+
+CREATE TABLE "logistica"."paciente" (
+  "paciente_id" integer PRIMARY KEY NOT NULL,
+  "persona_id" integer,
+  "hc" integer UNIQUE,
+  "status" integer
+);
+
+CREATE TABLE "logistica"."consulta" (
+  "consulta_id" integer PRIMARY KEY NOT NULL,
+  "paciente_id" integer,
+  "medico_id" integer,
+  "tipo" integer,
+  "enfermedad_id" integer,
+  "fecha_hora" timestamp DEFAULT (now()),
+  "peso" text,
+  "talla" text,
+  "sc" text,
+  "fc" text,
+  "fr" text,
+  "subjetivo" text,
+  "plan_trabajo" text,
+  "proxima_cita" date,
+  "status" integer
+);
+
+CREATE TABLE "logistica"."enfermedad" (
+  "enfermedad_id" integer PRIMARY KEY NOT NULL,
+  "tipo" integer,
+  "descripcion" varchar(255)
+);
+
+CREATE TABLE "logistica"."medicina" (
+  "medicina_id" integer PRIMARY KEY NOT NULL,
+  "descripcion" varchar(255)
+);
+
+CREATE TABLE "logistica"."medicina_pro" (
+  "id" integer NOT NULL,
+  "id_protocolo" integer NOT NULL,
+  "id_medicina" integer NOT NULL,
+  "id_fase" integer NOT NULL,
+  PRIMARY KEY ("id", "id_protocolo", "id_medicina", "id_fase")
+);
+
+CREATE TABLE "logistica"."fase" (
+  "fase_id" integer PRIMARY KEY NOT NULL,
+  "numero" integer NOT NULL
+);
+
+CREATE TABLE "logistica"."protocolo" (
+  "protocolo_id" integer PRIMARY KEY NOT NULL,
+  "nombre" text NOT NULL
+);
+
+CREATE TABLE "estado" (
+  "estado_id" integer PRIMARY KEY NOT NULL,
+  "nombre" varchar(25) UNIQUE NOT NULL
+);
+
+CREATE TABLE "municipio" (
+  "municipio_id" integer PRIMARY KEY NOT NULL,
+  "nombre" varchar(50) NOT NULL
+);
+
+CREATE TABLE "parroquia" (
+  "parroquia_id" integer PRIMARY KEY NOT NULL,
+  "nombre" varchar(60) NOT NULL
+);
+
+CREATE TABLE "persona" (
+  "persona_id" integer PRIMARY KEY NOT NULL,
+  "nombres" varchar(100),
+  "apellidos" varchar(100),
+  "fecha_nacimiento" date,
+  "sexo" varchar(12),
+  "cedula" varchar(10) UNIQUE,
+  "telefono" varchar(20),
+  "email" varchar(100),
+  "estado_id" integer,
+  "municipio_id" integer,
+  "parroquia_id" integer,
+  "direccion_exacta" text
+);
+
+CREATE TABLE "desechable"."antecedente_familiar" (
+  "ant_fam_id" integer PRIMARY KEY NOT NULL,
+  "paciente_id" integer,
+  "consulta_id" integer,
+  "parentesco" varchar(50),
+  "patologia" varchar(255),
+  "descripcion" text
+);
+
+CREATE TABLE "desechable"."examen" (
+  "examen_id" integer PRIMARY KEY NOT NULL,
+  "nombre" varchar(100) UNIQUE,
+  "unidad_medida" varchar(20),
+  "valor_ref_min" text,
+  "valor_ref_max" text,
+  "status" varchar(15) DEFAULT ('Activo')
+);
+
+CREATE TABLE "desechable"."frotis_fsp" (
+  "fsp_id" integer PRIMARY KEY NOT NULL,
+  "consulta_id" integer,
+  "seg_val" text,
+  "lin_val" text,
+  "mon_val" text,
+  "eos_val" text,
+  "blastos_val" text,
+  "morfologia" text,
+  "observaciones" text
+);
+
+CREATE TABLE "desechable"."representante" (
+  "representante_id" integer PRIMARY KEY NOT NULL,
+  "persona_id" integer,
+  "ocupacion" varchar(100)
+);
+
+CREATE TABLE "desechable"."resultado_laboratorio" (
+  "resultado_id" integer PRIMARY KEY NOT NULL,
+  "orden_id" integer,
+  "examen_id" integer,
+  "valor_encontrado" text,
+  "status" varchar(20) DEFAULT ('Activo')
+);
+
+CREATE TABLE "desechable"."tipaje_sanguineo" (
+  "tipaje_id" integer PRIMARY KEY NOT NULL,
+  "paciente_id" integer,
+  "fecha" date,
+  "grupo_ab" varchar(3),
+  "factor_rh" varchar(3),
+  "fenotipo_extendido" text,
+  "genetica_transfusional" text,
+  "metodo" varchar(50),
+  "usuario_registrador_id" integer,
+  "status" varchar(20) DEFAULT ('Activo')
+);
+
+CREATE TABLE "desechable"."transfusion" (
+  "transfusion_id" integer PRIMARY KEY NOT NULL,
+  "paciente_id" integer,
+  "unidad_id" integer,
+  "consulta_id" integer,
+  "fecha_hora" timestamp,
+  "volumen_adm" text,
+  "status" varchar(20) DEFAULT ('Realizada')
+);
+
+CREATE TABLE "desechable"."unidad_hemocomponente" (
+  "unidad_id" integer PRIMARY KEY NOT NULL,
+  "codigo_bolsa" varchar(20) UNIQUE,
+  "tipo_componente" varchar(100),
+  "grupo_rh" varchar(5),
+  "volumen_ml" text,
+  "fecha_vencimiento" date,
+  "status" varchar(20) DEFAULT ('Disponible')
+);
+
+CREATE TABLE "desechable"."orden_laboratorio" (
+  "orden_id" integer PRIMARY KEY NOT NULL,
+  "consulta_id" integer,
+  "tipo_seguimiento" varchar(100),
+  "fecha_solicitud" timestamp DEFAULT (now()),
+  "status" varchar(20) DEFAULT ('Pendiente')
+);
+
+CREATE TABLE "desechable"."paciente_representante" (
+  "paciente_id" integer NOT NULL,
+  "representante_id" integer NOT NULL,
+  "parentesco" varchar(50),
+  "es_principal" boolean DEFAULT true,
+  PRIMARY KEY ("paciente_id", "representante_id")
+);
+
+ALTER TABLE "usuarios"."usuario" ADD FOREIGN KEY ("persona_id") REFERENCES "persona" ("persona_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "usuarios"."usuario" ADD FOREIGN KEY ("id_rol") REFERENCES "usuarios"."rol" ("rol_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "usuarios"."auditoria" ADD FOREIGN KEY ("id_usuario") REFERENCES "usuarios"."usuario" ("usuario_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "logistica"."cita" ADD FOREIGN KEY ("consulta_id") REFERENCES "logistica"."consulta" ("consulta_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "logistica"."consulta" ADD FOREIGN KEY ("paciente_id") REFERENCES "logistica"."paciente" ("paciente_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "logistica"."consulta" ADD FOREIGN KEY ("medico_id") REFERENCES "usuarios"."usuario" ("usuario_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "logistica"."consulta" ADD FOREIGN KEY ("enfermedad_id") REFERENCES "logistica"."enfermedad" ("enfermedad_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "logistica"."medicina_pro" ADD FOREIGN KEY ("id_protocolo") REFERENCES "logistica"."protocolo" ("protocolo_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "logistica"."medicina_pro" ADD FOREIGN KEY ("id_medicina") REFERENCES "logistica"."medicina" ("medicina_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "logistica"."medicina_pro" ADD FOREIGN KEY ("id_fase") REFERENCES "logistica"."fase" ("fase_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "persona" ADD FOREIGN KEY ("estado_id") REFERENCES "estado" ("estado_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "persona" ADD FOREIGN KEY ("municipio_id") REFERENCES "municipio" ("municipio_id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "persona" ADD FOREIGN KEY ("parroquia_id") REFERENCES "parroquia" ("parroquia_id") DEFERRABLE INITIALLY IMMEDIATE;

@@ -10,7 +10,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('estado')->insert([
+        $this->call([
+            Roles::class,
+            Estados::class,
+            Municipios::class,
+            Parroquias::class,
+            Usuarios::class,
+        ]);
+
+        /*DB::table('estado')->insert([
             ['estado_id' => 1, 'nombre' => 'Distrito Capital'],
             ['estado_id' => 2, 'nombre' => 'Miranda'],
         ]);
@@ -143,6 +151,6 @@ class DatabaseSeeder extends Seeder
             ['auditoria_id' => 2, 'descripcion' => 'Actualizacion de consulta', 'modulo' => 'Consultas', 'id_usuario' => 3, 'fecha_hora' => '2026-08-21 10:00:00', 'accion' => 'UPDATE'],
         ]);
 
-        $this->call(ConsultaPendienteSeeder::class);
+        $this->call(ConsultaPendienteSeeder::class);*/
     }
 }
