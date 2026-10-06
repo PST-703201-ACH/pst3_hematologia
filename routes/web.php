@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ConsultaController;
+use App\Http\Controllers\CitaController;
 use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\GerenteController;
@@ -10,7 +11,6 @@ use App\Http\Controllers\ParroquiaController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\CitaController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -87,20 +87,31 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             Route::get('/dashboard-admin', 'dashboards');
             Route::get('/obtener-medicinas-disponibles', 'listarMedDis');
             Route::get('/obtener-protocolos', 'listarProt');
-            Route::post('/protocolo-guardar', 'registrarProt')->name('protocolo.registrar');
             Route::get('/obtener-protocolo-fases/{id}', 'verFases');
+            Route::post('/protocolo-guardar', 'registrarProt')->name('protocolo.registrar');
 
             Route::get('/obtener-enfermedades', 'listarEnf');
             Route::get('/precargar-enf/{id}', 'precargarEnf');
             Route::post('/enfermedad-guardar', 'registrarEnf')->name('enfermedad.registrar');
             Route::post('/enfermedad-actualizar', 'actualizarEnf')->name('enfermedad.actualizar');
+
             Route::get('/obtener-medicinas', 'listarMed');
             Route::get('/precargar-med/{id}', 'precargarMed');
             Route::post('/medicina-guardar', 'registrarMed')->name('medicina.registrar');
             Route::post('/medicina-actualizar', 'actualizarMed')->name('medicina.actualizar');
         });
+    });
 
-        });
+    // ADMINISTRATIVO
+    Route::middleware('role:2')->prefix('admvo')->group(function () {
+        Route::get('/', function () {
+            return view('administrativo.index');
+        })->name('admvo.index');
+
+        Route::post('/cita-agendar', [CitaController::class, 'agendar'])->name('cita.agendar');
+        Route::get('/obtener-citas', [CitaController::class, 'getCitas'])->name('citas.json');
+        Route::get('/precargar-cita/{id}', [CitaController::class, 'precargar']);
+        Route::post('/cita-rep', [CitaController::class, 'reprogramar'])->name('cita.rep');
     });
 
 // ---------------------------------------------------------------------
@@ -141,21 +152,6 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
         });
     });
 
-// ---------------------------------------------------------------------
-    // ADMINISTRATIVO
-// ---------------------------------------------------------------------
-
-    Route::middleware('role:2')->prefix('admvo')->group(function () {
-        Route::get('/', function () {
-            return view('administrativo.index');
-        })->name('admvo.index');
-
-        Route::post('/cita-agendar', [CitaController::class, 'agendar'])->name('cita.agendar');
-        Route::get('/obtener-citas', [CitaController::class, 'getCitas'])->name('citas.json');
-        Route::get('/precargar-cita/{id}', [CitaController::class, 'precargar']);
-        Route::post('/cita-rep', [CitaController::class, 'reprogramar'])->name('cita.rep');
-    });
-
 /*
 // Rutas protegidas
     Route::get('/admin/', function () {
@@ -194,7 +190,7 @@ Route::post('/medico/pacientes/crear', [PacienteController::class, 'store'])->na
 //ARREGLADO
 Route::get('/obtener-pacientes', [PacienteController::class, 'listar']);
 
-//Administrativo
 */
 
 
+});
