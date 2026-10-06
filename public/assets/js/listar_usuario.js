@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
-
 async function listarUsuarios(termino = '', status = '', rol = '') {
     try {
+
+        let usuario = document.getElementById('user').textContent;
 
         let parametros = [];
                 

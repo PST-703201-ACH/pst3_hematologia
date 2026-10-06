@@ -1,8 +1,13 @@
-<div class="card card-success" style="width: 90%; max-width: 60rem; margin: auto;">
-	<div class="card-header">Registro de usuario</div>
-	<div class="card-body">
-		<form id="formReg" action="{{ route('persona.registrar') }}" method="POST">
-			@csrf
+<div class="card card-success card-outline">
+	<div class="card-header">
+		<h3 class="card-title">Registro de usuario</h3>
+	</div>
+
+	<form id="formReg" action="{{ route('persona.registrar') }}" method="POST">
+		@csrf
+		<div class="card-body">
+			<h4>Datos del usuario</h4>
+			
 			<div id="alertCreate"></div>
 			<div class="row">
 				<div class="col">
