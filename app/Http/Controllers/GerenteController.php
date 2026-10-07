@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Persona;
 use App\Models\User;
 use App\Models\Rol;
@@ -63,6 +64,7 @@ class GerenteController extends Controller
         } else {
 
             try {
+                DB::beginTransaction();
 
                 $nombre = $request->nombreProtReg;
 
@@ -72,37 +74,50 @@ class GerenteController extends Controller
 
                 $datos = $request->all();
 
-                // Recorrer todos los datos para organizar las fases
                 foreach ($datos as $clave => $valoresSelect) {
-                    if (str_starts_with($clave, 'fase-')) {
+                    if (str_starts_with($clave, 'med_fase-')) {
                         
-                        // Extraccion de numero de fase
-                        $numeroFase = str_replace('fase-', '', $clave);
+                        // Extracción de número de fase
+                        $numeroFase = str_replace('med_fase-', '', $clave);
                         
                         // Registro de la fase
                         $fase = Fase::create([
                             'numero' => $numeroFase
                         ]);
+                        $claveVia = 'via_fase-' . $numeroFase;
+                        
+                        $viasFase = $datos[$claveVia] ?? [];
 
-                        // Recorrer los datos de medicamentos para esta fase
-                        foreach ($valoresSelect as $medicina) {
+                        foreach ($valoresSelect as $indice => $medicina) {
+                            
+                            $via = $viasFase[$indice] ?? null; 
                             
                             MedicinaProt::create([
-                                'id_protocolo' => $protocolo->protocolo_id, // Vinculamos con el protocolo creado
-                                'id_fase' => $fase->fase_id, // Vinculamos con la fase creada
-                                'id_medicina'   => $medicina   // Guardamos cada medicamento
-                            ]);                }
-
+                                'id_protocolo' => $protocolo->protocolo_id,
+                                'id_fase'      => $fase->fase_id,
+                                'id_medicina'  => $medicina,
+                                'via_admin'       => $via
+                            ]);                
+                        }
                     }
                 }
 
-                return response()->json(['status' => 'exito', 'mensaje' => 'Se ha registrado el protocolo exitosamente']);
+                DB::commit();
+
+                return response()->json([
+                    'status' => 'exito', 
+                    'mensaje' => 'Se ha registrado el protocolo exitosamente'
+                ]);
+
             } catch (\Exception $e) {
+                DB::rollBack();
+
                 return response()->json([
                     'status' => 'error',
                     'mensaje' => 'Error de servidor o base de datos: '. $e->getMessage()
                 ]);
             }
+
         }
     }
 

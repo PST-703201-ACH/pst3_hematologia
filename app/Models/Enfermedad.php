@@ -8,7 +8,7 @@ class Enfermedad extends Model
 {
     protected $table = 'logistica.enfermedad';
     protected $primaryKey = 'enfermedad_id';
-    protected $fillable = ['tipo', 'descripcion', 'status'];
+    protected $fillable = ['tipo', 'descripcion'];
     public $incrementing = true;
     public $timestamps = false;
 }

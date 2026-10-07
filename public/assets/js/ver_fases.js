@@ -34,6 +34,7 @@ async function verFases(boton){
 		              <tr>
 		                <th>#</th>
 		                <th>Medicamento</th>
+		    			<th>Via de administracion</th>
 		              </tr>
 		            </thead>
 		            <tbody>
@@ -42,10 +43,21 @@ async function verFases(boton){
 		    for (var i = 0; i < tablaFase.length; i++) {
 		        var prot = tablaFase[i];
 
+		        if (prot.via_admin == 1) {
+		        	prot.via_admin = "Intramuscular";
+		        }
+		        else if (prot.via_admin == 2) {
+		        	prot.via_admin = "Indovenoso";
+		        }
+		        else if (prot.via_admin == 3) {
+		        	prot.via_admin = "Oral";
+		        }
+
 		        fases += `
 		              <tr>
 		                <td>${idMed++}</td>
 		                <td>${prot.medicina.descripcion}</td>
+		        		<td>${prot.via_admin}</td>
 		              </tr>
 		        `;
 		    }

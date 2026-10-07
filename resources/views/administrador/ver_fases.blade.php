@@ -3,7 +3,7 @@
     <div class="modal-content">
       
       <div class="modal-header bg-light">
-        <h5 class="modal-title">Detalles de usuario</h5>
+        <h5 class="modal-title">Fases de protocolo</h5>
         <button type="button" class="btn-close" data-dismiss="modal"></button>
       </div>
 

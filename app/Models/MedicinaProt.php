@@ -8,7 +8,7 @@ class MedicinaProt extends Model
 {
     protected $table = 'logistica.medicina_pro';
     protected $primaryKey = 'id';
-    protected $fillable = ['id_protocolo', 'id_medicina', 'id_fase'];
+    protected $fillable = ['id_protocolo', 'id_medicina', 'id_fase', 'via_admin'];
     public $incrementing = true;
     public $timestamps = false;
 

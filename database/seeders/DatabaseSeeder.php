@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
             Municipios::class,
             Parroquias::class,
             Usuarios::class,
+            Enfermedades::class,
+            Medicinas::class,
+            
+
         ]);
 
         /*DB::table('estado')->insert([
