@@ -5,7 +5,7 @@ async function cambiarStatus(boton){
 
 
 	try {
-		const respuesta = await fetch(`/cambiar-status/${id}`);
+		const respuesta = await fetch(`/admin/cambiar-status/${id}`);
 		const nuevo = await respuesta.json();
 
 		if (nuevo.status == "exito") {

@@ -2,7 +2,7 @@ async function cargarDetalle(boton){
 	const id = boton.getAttribute('data-id');
 	const modalDetalle = document.getElementById('modalDetalle');
 	try {
-		const respuesta = await fetch(`/obtener-detalles/${id}`);
+		const respuesta = await fetch(`/admin/obtener-detalles/${id}`);
 		const detalle = await respuesta.json();
 		if (detalle.status == 1) {
 			detalle.status = '<p class="text-success">Activo</p>';
