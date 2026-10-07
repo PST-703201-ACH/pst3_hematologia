@@ -241,6 +241,8 @@ document.getElementById('btnNuevaFase').addEventListener('click', () => {
 
 // Control de envio y respuesta de registro de protocolo
 document.addEventListener('DOMContentLoaded', function() {
+    crearFase();
+
     const formularioProt = document.getElementById('formRegProt');
     const registroModal = new bootstrap.Modal(document.getElementById('registrandoModalProt'));
 

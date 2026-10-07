@@ -10,7 +10,6 @@ async function verFases(boton){
 
 		var fasesAgrupadas = {};
 		for (var p of protocolo) {
-		    
 		    var n = p.fase.numero;
 		    if (!fasesAgrupadas[n]) {
 		        fasesAgrupadas[n] = []; 
@@ -19,17 +18,17 @@ async function verFases(boton){
 		}
 
 		var fases = ""; 
-		var idMed = 1;
 
 		for (var nFase in fasesAgrupadas) {
-		    
 		    var tablaFase = fasesAgrupadas[nFase];
+
+		    var idMed = 1; 
 
 		    fases += `
 		        <table class="table table-striped">
 		            <thead>
 		              <tr>
-		                <th colspan="2">Fase N°${nFase}</th>
+		                <th colspan="3">Fase N°${nFase}</th>
 		              </tr>
 		              <tr>
 		                <th>#</th>

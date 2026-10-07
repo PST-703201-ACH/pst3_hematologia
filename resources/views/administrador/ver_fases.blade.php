@@ -9,9 +9,9 @@
 
         <div class="modal-body">
           <div class="container-fluid">
+            <label>Nombre de protocolo</label>
             <div class="col-6">
-              <h5 class="text-muted d-block">Nombre de protocolo</h5>
-              <p id="protocoloNombre"></p>
+              <h5 id="protocoloNombre"></h5>
             </div>
           </div>
 

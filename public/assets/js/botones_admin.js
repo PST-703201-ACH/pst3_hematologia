@@ -41,6 +41,7 @@ document.getElementById('btnCatalogo').addEventListener('click', function(catalo
 
 document.getElementById('btnRegProt').addEventListener('click', function(registrarProt) {
     registrarProt.preventDefault();
+    
     intercambiarVista('registrar-protocolo');
 });
 

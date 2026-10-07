@@ -97,7 +97,7 @@ class GerenteController extends Controller
                                 'id_fase'      => $fase->fase_id,
                                 'id_medicina'  => $medicina,
                                 'via_admin'       => $via
-                            ]);                
+                            ]);
                         }
                     }
                 }
