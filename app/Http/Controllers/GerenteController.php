@@ -129,7 +129,7 @@ class GerenteController extends Controller
             $termino = $request->input('busqueda');
             
             $query->where(function($q) use ($termino) {
-                $q->where('descripcion', 'ILIKE', "%{$termino}%");
+                $q->where('nombre', 'ILIKE', "%{$termino}%");
             });     
         }
 
