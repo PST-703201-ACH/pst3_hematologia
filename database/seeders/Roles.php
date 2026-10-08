@@ -14,25 +14,21 @@ class Roles extends Seeder
 
         // Administrador
         Rol::create([
-            'rol_id' => 1,
             'nombre' => 'Administrador'
         ]);
 
         // Administrativo
         Rol::create([
-            'rol_id' => 2,
             'nombre' => 'Administrativo'
         ]);
 
         // Medico
         Rol::create([
-            'rol_id' => 3,
             'nombre' => 'Medico'
         ]);
 
         // Enfermero
         Rol::create([
-            'rol_id' => 4,
             'nombre' => 'Enfermero'
         ]);
     }

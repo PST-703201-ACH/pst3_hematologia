@@ -11,7 +11,7 @@ class Persona extends Model
     protected $primaryKey = 'persona_id';
     public $incrementing = true;
     protected $keyType = 'int';
-    protected $fillable = ['persona_id', 'nombres', 'apellidos', 'fecha_nacimiento', 'sexo', 'cedula', 'telefono', 'email', 'estado_id', 'municipio_id', 'parroquia_id', 'direccion_exacta', 'status'];
+    protected $fillable = ['persona_id', 'nombres', 'apellidos', 'fecha_nacimiento', 'sexo', 'cedula', 'telefono', 'email', 'estado_id', 'municipio_id', 'parroquia_id', 'direccion_exacta'];
     public function estado(){
     return $this->belongsTo(Estado::class, 'estado_id', 'estado_id');
     }

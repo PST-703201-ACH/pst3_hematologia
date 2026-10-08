@@ -12,12 +12,10 @@ class Protocolos extends Seeder
     public function run(): void
     {
         Protocolo::create([
-            'protocolo_id' => 1,
             'nombre' => 'Protocolo Estandar'
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 1,
             'id_fase' => 1,
@@ -25,7 +23,6 @@ class Protocolos extends Seeder
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 2,
             'id_fase' => 1,
@@ -33,7 +30,6 @@ class Protocolos extends Seeder
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 3,
             'id_fase' => 1,
@@ -41,7 +37,6 @@ class Protocolos extends Seeder
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 4,
             'id_fase' => 1,
@@ -49,7 +44,6 @@ class Protocolos extends Seeder
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 5,
             'id_fase' => 1,
@@ -57,7 +51,6 @@ class Protocolos extends Seeder
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 1,
             'id_fase' => 2,
@@ -65,7 +58,6 @@ class Protocolos extends Seeder
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 1,
             'id_fase' => 3,
@@ -73,7 +65,6 @@ class Protocolos extends Seeder
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 2,
             'id_fase' => 3,
@@ -81,7 +72,6 @@ class Protocolos extends Seeder
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 3,
             'id_fase' => 3,
@@ -89,7 +79,6 @@ class Protocolos extends Seeder
         ]);
 
         MedicinaProt::create([
-            'id' => 1,
             'id_protocolo' => 1,
             'id_medicina' => 5,
             'id_fase' => 4,

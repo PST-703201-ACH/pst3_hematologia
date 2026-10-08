@@ -15,8 +15,7 @@ class Cita extends Model
         'apellidos_representante',
         'numero_hc',
         'fecha_hora',
-        'consulta_id',
-        'estatus',
+        'consulta_id'
     ];
     public $incrementing = true;
     public $timestamps = false;

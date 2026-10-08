@@ -13,6 +13,7 @@ class CitaController extends Controller
 {
     public function agendar(Request $request)
     {
+
         $errores = [];
 
         if (empty($request->pacienteNombre1)) {
@@ -33,6 +34,12 @@ class CitaController extends Controller
 
         if (empty($request->hc)) {
             $errores['hc'] = "Debe ingresar el Nº de historia clinica del nuevo paciente";
+        }
+
+        $hcExistente = Paciente::where('hc', $request->hc)->exists();
+
+        if ($hcExistente) {
+            $errores['hc'] = "Nº de historia clinica no disponible";
         }
 
         if (empty($request->fechaHora)) {

@@ -11,7 +11,7 @@ class Consulta extends Model
     protected $fillable = [
         'paciente_id',
         'medico_id',
-        'tipo_id',
+        'tipo',
         'enfermedad_id',
         'fecha_hora',
         'peso',

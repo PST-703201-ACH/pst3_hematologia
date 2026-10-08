@@ -13,17 +13,14 @@ class Parroquias extends Seeder
         // Parroquias
 
         Parroquia::create([
-            'parroquia_id' => 1,
             'nombre' => 'San Bernardino'
         ]);
 
         Parroquia::create([
-            'parroquia_id' => 2,
             'nombre' => 'La Candelaria'
         ]);
 
         Parroquia::create([
-            'parroquia_id' => 3,
             'nombre' => 'Chacao'
         ]);
     }

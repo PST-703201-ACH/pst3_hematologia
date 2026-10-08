@@ -18,11 +18,11 @@
 		      <div class="modal-body">
 		        <form id="formReg" action="{{ route('cita.agendar') }}" method="POST">
 		        	@csrf
-		        	<h4 style="text-align: center;">DATOS DE PACIENTE</h4>
+		        	<h4>DATOS DE PACIENTE</h4>
 			        <div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteNombre1">Primer nombre del paciente</label>
-					    <input type="text" class="form-control" name="pacienteNombre1" id="pacienteNombre1" placeholder="" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteNombre1" id="pacienteNombre1" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
@@ -34,7 +34,7 @@
 					<div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteApellido1">Primer apellido del paciente</label>
-					    <input type="text" class="form-control" name="pacienteApellido1" id="pacienteApellido1" placeholder="" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteApellido1" id="pacienteApellido1" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
@@ -43,11 +43,11 @@
 					  </div>
 					</div>
 
-					<h4 style="text-align: center;">DATOS DE REPRESENTANTE</h4>
+					<h4>DATOS DE REPRESENTANTE</h4>
 					<div class="row">
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represNombre1">Primer nombre del representante</label>
-					    <input type="text" class="form-control" name="represNombre1" id="represNombre1" placeholder="" autocomplete="off">
+					    <input type="text" class="form-control" name="represNombre1" id="represNombre1" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
@@ -59,7 +59,7 @@
 					<div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represApellido1">Primer apellido del representante</label>
-					    <input type="text" class="form-control" name="represApellido1" id="represApellido1" placeholder="" autocomplete="off">
+					    <input type="text" class="form-control" name="represApellido1" id="represApellido1" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
@@ -68,7 +68,7 @@
 					  </div>
 					</div>
 
-					<h4 style="text-align: center;">DATOS DE CITA</h4>
+					<h4>DATOS DE CITA</h4>
 
 		          <div class="form-group">
 		            <label for="hc">Nº de Historia Clinica</label>
@@ -125,11 +125,11 @@
 		      <div class="modal-body">
 		        <form id="formRep" action="{{ route('cita.rep') }}" method="POST">
 		        	@csrf
-		        	<h4 style="text-align: center;">DATOS DE PACIENTE</h4>
+		        	<h4>DATOS DE PACIENTE</h4>
 			        <div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteNombreRep1">Primer nombre del paciente</label>
-					    <input type="text" class="form-control" name="pacienteNombreRep1" id="pacienteNombreRep1" placeholder="" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteNombreRep1" id="pacienteNombreRep1" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
@@ -141,7 +141,7 @@
 					<div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteApellidoRep1">Primer apellido del paciente</label>
-					    <input type="text" class="form-control" name="pacienteApellidoRep1" id="pacienteApellidoRep1" placeholder="" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteApellidoRep1" id="pacienteApellidoRep1" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
@@ -150,11 +150,11 @@
 					  </div>
 					</div>
 
-					<h4 style="text-align: center;">DATOS DE REPRESENTANTE</h4>
+					<h4>DATOS DE REPRESENTANTE</h4>
 					<div class="row">
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represNombreRep1">Primer nombre del representante</label>
-					    <input type="text" class="form-control" name="represNombreRep1" id="represNombreRep1" placeholder="" autocomplete="off">
+					    <input type="text" class="form-control" name="represNombreRep1" id="represNombreRep1" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
@@ -166,7 +166,7 @@
 					<div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represApellidoRep1">Primer apellido del representante</label>
-					    <input type="text" class="form-control" name="represApellidoRep1" id="represApellidoRep1" placeholder="" autocomplete="off">
+					    <input type="text" class="form-control" name="represApellidoRep1" id="represApellidoRep1" autocomplete="off">
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
@@ -175,7 +175,7 @@
 					  </div>
 					</div>
 
-					<h4 style="text-align: center;">DATOS DE CITA</h4>
+					<h4>DATOS DE CITA</h4>
 
 		          <div class="form-group">
 		            <label for="hcRep">Nº de Historia Clinica</label>
@@ -219,63 +219,5 @@
 		    </div>
 		  </div>
 		</div>
-
-
-
-
 	</div>
-</div>
-
-<div class="card card-primary card-outline">
-	<div class="card-header">
-		<h3 class="card-title">Citas</h3>
-	</div>
-
-	<div class="card-body">
-
-		<div class="d-flex align-items-center justify-content-between mb-3">
-
-		    <div>
-				<button id="btnRefrescarCi" class="btn btn-primary"><i class="fas fa-undo" aria-hidden="true"></i>
-				</button>
-		    </div>
-
-		    <form onsubmit="event.preventDefault();" class="d-flex align-items-center m-0" id="formBusquedaCi">
-		        <input 
-		            type="text" 
-		            name="busqueda_ci"
-		            id="inputBuscar" 
-		            placeholder="Buscar..." 
-		            class="form-control me-2" 
-		            style="width: 250px;"
-		            autocomplete="off" 
-		        >
-		    </form>
-		</div>
-
-
-		<div class="table-responsive">
-			<table class="card-table table">
-				<caption>Citas de pacientes agendadas</caption>
-				<thead>
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">Nombre</th>
-						<th scope="col">Representante</th>
-						<th scope="col">Cedula</th>
-						<th scope="col">Nº de H.C</th>
-						<th scope="col">Status</th>
-					</tr>
-				</thead>
-				<tbody id="cuerpoTablaCitas">
-
-				</tbody>
-			</table>
-		</div>
-
-
-
-		
-
-	</div>	
 </div>

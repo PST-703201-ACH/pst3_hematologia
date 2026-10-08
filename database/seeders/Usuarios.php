@@ -13,7 +13,6 @@ class Usuarios extends Seeder
     public function run(): void
     {
         $persona1 = Persona::create([
-            'persona_id' => 1,
             'nombres' => 'Angel David',
             'apellidos' => 'Granados Carrillo',
             'fecha_nacimiento' => '2006-07-24',
@@ -28,7 +27,6 @@ class Usuarios extends Seeder
         ]);
 
         $persona2 = Persona::create([
-            'persona_id' => 2,
             'nombres' => 'Jeandel Jose',
             'apellidos' => 'Hernandez Muñoz',
             'fecha_nacimiento' => '2006-07-24',
@@ -43,16 +41,14 @@ class Usuarios extends Seeder
         ]);
 
         User::create([
-            'usuario_id' => 1,
             'persona_id' => $persona1->persona_id,
             'username' => '31940105',
             'password_hash' => Hash::make('123456'),
             'status' => 1,
-            'id_rol' => 1
+            'id_rol' => 2
         ]);
 
         User::create([
-            'usuario_id' => 2,
             'persona_id' => $persona2->persona_id,
             'username' => '31491413',
             'password_hash' => Hash::make('123456'),

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             Usuarios::class,
             Enfermedades::class,
             Medicinas::class,
+            Citas::class,
             
 
         ]);

@@ -12,32 +12,27 @@ class Enfermedades extends Seeder
     {
         // Enfermedades Malignas
         Enfermedad::create([
-            'enfermedad_id' => 1,
             'tipo' => 2,
             'descripcion' => 'Leucemia mieloide crónica',
         ]);
 
         Enfermedad::create([
-            'enfermedad_id' => 2,
             'tipo' => 2,
             'descripcion' => 'Linfoma de Hodgkin',
         ]);
 
         // Enfermedades Benignas
         Enfermedad::create([
-            'enfermedad_id' => 3,
             'tipo' => 1,
             'descripcion' => 'Anemia ferropénica',
         ]);
 
         Enfermedad::create([
-            'enfermedad_id' => 4,
             'tipo' => 1,
             'descripcion' => 'Hemofilia',
         ]);
 
         Enfermedad::create([
-            'enfermedad_id' => 5,
             'tipo' => 1,
             'descripcion' => 'Trombocitopenia inmune',
         ]);

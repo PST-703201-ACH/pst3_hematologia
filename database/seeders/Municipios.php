@@ -13,12 +13,10 @@ class Municipios extends Seeder
         // Municipios
 
         Municipio::create([
-            'municipio_id' => 1,
             'nombre' => 'Libertador'
         ]);
 
         Municipio::create([
-            'municipio_id' => 2,
             'nombre' => 'Chacao'
         ]);
     }
