@@ -1,11 +1,12 @@
 <div class="row">
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-          <span class="info-box-icon bg-success"><i class="fas fa-users"></i></span>
-          <div class="info-box-content">
-            <span class="info-box-text">Visitas</span>
-            <span class="info-box-number" id="total-usuarios">0</span>
+  <div class="col-lg-3 col-6">
+      <div class="small-box bg-primary">
+          <div class="inner">
+              <p><h3 id="total-citas">0</h3>Citas</p>
           </div>
-        </div>
-    </div>
+          <div class="icon">
+              <i class="fas fa-calendar"></i>
+          </div>
+      </div>
+  </div>
 </div>

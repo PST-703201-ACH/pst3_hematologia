@@ -68,6 +68,7 @@
 <!-- Custom App JS -->
 <script src="{{ asset('assets/js/app.js') }}"></script>
 
+<script src="{{ asset('assets/js/dashboards_admvo.js') }}"></script>
 <script src="{{ asset('assets/js/botones_admvo.js') }}"></script>
 <script src="{{ asset('assets/js/calendario.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_cita.js') }}"></script>

@@ -41,8 +41,6 @@ async function precargarEventos(){
     return eventos;
 }
 
-
-
 var calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     locale: 'es',
@@ -88,17 +86,13 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     return { domNodes: [contenedor] };
     },
     dateClick: function(info) {
-        // 1. Obtener la fecha y hora actual del sistema
         const ahora = new Date();
 
-        // 2. Bloquear si la fecha del clic es anterior a la actual
         if (info.date < ahora) {
-            // Opcional: Puedes mostrar una alerta o notificación flotante aquí
             alert('No puedes agendar citas en fechas o horas pasadas.');
-            return; // Detiene por completo la ejecución y no abre el modal
+            return;
         }
 
-        // --- Tu código original continúa exactamente igual aquí abajo ---
         const formCita = new bootstrap.Modal(modalCita);
         let horaExtraida = info.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         let fechaExtraida = info.date.toLocaleDateString('sv');

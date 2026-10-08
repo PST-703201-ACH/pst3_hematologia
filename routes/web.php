@@ -5,6 +5,7 @@ use App\Http\Controllers\CitaController;
 use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\GerenteController;
+use App\Http\Controllers\AdmvoController;
 use App\Http\Controllers\MedicoController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ParroquiaController;
@@ -108,10 +109,16 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             return view('administrativo.index');
         })->name('admvo.index');
 
-        Route::post('/cita-agendar', [CitaController::class, 'agendar'])->name('cita.agendar');
-        Route::get('/obtener-citas', [CitaController::class, 'getCitas'])->name('citas.json');
-        Route::get('/precargar-cita/{id}', [CitaController::class, 'precargar']);
-        Route::post('/cita-rep', [CitaController::class, 'reprogramar'])->name('cita.rep');
+        Route::controller(AdmvoController::class)->group(function () {
+            Route::get('/dashboard-admvo', 'dashboards');
+        });
+
+        Route::controller(CitaController::class)->group(function () {
+            Route::post('/cita-agendar', 'agendar')->name('cita.agendar');
+            Route::get('/obtener-citas', 'getCitas')->name('citas.json');
+            Route::get('/precargar-cita/{id}', 'precargar');
+            Route::post('/cita-rep', 'reprogramar')->name('cita.rep');
+        });
     });
 
 // ---------------------------------------------------------------------
