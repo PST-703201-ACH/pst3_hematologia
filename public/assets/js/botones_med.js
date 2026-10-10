@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnRegistrar = document.getElementById('btnRegistrar');
     const btnCancelarReg = document.getElementById('btnCancelarReg');
     const btnListarCon = document.getElementById('btnListarCon');
+    const btnProgramarTratamiento = document.getElementById('btnProgramarTratamiento');
 
     if (btnListarPa) {
         btnListarPa.addEventListener('click', function (evento) {
@@ -50,6 +51,16 @@ document.getElementById('btnListarCon').addEventListener('click', function(lista
 
             if (typeof listarConsultaP === 'function') {
                 listarConsultaP();
+            }
+        });
+    }
+
+    if (btnProgramarTratamiento) {
+        btnProgramarTratamiento.addEventListener('click', function (evento) {
+            evento.preventDefault();
+            intercambiarVista('seccion-tratamiento_programar');
+            if (typeof cargarFormularioTratamiento === 'function') {
+                cargarFormularioTratamiento();
             }
         });
     }

@@ -58,6 +58,22 @@
                     <div id="contenedor-consulta-formulario"></div>
                 </div>
 
+                <div id="seccion-tratamiento_programar" class="vista_med d-none">
+                    <div class="alert alert-success {{ session()->has('success') ? '' : 'd-none' }}" role="alert">
+                        {{ session('success') }}
+                    </div>
+                    @if($errors->any())
+                        <div class="alert alert-danger" role="alert">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <div id="contenedor-tratamientos-programar"></div>
+                </div>
+
                 @if(($vistaInicial ?? null) === 'pacientes')
                     <script>document.getElementById('seccion-dashboard').classList.add('d-none');</script>
                 @elseif(($vistaInicial ?? null) === 'registrar')
@@ -71,6 +87,12 @@
                         document.getElementById('seccion-dashboard').classList.add('d-none');
                         document.getElementById('seccion-pacientes_listados').classList.add('d-none');
                         document.getElementById('seccion-consultas_listadas').classList.remove('d-none');
+                    </script>
+                @elseif(($vistaInicial ?? null) === 'tratamientos')
+                    <script>
+                        document.getElementById('seccion-dashboard').classList.add('d-none');
+                        document.getElementById('seccion-pacientes_listados').classList.add('d-none');
+                        document.getElementById('seccion-tratamiento_programar').classList.remove('d-none');
                     </script>
                 @endif
             </div>
@@ -87,6 +109,7 @@
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/botones_med.js') }}"></script>
 <script src="{{ asset('assets/js/listar_consulta.js') }}"></script>
+<script src="{{ asset('assets/js/programar_tratamiento.js') }}"></script>
 
 @stack('scripts')
 </body>

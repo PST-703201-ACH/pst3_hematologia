@@ -2,6 +2,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ConsultaController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\EnfermeriaController;
 use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\GerenteController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ParroquiaController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\TratamientoController;
 use App\Http\Controllers\UsuarioController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -157,6 +159,24 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
         Route::get('/consultas/atender/{cita_id}', 'atenderCita')->name('medico.consultas.atender');
         Route::post('/consultas/guardar', 'store')->name('medico.consultas.store');
     });
+
+    Route::controller(TratamientoController::class)->group(function () {
+        Route::get('/tratamientos/programar', 'create')->name('medico.tratamientos.create');
+        Route::post('/tratamientos', 'store')->name('medico.tratamientos.store');
+        Route::post('/tratamientos/sesiones', 'storeSesion')->name('medico.tratamientos.sesiones.store');
+    });
+});
+
+// ---------------------------------------------------------------------
+// ENFERMERÍA
+// ---------------------------------------------------------------------
+Route::middleware('role:4')->prefix('enfermeria')->controller(EnfermeriaController::class)->group(function () {
+    Route::get('/', 'index')->name('enfermeria.index');
+    Route::get('/sesiones', 'sesiones')->name('enfermeria.sesiones.index');
+    Route::post('/sesiones/{sesionId}/aplicar', 'aplicarSesion')->name('enfermeria.sesiones.aplicar');
+    Route::post('/transfusiones/{transfusionId}/aplicar', 'aplicarTransfusion')->name('enfermeria.transfusiones.aplicar');
+    Route::post('/observaciones', 'storeObservacion')->name('enfermeria.observaciones.store');
+    Route::post('/reacciones-adversas', 'storeReaccion')->name('enfermeria.reacciones.store');
 });
 
 });
