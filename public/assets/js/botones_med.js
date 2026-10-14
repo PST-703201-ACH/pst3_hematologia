@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const btnRegistrar = document.getElementById('btnRegistrar');
     const btnCancelarReg = document.getElementById('btnCancelarReg');
     const btnListarCon = document.getElementById('btnListarCon');
+    const btnProgramarTratamiento = document.getElementById('btnProgramarTratamiento');
 
     document.getElementById('btnListarPa').addEventListener('click', function (listarPa) {
         listarPa.preventDefault();
@@ -39,5 +40,4 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('formRegCon').reset();
         intercambiarVista('seccion-consultas');
     });
-
 });
