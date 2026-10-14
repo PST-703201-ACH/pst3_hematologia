@@ -148,14 +148,16 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
         Route::delete('/pacientes/{id}', 'destroy')->name('medico.pacientes.destroy');
 
         Route::get('/obtener-pacientes', 'listar')->name('medico.pacientes.listar');
-        Route::get('/obtener-consultas', 'listarCon')->name('medico.pacientes.consultas');
+        
         Route::get('/obtener-consultas-realizadas', 'listarConRealizadas')->name('medico.pacientes.consultas.realizadas');
         Route::get('/representantes/buscar', 'getRepresentantes')->name('medico.representantes.buscar');
     });
 
     Route::controller(ConsultaController::class)->group(function () {
-        Route::get('/consultas/atender/{cita_id}', 'atenderCita')->name('medico.consultas.atender');
-        Route::post('/consultas/guardar', 'store')->name('medico.consultas.store');
+        Route::get('/obtener-consultas', 'listarConP')->name('medico.pacientes.consultas');
+        Route::get('/obtener-enfermedades', 'obtenerEnf');
+        Route::get('/precargar-con/{id}', 'precargarConP');
+        Route::post('/consulta-registrar', 'registrarCon')->name('medico.consultas.registrar');
     });
 });
 

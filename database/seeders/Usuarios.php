@@ -45,7 +45,7 @@ class Usuarios extends Seeder
             'username' => '31940105',
             'password_hash' => Hash::make('123456'),
             'status' => 1,
-            'id_rol' => 2
+            'id_rol' => 3
         ]);
 
         User::create([

@@ -46,33 +46,14 @@
                     <div id="contenedor-paciente-detalle"></div>
                 </div>
 
-                <div id="seccion-registrar_paciente" class="vista_med d-none">
-                    @include('medico.pacientes.create')
-                </div>
-
-                <div id="seccion-consultas_listadas" class="vista_med d-none">
+                <div id="seccion-consultas" class="vista_med d-none">
                     @include('medico.consultas.listado')
                 </div>
 
-                <div id="seccion-consulta_formulario" class="vista_med d-none">
-                    <div id="contenedor-consulta-formulario"></div>
+                <div id="seccion-consulta-registrar" class="vista_med d-none">
+                    @include('medico.consultas.registrar')
                 </div>
 
-                @if(($vistaInicial ?? null) === 'pacientes')
-                    <script>document.getElementById('seccion-dashboard').classList.add('d-none');</script>
-                @elseif(($vistaInicial ?? null) === 'registrar')
-                    <script>
-                        document.getElementById('seccion-dashboard').classList.add('d-none');
-                        document.getElementById('seccion-pacientes_listados').classList.add('d-none');
-                        document.getElementById('seccion-registrar_paciente').classList.remove('d-none');
-                    </script>
-                @elseif(($vistaInicial ?? null) === 'consultas')
-                    <script>
-                        document.getElementById('seccion-dashboard').classList.add('d-none');
-                        document.getElementById('seccion-pacientes_listados').classList.add('d-none');
-                        document.getElementById('seccion-consultas_listadas').classList.remove('d-none');
-                    </script>
-                @endif
             </div>
         </section>
     </div>
@@ -87,6 +68,8 @@
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/botones_med.js') }}"></script>
 <script src="{{ asset('assets/js/listar_consulta.js') }}"></script>
+<script src="{{ asset('assets/js/registrar_con.js') }}"></script>
+
 
 @stack('scripts')
 </body>

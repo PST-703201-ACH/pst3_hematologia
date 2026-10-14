@@ -1,6 +1,6 @@
 <div class="card card-primary card-outline">
 	<div class="card-header">
-		<h3 class="card-title">Calendario de agendamiento de cita</h3>
+		<h3 class="card-title">Agenda de citas</h3>
 	</div>
 
 	<div class="card-body">

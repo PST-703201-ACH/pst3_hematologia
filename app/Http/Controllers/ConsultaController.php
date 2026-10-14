@@ -15,164 +15,205 @@ use Illuminate\Support\Facades\Log;
 
 class ConsultaController extends Controller
 {
-    public function atenderCita($citaId)
+    public function listarConP(Request $request)
     {
-        $cita = Cita::with('consulta')->findOrFail($citaId);
+        $query = Consulta::with(['paciente.persona', 'enfermedad', 'cita'])->where('status', 0);
 
-        $paciente = null;
-        $persona = null;
-        $esPrimeraConsulta = false;
-
-        if (!empty($cita->numero_hc)) {
-            $paciente = Paciente::where('hc', $cita->numero_hc)->first();
+        if ($request->filled('busqueda')) {
+            $busqueda = $request->string('busqueda')->trim();
+            $query->where(function ($consulta) use ($busqueda) {
+                $consulta->whereHas('paciente', function ($paciente) use ($busqueda) {
+                    $paciente->where('hc', 'like', "%{$busqueda}%")
+                        ->orWhereHas('persona', function ($persona) use ($busqueda) {
+                            $persona->where('nombres', 'like', "%{$busqueda}%")
+                                ->orWhere('apellidos', 'like', "%{$busqueda}%")
+                                ->orWhere('cedula', 'like', "%{$busqueda}%");
+                        });
+                })->orWhereHas('cita', function ($cita) use ($busqueda) {
+                    $cita->where('numero_hc', 'like', "%{$busqueda}%")
+                        ->orWhere('nombres_paciente', 'like', "%{$busqueda}%")
+                        ->orWhere('apellidos_paciente', 'like', "%{$busqueda}%");
+                });
+            });
         }
 
-        if ($paciente) {
-            $persona = $paciente->persona;
-            $esPrimeraConsulta = !Consulta::where('paciente_id', $paciente->paciente_id)->exists();
-        } else {
-            $esPrimeraConsulta = true;
+        if ($request->filled('fecha')) {
+            $query->whereDate('fecha_hora', $request->input('fecha'));
         }
 
-        $tipoConsultaId = $esPrimeraConsulta ? 1 : 2;
-        $tipoConsultaNombre = DB::table('tipo_consulta')
-            ->where('tipo_id', $tipoConsultaId)
-            ->value('nombre') ?? ($esPrimeraConsulta ? 'Primera consulta' : 'Consulta de control');
-        $enfermedades = Enfermedad::orderBy('enfermedad_id')->get();
-        $enfermedadSeleccionada = $esPrimeraConsulta
-            ? null
-            : ($cita->consulta?->enfermedad ?? Consulta::where('paciente_id', $paciente?->paciente_id)
-                ->whereNotNull('enfermedad_id')
-                ->latest('fecha_hora')
-                ->first()?->enfermedad);
-        $medico = auth()->user();
-
-        $vistaData = [
-            'cita' => $cita,
-            'paciente' => $paciente,
-            'persona' => $persona,
-            'esPrimeraConsulta' => $esPrimeraConsulta,
-            'tipoConsultaId' => $tipoConsultaId,
-            'tipoConsultaNombre' => $tipoConsultaNombre,
-            'enfermedades' => $enfermedades,
-            'enfermedadSeleccionada' => $enfermedadSeleccionada,
-            'medico' => $medico,
-            'titulo' => $esPrimeraConsulta ? 'Primera Consulta' : 'Consulta de Control',
-        ];
-
-        return view('medico.consultas.formulario', $vistaData);
+        return response()->json($query->get());
     }
 
-    public function store(ConsultaMedicaRequest $request)
+    public function obtenerEnf(){
+        $enfermedades = Enfermedad::all(); 
+        return response()->json($enfermedades);
+    }
+
+    public function precargarConP($id)
+    {
+        $consulta = Cita::with('consulta.paciente.persona')->where('cita_id', $id)->first();
+        return response()->json($consulta);
+    }
+
+    public function registrarCon(Request $request)
     {
         try {
             DB::beginTransaction();
 
-            $cita = Cita::with('consulta')->findOrFail($request->cita_id);
-            $paciente = null;
-            $paciente = Paciente::where('hc', $cita->numero_hc)->first();
-            $esPrimeraConsulta = ! $paciente || ! Consulta::where('paciente_id', $paciente->paciente_id)->exists();
-            $tipoConsultaId = $esPrimeraConsulta ? 1 : 2;
-            $enfermedadId = $esPrimeraConsulta
-                ? $request->enfermedad_id
-                : ($cita->consulta?->enfermedad_id ?? Consulta::where('paciente_id', $paciente->paciente_id)
-                    ->whereNotNull('enfermedad_id')
-                    ->latest('fecha_hora')
-                    ->value('enfermedad_id'));
+            $errores = [];
 
-            if (! $enfermedadId) {
-                throw new \RuntimeException('La consulta de control no tiene una enfermedad asignada.');
+            if (empty($request->enfConReg)) {
+                $errores['enfConReg'] = "";
             }
 
-            if ($esPrimeraConsulta) {
-                $paciente = $this->crearPacienteDesdeCita($cita);
+            if (empty($request->pesoConReg)) {
+                $errores['pesoConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->tallaConReg)) {
+                $errores['tallaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->scConReg)) {
+                $errores['scConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->fcConReg)) {
+                $errores['fcConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->frConReg)) {
+                $errores['frConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->antePersoConReg)) {
+                $errores['antePersoConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->anteFamiConReg)) {
+                $errores['anteFamiConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->signosConReg)) {
+                $errores['signosConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->subjConReg)) {
+                $errores['subjConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->planConReg)) {
+                $errores['planConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->citaFechaConReg)) {
+                $errores['citaFechaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->citaHoraConReg)) {
+                $errores['citaHoraConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->hcPaConReg)) {
+                $errores['hcPaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->nacPaConReg)) {
+                $errores['nacPaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->cedulaPaConReg)) {
+                $errores['cedulaPaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->nombrePa1ConReg)) {
+                $errores['nombrePa1ConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->nombrePa2ConReg)) {
+                $errores['nombrePa2ConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->apellidoPa1ConReg)) {
+                $errores['apellidoPa1ConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->apellidoPa2ConReg)) {
+                $errores['apellidoPa2ConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->sexoPaConReg)) {
+                $errores['sexoPaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->emailPaConReg)) {
+                $errores['emailPaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->tlfPaConReg)) {    
+                $errores['tlfPaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->dirPaConReg)) {
+                $errores['dirPaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->estadoPaConReg)) {
+                $errores['estadoPaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->muniPaConReg)) {
+                $errores['muniPaConReg'] = "Complete esta informacion";
+            }
+
+            if (empty($request->parroquiaPaConReg)) {
+                $errores['parroquiaPaConReg'] = "Complete esta informacion";
+            }
+
+
+            if (!empty($errores)) {
+                return response()->json([
+                    "status" => "errores",
+                    "errores" => $errores
+                ]);
+                exit;
             } else {
-                $paciente = $paciente->fresh();
+
+                $tiempoActual = new \DateTime();
+                $fechaHora = $tiempoActual->format('Y-m-d H:i:s');
+                $fechaHoraProx = new \DateTime("$request->citaFechaConReg $request->citaHoraConReg");
+                $proxCita = $fechaHoraProx->format('Y-m-d H:i:s');
+
+                $consulta = Consulta::with('paciente.persona')->where('consulta_id', $request->consultaReg)->first();
+
+                $consulta->medico_id = $request->usuConReg;
+                $consulta->enfermedad_id = $request->enfConReg;
+                $consulta->fecha_hora = $fechaHora;
+                $consulta->peso = $request->pesoConReg;
+                $consulta->talla = $request->tallaConReg;
+                $consulta->sc = $request->scConReg;
+                $consulta->fc = $request->fcConReg;
+                $consulta->fr = $request->frConReg;
+                $consulta->subjetivo = $request->subjConReg;
+                $consulta->plan_trabajo = $request->planConReg;
+                $consulta->proxima_cita = $proxCita;
+                $consulta->status = 1;
             }
-
-            $consulta = Consulta::create([
-                'paciente_id' => $paciente->paciente_id,
-                'medico_id' => auth()->user()?->usuario_id,
-                'tipo_id' => $tipoConsultaId,
-                'enfermedad_id' => $enfermedadId,
-                'fecha_hora' => now(),
-                'peso' => $request->peso,
-                'talla' => $request->talla,
-                'sc' => $request->sc,
-                'fc' => $request->fc,
-                'fr' => $request->fr,
-                'antecedentes_personales' => $request->antecedentes_personales,
-                'antecedentes_familiares' => $request->antecedentes_familiares,
-                'signos_sintomas_iniciales' => $request->signos_sintomas_iniciales,
-                'subjetivo' => $request->subjetivo,
-                'plan_trabajo' => $request->plan_trabajo,
-                'proxima_cita' => $request->proxima_cita,
-                'status' => 1,
-            ]);
-
-            if ($cita->consulta_id) {
-                $consultaExistente = Consulta::find($cita->consulta_id);
-                if ($consultaExistente) {
-                    $consultaExistente->update(['status' => 1]);
-                }
-            }
-
-            $cita->update([
-                'consulta_id' => $consulta->consulta_id,
-                'estatus' => 'atendida',
-            ]);
 
             DB::commit();
 
-            return redirect()->route('medico.index', ['vista' => 'consultas'])
-                ->with('success', 'Consulta médica registrada exitosamente.');
-        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'exito', 
+                'mensaje' => 'Se ha registrado la consulta exitosamente'
+            ]);
+
+        } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Error al guardar consulta médica: ' . $e->getMessage(), [
-                'request' => $request->all(),
-                'trace' => $e->getTraceAsString(),
-            ]);
 
-            return back()->withInput()->withErrors([
-                'error' => 'No se pudo guardar la consulta: ' . $e->getMessage(),
+            return response()->json([
+                'status' => 'error',
+                'mensaje' => 'Error de servidor o base de datos: '. $e->getMessage()
             ]);
         }
-    }
-
-    protected function crearPacienteDesdeCita(Cita $cita): Paciente
-    {
-        $paciente = Paciente::where('hc', $cita->numero_hc)->first();
-
-        if ($paciente) {
-            return $paciente;
-        }
-
-        $persona = Persona::create([
-            'nombres' => trim(($cita->nombres_paciente ?? '')),
-            'apellidos' => trim(($cita->apellidos_paciente ?? '')),
-            'cedula' => $cita->numero_hc,
-            'telefono' => null,
-            'email' => null,
-            'estado_id' => 1,
-            'municipio_id' => 1,
-            'parroquia_id' => 1,
-            'status' => 'Activo',
-        ]);
-
-        if (! $persona) {
-            throw new \RuntimeException('No se pudo crear la persona del paciente.');
-        }
-
-        $paciente = Paciente::create([
-            'persona_id' => $persona->persona_id,
-            'hc' => $cita->numero_hc,
-            'status' => 1,
-        ]);
-
-        if (! $paciente) {
-            throw new \RuntimeException('No se pudo crear el paciente.');
-        }
-
-        return $paciente;
     }
 }

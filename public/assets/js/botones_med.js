@@ -12,45 +12,32 @@ function intercambiarVista(mostrar) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const btnListarPa = document.getElementById('btnListarPa');
     const btnRegistrar = document.getElementById('btnRegistrar');
     const btnCancelarReg = document.getElementById('btnCancelarReg');
     const btnListarCon = document.getElementById('btnListarCon');
 
-    if (btnListarPa) {
-        btnListarPa.addEventListener('click', function (evento) {
-            evento.preventDefault();
-            intercambiarVista('seccion-pacientes_listados');
-        });
-    }
+    document.getElementById('btnListarPa').addEventListener('click', function (listarPa) {
+        listarPa.preventDefault();
+        intercambiarVista('seccion-pacientes_listados');
+    });
 
-    if (btnRegistrar) {
-        btnRegistrar.addEventListener('click', function (evento) {
-            evento.preventDefault();
-            intercambiarVista('seccion-registrar_paciente');
-        });
-    }
+    document.getElementById('btnListarCon').addEventListener('click', function(listadoCon) {
+        listadoCon.preventDefault();
+        intercambiarVista('seccion-consultas');
+        
+        if (typeof listarConsultaP === 'function') {
+            listarConsultaP();
+        }
+    });
 
-document.getElementById('btnListarCon').addEventListener('click', function(listadoCon) {
-    listadoCon.preventDefault();
-    intercambiarVista('seccion-consultas_listadas');
-});
+    document.getElementById('btnListarPa').addEventListener('click', function (listarPa) {
+        listarPa.preventDefault();
+        intercambiarVista('seccion-pacientes_listados');
+    });
 
-    if (btnCancelarReg) {
-        btnCancelarReg.addEventListener('click', function (evento) {
-            evento.preventDefault();
-            intercambiarVista('seccion-pacientes_listados');
-        });
-    }
+    document.getElementById('btnSalirConReg').addEventListener('click', function () {
+        document.getElementById('formRegCon').reset();
+        intercambiarVista('seccion-consultas');
+    });
 
-    if (btnListarCon) {
-        btnListarCon.addEventListener('click', function (evento) {
-            evento.preventDefault();
-            intercambiarVista('seccion-consultas_listadas');
-
-            if (typeof listarConsultaP === 'function') {
-                listarConsultaP();
-            }
-        });
-    }
 });

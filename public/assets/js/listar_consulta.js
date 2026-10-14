@@ -35,10 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const pestañaRealizadas = document.querySelector('[data-target="#tabConR"]');
-    if (pestañaRealizadas) {
-        pestañaRealizadas.addEventListener('click', listarConsultaR);
-    }
 });
 
 let paginaActualCon = 1;
@@ -99,9 +95,9 @@ async function listarConsultaP(termino = '', fecha = '') {
                         <td>${con.fecha_hora}</td>
                         <td>${enfermedad}</td>
                         <td class="text-center">
-                            <a href="/medico/consultas/atender/${citaId}" class="btn btn-sm btn-warning js-atender-consulta" data-cita-id="${citaId}">
+                            <button type="button" onclick="intercambiarVista('seccion-consulta-registrar'); precargarDatosCon(this);" class="btn btn-sm btn-warning" data-id="${citaId}">
                                 <i class="fas fa-notes-medical"></i> Atender
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 `;
@@ -198,52 +194,3 @@ async function listarConsultaR() {
         console.error('Error al listar consultas realizadas:', error);
     }
 }
-
-async function abrirFormularioConsulta(citaId) {
-    const contenedor = document.getElementById('contenedor-consulta-formulario');
-
-    if (!contenedor || !citaId) {
-        return;
-    }
-
-    try {
-        const respuesta = await fetch(`/medico/consultas/atender/${citaId}`, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        });
-
-        if (!respuesta.ok) {
-            throw new Error(`HTTP ${respuesta.status}`);
-        }
-
-        contenedor.innerHTML = await respuesta.text();
-        intercambiarVista('seccion-consulta_formulario');
-    } catch (error) {
-        console.error('Error al cargar el formulario de consulta:', error);
-    }
-}
-
-function volverAlListadoConsultas() {
-    const formulario = document.getElementById('contenedor-consulta-formulario');
-
-    if (formulario) {
-        formulario.innerHTML = '';
-    }
-
-    intercambiarVista('seccion-consultas_listadas');
-    listarConsultaP();
-}
-
-document.addEventListener('click', function (evento) {
-    const atender = evento.target.closest('.js-atender-consulta');
-    const volver = evento.target.closest('.js-volver-consultas');
-
-    if (atender) {
-        evento.preventDefault();
-        abrirFormularioConsulta(atender.dataset.citaId);
-    }
-
-    if (volver) {
-        evento.preventDefault();
-        volverAlListadoConsultas();
-    }
-});

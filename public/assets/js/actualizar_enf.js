@@ -82,19 +82,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 })
-	async function precargarDatosEnf(boton) {
-		const id = boton.getAttribute('data-id');
+async function precargarDatosEnf(boton) {
+	const id = boton.getAttribute('data-id');
 
-		try {
-			const respuesta = await fetch(`/admin/precargar-enf/${id}`);
-			const datos = await respuesta.json();
+	try {
+		const respuesta = await fetch(`/admin/precargar-enf/${id}`);
+		const datos = await respuesta.json();
 
-			document.getElementById('nombreEnfUp').value = datos.descripcion;
-			document.getElementById('tipEnfUp').value = datos.tipo;
-            document.getElementById('enfermedadUp').value = datos.enfermedad_id;
+		document.getElementById('nombreEnfUp').value = datos.descripcion;
+		document.getElementById('tipEnfUp').value = datos.tipo;
+        document.getElementById('enfermedadUp').value = datos.enfermedad_id;
 
-		} catch (error) { 
-			console.error("Error al pre-cargar datos:", error);
-		} 
-	}
-
+	} catch (error) { 
+		console.error("Error al pre-cargar datos:", error);
+	} 
+}

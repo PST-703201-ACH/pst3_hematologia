@@ -51,7 +51,7 @@ CREATE TABLE "logistica"."consulta" (
   "medico_id" integer,
   "tipo" integer,
   "enfermedad_id" integer,
-  "fecha_hora" timestamp DEFAULT (now()),
+  "fecha_hora" timestamp,
   "peso" text,
   "talla" text,
   "sc" text,
@@ -59,7 +59,7 @@ CREATE TABLE "logistica"."consulta" (
   "fr" text,
   "subjetivo" text,
   "plan_trabajo" text,
-  "proxima_cita" date,
+  "proxima_cita" timestamp,
   "status" integer
 );
 
