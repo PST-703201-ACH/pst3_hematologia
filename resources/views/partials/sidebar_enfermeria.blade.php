@@ -36,11 +36,25 @@
                 data-accordion="false">
                 <li class="nav-header">OPCIONES</li>
                 <li class="nav-item">
-                    <a href="{{ route('enfermeria.index') }}"
+                    <a href="#jornada-enfermeria"
                        class="nav-link active"
-                       aria-current="page">
+                       data-toggle="pill"
+                       role="tab"
+                       aria-controls="jornada-enfermeria"
+                       aria-selected="true">
                         <i class="nav-icon fas fa-clipboard-list"></i>
                         <p>Jornada</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#sala-enfermeria"
+                       class="nav-link"
+                       data-toggle="pill"
+                       role="tab"
+                       aria-controls="sala-enfermeria"
+                       aria-selected="false">
+                        <i class="nav-icon fas fa-door-open"></i>
+                        <p>Sala</p>
                     </a>
                 </li>
                 <li class="nav-item">

@@ -28,18 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
         medicine.textContent = `${session.medicamento ?? ''} — Ciclo ${session.numero_ciclo ?? ''}`;
         treatmentCell.appendChild(medicine);
 
-        const doseCell = addCell(row, session.dosis ?? '');
-        const route = document.createElement('small');
-        route.className = 'd-block';
-        route.textContent = session.via_administracion ?? '';
-        doseCell.appendChild(route);
-
-        addCell(row, session.sala);
-        const actionCell = addCell(row, '');
+        addCell(row, session.via_administracion);
+        const statusCell = addCell(row, '');
         const badge = document.createElement('span');
         badge.className = `badge ${session.status === 'Realizada' ? 'badge-success' : 'badge-info'}`;
         badge.textContent = session.status;
-        actionCell.appendChild(badge);
+        statusCell.appendChild(badge);
+        const actionCell = addCell(row, '');
 
         if (session.status === 'Programada') {
             const wrapper = document.createElement('form');
