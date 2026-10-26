@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 // RUTAS PÚBLICAS Y DE BIENVENIDA
 // =========================================================================
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.portal');
 });
 
 // =========================================================================
