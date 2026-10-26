@@ -67,7 +67,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Fecha de Nacimiento <span class="text-danger">*</span></label>
-                            <input type="date" name="nacPaConReg" id="nacPaConReg" class="form-control">
+                            <input type="date" name="naciPaConReg" id="naciPaConReg" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-4">

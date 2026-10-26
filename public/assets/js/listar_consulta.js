@@ -35,14 +35,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const limpiarConR = document.getElementById('btnLimpiar_conr');
+    const busquedaConR = document.querySelector('input[name="busqueda_conr"]');
+    const fechaConR = document.querySelector('input[name="busqueda_fechaR"]');
+
+    function buscarCombinadoR() {
+        const texto = busquedaConR ? busquedaConR.value.trim() : '';
+        const fecha = fechaConR ? fechaConR.value.trim() : '';
+
+        if (limpiarConR) {
+            if (texto.length > 0 || fecha.length > 0) {
+                limpiarConR.classList.remove('d-none');
+            } else {
+                limpiarConR.classList.add('d-none');
+            }
+        }
+
+        listarConsultaR(texto, fecha); 
+    }
+
+    if (busquedaConR) {
+        busquedaConR.addEventListener('input', buscarCombinadoR);
+    }
+
+    if (fechaConR) {
+        fechaConR.addEventListener('input', buscarCombinadoR);
+    }
+
+    if (limpiarConR) {
+        limpiarConR.addEventListener('click', function() {
+            if (busquedaConR) busquedaConR.value = '';
+            if (fechaConR) fechaConR.value = '';
+            this.classList.add('d-none');
+            listarConsultaR('', '');
+        });
+    }
+
 });
 
-let paginaActualCon = 1;
-const elementosPorPaginaCon = 5; 
+let paginaActualConP = 1;
+const elementosPorPaginaConP = 5; 
 
 async function listarConsultaP(termino = '', fecha = '') {
     try {
-        paginaActualCon = 1; 
+        paginaActualConP = 1; 
 
         let parametros = [];
             
@@ -54,7 +90,7 @@ async function listarConsultaP(termino = '', fecha = '') {
             parametros.push(`fecha=${encodeURIComponent(fecha)}`);
         }
 
-        const url = parametros.length > 0 ? `/medico/obtener-consultas?${parametros.join('&')}` : '/medico/obtener-consultas';
+        const url = parametros.length > 0 ? `/medico/obtener-consultasP?${parametros.join('&')}` : '/medico/obtener-consultasP';
 
         const respuesta = await fetch(url);
 
@@ -62,12 +98,12 @@ async function listarConsultaP(termino = '', fecha = '') {
         const consultas = JSON.parse(JSON.stringify(datosServidor));
 
         function renderizarPaginador() {
-            const inicio = (paginaActualCon - 1) * elementosPorPaginaCon;
-            const fin = inicio + elementosPorPaginaCon;
+            const inicio = (paginaActualConP - 1) * elementosPorPaginaConP;
+            const fin = inicio + elementosPorPaginaConP;
             const itemsVisibles = consultas.slice(inicio, fin);
 
             let filas = '';
-            let id = (paginaActualCon - 1) * elementosPorPaginaCon + 1;
+            let id = (paginaActualConP - 1) * elementosPorPaginaConP + 1;
             let paciente = '';
             let hc = '';
             let enfermedad = '';
@@ -108,10 +144,10 @@ async function listarConsultaP(termino = '', fecha = '') {
             const contenedorBotones = document.getElementById('btnPagConP'); 
             contenedorBotones.innerHTML = '';
 
-            const totalPaginas = Math.ceil(consultas.length / elementosPorPaginaCon);
+            const totalPaginas = Math.ceil(consultas.length / elementosPorPaginaConP);
 
             const maximoBotonesVisibles = 5; // Número máximo de botones numéricos a mostrar
-            let paginaInicio = Math.max(1, paginaActualCon - Math.floor(maximoBotonesVisibles / 2));
+            let paginaInicio = Math.max(1, paginaActualConP - Math.floor(maximoBotonesVisibles / 2));
             let paginaFin = paginaInicio + maximoBotonesVisibles - 1;
 
             if (paginaFin > totalPaginas) {
@@ -123,7 +159,7 @@ async function listarConsultaP(termino = '', fecha = '') {
                 const btnPrimero = document.createElement('button');
                 btnPrimero.textContent = '«';
                 btnPrimero.className = 'btn btn-outline-primary m-1';
-                btnPrimero.addEventListener('click', () => { paginaActualCon = 1; renderizarPaginador(); });
+                btnPrimero.addEventListener('click', () => { paginaActualConP = 1; renderizarPaginador(); });
                 contenedorBotones.appendChild(btnPrimero);
             }
 
@@ -132,12 +168,12 @@ async function listarConsultaP(termino = '', fecha = '') {
                 boton.textContent = i;
                 boton.className = 'btn btn-outline-primary m-1';
 
-                if (i === paginaActualCon) {
+                if (i === paginaActualConP) {
                     boton.classList.replace('btn-outline-primary', 'btn-primary');
                 }
 
                 boton.addEventListener('click', () => {
-                    paginaActualCon = i;
+                    paginaActualConP = i;
                     renderizarPaginador();
                 });
 
@@ -148,7 +184,7 @@ async function listarConsultaP(termino = '', fecha = '') {
                 const btnUltimo = document.createElement('button');
                 btnUltimo.textContent = '»';
                 btnUltimo.className = 'btn btn-outline-primary m-1';
-                btnUltimo.addEventListener('click', () => { paginaActualCon = totalPaginas; renderizarPaginador(); });
+                btnUltimo.addEventListener('click', () => { paginaActualConP = totalPaginas; renderizarPaginador(); });
                 contenedorBotones.appendChild(btnUltimo);
             }
         }
@@ -158,39 +194,118 @@ async function listarConsultaP(termino = '', fecha = '') {
     }
 }
 
-async function listarConsultaR() {
-    const cuerpoTabla = document.getElementById('cuerpoTablaConsultasR');
 
-    if (!cuerpoTabla) {
-        return;
-    }
 
+let paginaActualConR = 1;
+const elementosPorPaginaConR = 5; 
+
+async function listarConsultaR(termino = '', fecha = '') {
     try {
-        const respuesta = await fetch('/medico/obtener-consultas-realizadas');
+        paginaActualConR = 1; 
 
-        if (!respuesta.ok) {
-            throw new Error(`HTTP ${respuesta.status}`);
+        let parametros = [];
+            
+        if (termino) {
+            parametros.push(`busqueda=${encodeURIComponent(termino)}`);
+        }
+        
+        if (fecha) {
+            parametros.push(`fecha=${encodeURIComponent(fecha)}`);
         }
 
-        const consultas = await respuesta.json();
-        cuerpoTabla.innerHTML = consultas.map((consulta, indice) => {
-            const paciente = consulta.paciente?.persona;
-            const nombre = paciente
-                ? `${paciente.nombres} ${paciente.apellidos}`
-                : 'Paciente no disponible';
-            const enfermedad = consulta.enfermedad?.descripcion ?? 'No definida';
+        const url = parametros.length > 0 ? `/medico/obtener-consultasR?${parametros.join('&')}` : '/medico/obtener-consultasR';
 
-            return `
-                <tr>
-                    <td>${indice + 1}</td>
-                    <td>${nombre}</td>
-                    <td>${consulta.fecha_hora ?? ''}</td>
-                    <td>${enfermedad}</td>
-                    <td></td>
-                </tr>
-            `;
-        }).join('');
+        const respuesta = await fetch(url);
+
+        const datosServidor = await respuesta.json();
+        const consultas = JSON.parse(JSON.stringify(datosServidor));
+
+        function renderizarPaginador() {
+            const inicio = (paginaActualConR - 1) * elementosPorPaginaConR;
+            const fin = inicio + elementosPorPaginaConR;
+            const itemsVisibles = consultas.slice(inicio, fin);
+
+            let filas = '';
+            let id = (paginaActualConR - 1) * elementosPorPaginaConR + 1;
+            let paciente = '';
+            let hc = '';
+
+            itemsVisibles.forEach(con => {
+                const persona = con.paciente?.persona;
+                const cita = con.cita;
+                paciente = persona
+                    ? `${persona.nombres} ${persona.apellidos}`
+                    : `${cita?.nombres_paciente ?? 'Paciente'} ${cita?.apellidos_paciente ?? 'no disponible'}`;
+                hc = con.paciente?.hc ?? cita?.numero_hc ?? 'Sin HC';
+
+                const citaId = con.cita?.cita_id ?? con.consulta_id ?? '';
+
+                filas += `
+                    <tr>
+                        <td>${id++}</td>
+                        <td>${paciente}</td>
+                        <td>${hc}</td>
+                        <td>${con.fecha_hora}</td>
+                        <td class="text-center">
+                            <button type="button" onclick="intercambiarVista('seccion-consulta-ver'); precargarDatosConR(this);" class="btn btn-sm btn-info" data-id="${citaId}">
+                                <i class="fas fa-circle-info"></i> Detalles
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('cuerpoTablaConsultasR').innerHTML = filas;
+
+            const contenedorBotones = document.getElementById('btnPagConR'); 
+            contenedorBotones.innerHTML = '';
+
+            const totalPaginas = Math.ceil(consultas.length / elementosPorPaginaConR);
+
+            const maximoBotonesVisibles = 5; // Número máximo de botones numéricos a mostrar
+            let paginaInicio = Math.max(1, paginaActualConR - Math.floor(maximoBotonesVisibles / 2));
+            let paginaFin = paginaInicio + maximoBotonesVisibles - 1;
+
+            if (paginaFin > totalPaginas) {
+                paginaFin = totalPaginas;
+                paginaInicio = Math.max(1, paginaFin - maximoBotonesVisibles + 1);
+            }
+
+            if (paginaInicio > 1) {
+                const btnPrimero = document.createElement('button');
+                btnPrimero.textContent = '«';
+                btnPrimero.className = 'btn btn-outline-primary m-1';
+                btnPrimero.addEventListener('click', () => { paginaActualConR = 1; renderizarPaginador(); });
+                contenedorBotones.appendChild(btnPrimero);
+            }
+
+            for (let i = paginaInicio; i <= paginaFin; i++) {
+                const boton = document.createElement('button');
+                boton.textContent = i;
+                boton.className = 'btn btn-outline-primary m-1';
+
+                if (i === paginaActualConR) {
+                    boton.classList.replace('btn-outline-primary', 'btn-primary');
+                }
+
+                boton.addEventListener('click', () => {
+                    paginaActualConR = i;
+                    renderizarPaginador();
+                });
+
+                contenedorBotones.appendChild(boton);
+            }
+
+            if (paginaFin < totalPaginas) {
+                const btnUltimo = document.createElement('button');
+                btnUltimo.textContent = '»';
+                btnUltimo.className = 'btn btn-outline-primary m-1';
+                btnUltimo.addEventListener('click', () => { paginaActualConR = totalPaginas; renderizarPaginador(); });
+                contenedorBotones.appendChild(btnUltimo);
+            }
+        }
+        renderizarPaginador();
     } catch (error) {
-        console.error('Error al listar consultas realizadas:', error);
+        console.error("Error al listar:", error);
     }
 }

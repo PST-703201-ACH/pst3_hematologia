@@ -91,7 +91,13 @@
                                 style="width: 250px;"
                                 autocomplete="off" 
                             >
-
+                            <input
+                                type="date"
+                                name="busqueda_fechaR"
+                                placeholder="Seleccione una fecha" 
+                                class="form-control me-2"
+                                autocomplete="off"
+                            >
                             <button type="button" id="btnLimpiar_conr" class="btn btn-danger d-none">Limpiar</button>
                         </form>
                     </div>
@@ -101,8 +107,8 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Paciente</th>
+                                <th scope="col">Nº de H.C</th>
                                 <th scope="col">Fecha y hora</th>
-                                <th scope="col">Enfermedad</th>
                                 <th style="text-align: center;">Acciones</th>
                             </tr>
                         </thead>

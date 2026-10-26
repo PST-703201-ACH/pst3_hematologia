@@ -10,7 +10,7 @@
 @endphp
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <a href="{{ route('enfermeria.index') }}" class="brand-link">
+    <a href="{{ route('enf.index') }}" class="brand-link">
         <img src="{{ asset('assets/adminlte/img/logo.png') }}"
              alt="S.H Dr. Walles C."
              class="brand-image img-circle elevation-3"
@@ -26,6 +26,7 @@
             <div class="d-flex flex-column">
                 <h5 class="d-block text-success mb-0">{{ $nombreSidebar }}</h5>
                 <h5 class="d-block text-primary mb-0">{{ $cedulaSidebar }}</h5>
+                <span hidden id="user"></span>
             </div>
         </div>
 
@@ -36,23 +37,13 @@
                 data-accordion="false">
                 <li class="nav-header">OPCIONES</li>
                 <li class="nav-item">
-                    <a href="#jornada-enfermeria"
-                       class="nav-link active"
-                       data-toggle="pill"
-                       role="tab"
-                       aria-controls="jornada-enfermeria"
-                       aria-selected="true">
+                    <a class="nav-link" onclick="event.preventDefault();" id="btnJornada">
                         <i class="nav-icon fas fa-clipboard-list"></i>
                         <p>Jornada</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#sala-enfermeria"
-                       class="nav-link"
-                       data-toggle="pill"
-                       role="tab"
-                       aria-controls="sala-enfermeria"
-                       aria-selected="false">
+                    <a class="nav-link" onclick="event.preventDefault();" id="btnSala">
                         <i class="nav-icon fas fa-door-open"></i>
                         <p>Sala</p>
                     </a>

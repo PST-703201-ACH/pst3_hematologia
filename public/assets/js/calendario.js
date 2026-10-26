@@ -12,13 +12,18 @@ async function precargarEventos(){
     citas.forEach(cita => {
         let fechaCita = new Date(cita.fecha_hora.replace(" ", "T"));
         let fechaActual = new Date();
-        let Status = "";
+        let status = "";
+        let statusCon = cita.consulta.status;
 
         let difFecha = fechaCita - fechaActual;
-        if (difFecha < 0) {
-            Status = "Incumplida";
-        } else {
-            Status = "Programada";
+        if (difFecha < 0 && statusCon === 0) {
+            status = "Incumplida";
+        } else if (difFecha > 0){
+            status = "Programada";
+        } 
+
+        if (statusCon === 1) {
+            status = "Cumplida";
         }
         const [nombre1P, nombre2P] = cita.nombres_paciente.split(" ");
         const [apellido1P, apellido2P] = cita.apellidos_paciente.split(" ");
@@ -31,7 +36,7 @@ async function precargarEventos(){
             color: '#3788d8',
 
             extendedProps: {
-                status: Status,
+                status: status,
                 id: id
             }
         });
@@ -73,6 +78,9 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     }
     else if (statusCita == "Incumplida") {
         elemento = `<button type="button" data-id="${id}" onclick="precargarCita(this);" class="fc-event-title badge badge-danger">${statusCita}</button>`;
+    }
+    else if (statusCita == "Cumplida") {
+        elemento = `<span class="fc-event-title badge badge-success">${statusCita}</span>`;
     }
 
     let contenedor = document.createElement('div');

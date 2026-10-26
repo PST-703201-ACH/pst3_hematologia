@@ -236,9 +236,9 @@ class CitaController extends Controller
         }
     }
 
-    public function getCitas(Request $request)
+    public function listarCitas(Request $request)
     {
-        $citas = Cita::get();
+        $citas = Cita::with('consulta')->get();
         
         return response()->json($citas);
     }

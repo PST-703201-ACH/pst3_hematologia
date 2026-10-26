@@ -11,8 +11,8 @@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-    @include('partials.navbar_med')
-    @include('partials.sidebar_enfermeria')
+    @include('partials.navbar_enf')
+    @include('partials.sidebar_enf')
 
     <div class="content-wrapper">
         <section class="content-header">
@@ -24,80 +24,10 @@
 
         <section class="content">
             <div class="container-fluid">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-                @if($errors->any())
-                    <div class="alert alert-danger" role="alert">
-                        <ul class="mb-0">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
 
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="jornada-enfermeria" role="tabpanel">
-                <div class="card card-primary card-outline">
-                    <div class="card-header"><h3 class="card-title">Tratamientos programados</h3></div>
-                    <div class="card-body">
-                        <form id="filtros-enfermeria" method="GET" action="{{ route('enfermeria.index') }}"
-                              data-url="{{ route('enfermeria.sesiones.index') }}"
-                              data-apply-template="{{ route('enfermeria.sesiones.aplicar', ['sesionId' => '__ID__']) }}">
-                            <div class="form-row align-items-end">
-                                <div class="form-group col-md-3">
-                                    <label for="filtro-fecha">Jornada</label>
-                                    <input class="form-control" type="date" id="filtro-fecha" name="fecha" value="{{ request('fecha', today()->toDateString()) }}">
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="filtro-paciente">Paciente / H.C.</label>
-                                    <input class="form-control" id="filtro-paciente" name="paciente" value="{{ request('paciente') }}" maxlength="100">
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="filtro-estado">Status</label>
-                                    <select class="form-control" id="filtro-estado" name="status">
-                                        <option value="">Todos</option>
-                                        @foreach(['Cumplida', 'Omitida'] as $estado)
-                                            <option value="{{ $estado }}" @selected(request('status') === $estado)>{{ $estado }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <button class="btn btn-primary btn-block" type="submit" title="Actualizar agenda">
-                                        <i class="fas fa-sync-alt"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                        <div id="error-agenda-enfermeria" class="alert alert-danger d-none" role="alert"></div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Hora</th><th>Paciente / H.C.</th><th>Protocolo / medicamento</th>
-                                        <th>Vía de administración</th><th>Status</th><th>Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cuerpo-sesiones-enfermeria">
-                                    @forelse($sesionesProgramadas as $sesion)
-                                        <tr>
-                                            <td>{{ $sesion->fecha_hora }}</td>
-                                            <td>{{ $sesion->nombres }} {{ $sesion->apellidos }}<br><small>H.C. {{ $sesion->hc }}</small></td>
-                                            <td>{{ $sesion->protocolo }}<br><small>{{ $sesion->medicamento }} — Ciclo {{ $sesion->numero_ciclo }}</small></td>
-                                            <td>{{ $sesion->via_administracion }}</td>
-                                            <td>{{ $sesion->status }}</td>
-                                            <td></td>
-                                        </tr>
-                                    @empty
-                                        <tr><td colspan="6" class="text-center">No hay sesiones para los filtros seleccionados.</td></tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                        <small class="text-muted">La agenda se actualiza automáticamente cada 30 segundos.</small>
-                    </div>
-                </div>
+                    <div class="vista_enf" id="seccion-jornada">
+                        @include('enfermeria.jornada')
                     </div>
 
                     <div class="tab-pane fade" id="sala-enfermeria" role="tabpanel">
@@ -165,6 +95,7 @@
 <script src="{{ asset('assets/adminlte/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
-<script src="{{ asset('assets/js/enfermeria.js') }}"></script>
+<script src="{{ asset('assets/js/listar_jornada.js') }}"></script>
+<script src="{{ asset('assets/js/botones_enf.js') }}"></script>
 </body>
 </html>

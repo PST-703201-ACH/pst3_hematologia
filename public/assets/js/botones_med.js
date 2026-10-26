@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (typeof listarConsultaP === 'function') {
             listarConsultaP();
+            listarConsultaR();
         }
     });
 

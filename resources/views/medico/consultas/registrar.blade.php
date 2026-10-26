@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <form action="{{ route('medico.consultas.registrar') }}" method="POST" id="formRegCon">
+    <form action="{{ route('medico.consultas.registrar1') }}" method="POST" id="formRegCon">
         @csrf
 
         <div id="seccion-consulta-registrar1">
@@ -38,7 +38,6 @@
                             <div class="form-group">
                                 <label>Enfermedad</label>
                                 <select name="enfConReg" id="enfConReg" class="form-control">
-                                    <option value="" disabled selected>Seleccione la enfermedad</option>
                                     
                                 </select>
                             </div>
@@ -132,9 +131,10 @@
         </div>
 
         <div class="d-none" id="seccion-consulta-registrar4">
-            
+            @include('medico.consultas.registrar_trat')
         </div>
 
+        <div id="alertCreateCon"></div>
         <div class="text-right mb-4">
             <div id="btnPagsConReg">
                 

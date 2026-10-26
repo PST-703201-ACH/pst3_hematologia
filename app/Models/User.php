@@ -67,7 +67,7 @@ class User extends Authenticatable
             1 => route('admin.index'),
             2 => route('admvo.index'),
             3 => route('medico.index'),
-            4 => route('enfermeria.index'),
+            4 => route('enf.index'),
             default => route('admin.index'),
         };
     }

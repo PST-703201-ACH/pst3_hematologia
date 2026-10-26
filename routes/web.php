@@ -117,7 +117,7 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
 
         Route::controller(CitaController::class)->group(function () {
             Route::post('/cita-agendar', 'agendar')->name('cita.agendar');
-            Route::get('/obtener-citas', 'getCitas')->name('citas.json');
+            Route::get('/obtener-citas', 'listarCitas')->name('citas.json');
             Route::get('/precargar-cita/{id}', 'precargar');
             Route::post('/cita-rep', 'reprogramar')->name('cita.rep');
         });
@@ -151,15 +151,18 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
 
         Route::get('/obtener-pacientes', 'listar')->name('medico.pacientes.listar');
         
-        Route::get('/obtener-consultas-realizadas', 'listarConRealizadas')->name('medico.pacientes.consultas.realizadas');
         Route::get('/representantes/buscar', 'getRepresentantes')->name('medico.representantes.buscar');
     });
 
     Route::controller(ConsultaController::class)->group(function () {
-        Route::get('/obtener-consultas', 'listarConP')->name('medico.pacientes.consultas');
+        Route::get('/obtener-consultasP', 'listarConP')->name('medico.pacientes.consultasP');
+        Route::get('/obtener-consultasR', 'listarConR')->name('medico.pacientes.consultasR');
         Route::get('/obtener-enfermedades', 'obtenerEnf');
         Route::get('/precargar-con/{id}', 'precargarConP');
-        Route::post('/consulta-registrar', 'registrarCon')->name('medico.consultas.registrar');
+        Route::post('/consulta-registrar1', 'registrarCon1')->name('medico.consultas.registrar1');
+        Route::post('/consulta-registrar2', 'registrarCon2')->name('medico.consultas.registrar2');
+        Route::get('/obtener-protocolos', 'precargarProts');
+        Route::get('/obtener-medicinasProt/{id}', 'precargarMeds');
     });
 
     Route::controller(TratamientoController::class)->group(function () {
@@ -172,9 +175,14 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
 // ---------------------------------------------------------------------
 // ENFERMERÍA
 // ---------------------------------------------------------------------
-Route::middleware('role:4')->prefix('enfermeria')->controller(EnfermeriaController::class)->group(function () {
-    Route::get('/', 'index')->name('enfermeria.index');
-    Route::get('/sesiones', 'sesiones')->name('enfermeria.sesiones.index');
+Route::middleware('role:4')->prefix('enf')->controller(EnfermeriaController::class)->group(function () {
+    Route::get('/', function () {
+        return view('enfermeria.index');
+    })->name('enf.index');
+
+    Route::get('/obtener-jornada', 'listarJor');
+
+
     Route::post('/sesiones/{sesionId}/aplicar', 'aplicarSesion')->name('enfermeria.sesiones.aplicar');
     Route::post('/transfusiones/{transfusionId}/aplicar', 'aplicarTransfusion')->name('enfermeria.transfusiones.aplicar');
     Route::post('/observaciones', 'storeObservacion')->name('enfermeria.observaciones.store');
