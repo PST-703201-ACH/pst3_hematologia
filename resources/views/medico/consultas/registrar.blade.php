@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <form action="{{ route('medico.consultas.registrar1') }}" method="POST" id="formRegCon">
+    <form method="POST" id="formRegCon">
         @csrf
 
         <div id="seccion-consulta-registrar1">
@@ -37,9 +37,10 @@
 
                             <div class="form-group">
                                 <label>Enfermedad</label>
-                                <select name="enfConReg" id="enfConReg" class="form-control">
+                                <select name="enfConReg" class="form-control">
                                     
                                 </select>
+                                <small class="text-danger" id="enfConReg"></small>
                             </div>
                         </div>
                     </div>
@@ -54,23 +55,32 @@
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label>Peso (kg)</label>
-                                    <input type="number" step="0.1" min="0" name="pesoConReg" id="pesoConReg" class="form-control">
+                                    <input type="number" step="0.1" min="0" name="pesoConReg"  class="form-control">
+                                    <small class="text-danger" id="pesoConReg"></small>
                                 </div>
+
                                 <div class="col-md-6 form-group">
                                     <label>Talla (cm)</label>
-                                    <input type="number" step="0.1" min="0" name="tallaConReg" id="tallaConReg" class="form-control">
+                                    <input type="number" step="0.1" min="0" name="tallaConReg" class="form-control">
+                                    <small class="text-danger" id="tallaConReg"></small>
                                 </div>
+
                                 <div class="col-md-4 form-group">
                                     <label>SC</label>
-                                    <input type="number" step="0.01" min="0" name="scConReg" id="scConReg" class="form-control">
+                                    <input type="number" step="0.01" min="0" name="scConReg" class="form-control">
+                                    <small class="text-danger" id="scConReg"></small>
                                 </div>
+
                                 <div class="col-md-4 form-group">
                                     <label>FC</label>
-                                    <input type="number" step="0.1" min="0" name="fcConReg" id="fcConReg" class="form-control">
+                                    <input type="number" step="0.1" min="0" name="fcConReg" class="form-control">
+                                    <small class="text-danger" id="fcConReg"></small>
                                 </div>
+
                                 <div class="col-md-4 form-group">
                                     <label>FR</label>
-                                    <input type="number" step="0.1" min="0" name="frConReg" id="frConReg" class="form-control">
+                                    <input type="number" step="0.1" min="0" name="frConReg" class="form-control">
+                                    <small class="text-danger" id="frConReg"></small>
                                 </div>
                             </div>
                         </div>
@@ -85,15 +95,18 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label>Antecedentes Personales</label>
-                        <textarea name="antePersoConReg" id="antePersoConReg" rows="3" class="form-control"></textarea>
+                        <textarea name="antePersoConReg" rows="3" class="form-control"></textarea>
+                        <small class="text-danger" id="antePersoConReg"></small>
                     </div>
                     <div class="form-group">
                         <label>Antecedentes Familiares</label>
-                        <textarea name="anteFamiConReg" id="anteFamiConReg" rows="3" class="form-control"></textarea>
+                        <textarea name="anteFamiConReg" rows="3" class="form-control"></textarea>
+                        <small class="text-danger" id="anteFamiConReg"></small>
                     </div>
                     <div class="form-group">
                         <label>Signos y Síntomas Iniciales</label>
-                        <textarea name="signosConReg" id="signosConReg" rows="3" class="form-control"></textarea>
+                        <textarea name="signosConReg" rows="3" class="form-control"></textarea>
+                        <small class="text-danger" id="signosConReg"></small>
                     </div>
                 </div>
             </div>
@@ -107,18 +120,23 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label>Evolución Subjetiva</label>
-                        <textarea name="subjConReg" id="subjConReg" rows="4" class="form-control"></textarea>
+                        <textarea name="subjConReg" rows="4" class="form-control"></textarea>
+                        <small class="text-danger" id="subjConReg"></small>
                     </div>
 
                     <div class="form-group">
                         <label>Plan de Trabajo</label>
-                        <textarea name="planConReg" id="planConReg" rows="3" class="form-control"></textarea>
+                        <textarea name="planConReg" rows="3" class="form-control"></textarea>
+                        <small class="text-danger" id="planConReg"></small>
                     </div>
 
                     <div class="form-group">
                         <label>Próxima Cita</label>
-                        <input type="date" name="citaFechaConReg" id="citaFechaConReg" class="form-control">
-                        <input type="time" name="citaHoraConReg" id="citaHoraConReg" class="form-control">
+                        <input type="date" name="citaFechaConReg" class="form-control">
+                        <small class="text-danger" id="citaFechaConReg"></small>
+                        
+                        <input type="time" name="citaHoraConReg" class="form-control">
+                        <small class="text-danger" id="citaHoraConReg"></small>
                     </div>
                     <input type="hidden" name="consultaReg" id="consultaReg">
                     <input type="hidden" name="usuConReg" id="usuConReg">

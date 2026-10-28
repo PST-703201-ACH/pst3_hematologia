@@ -46,7 +46,6 @@ function enumerarMed(tbodyFa){
    });
 }
 
-
 function agregarMed(tbody){
     try {
 
@@ -241,6 +240,7 @@ document.getElementById('btnNuevaFase').addEventListener('click', () => {
 
 // Control de envio y respuesta de registro de protocolo
 document.addEventListener('DOMContentLoaded', function() {
+    cargarMedicinas();
     crearFase();
 
     const formularioProt = document.getElementById('formRegProt');
