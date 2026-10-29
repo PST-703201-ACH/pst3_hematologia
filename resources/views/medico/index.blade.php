@@ -60,6 +60,8 @@
                 <div id="seccion-consulta-registrar" class="vista_med d-none">
                     @include('medico.consultas.registrar')
                 </div>
+
+                @include('medico.consultas.ver')
             </div>
         </section>
     </div>
@@ -82,6 +84,7 @@
 <script src="{{ asset('assets/js/historia-clinica-controller.js') }}"></script>
 <script src="{{ asset('assets/js/listar_consulta.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_con.js') }}"></script>
+<script src="{{ asset('assets/js/ver_consulta.js') }}"></script>
 
 <!--REVISANDO-->
 <script src="{{ asset('assets/js/programar_tratamiento.js') }}"></script>

@@ -246,7 +246,7 @@ async function listarConsultaR(termino = '', fecha = '') {
                     : `${cita?.nombres_paciente ?? 'Paciente'} ${cita?.apellidos_paciente ?? 'no disponible'}`;
                 hc = con.paciente?.hc ?? cita?.numero_hc ?? 'Sin HC';
 
-                const citaId = con.cita?.cita_id ?? con.consulta_id ?? '';
+                const citaId = con.cita.cita_id;
 
                 filas += `
                     <tr>
@@ -255,7 +255,7 @@ async function listarConsultaR(termino = '', fecha = '') {
                         <td>${hc}</td>
                         <td>${con.fecha_hora}</td>
                         <td class="text-center">
-                            <button type="button" onclick="intercambiarVista('seccion-consulta-ver'); precargarDatosConR(this);" class="btn btn-sm btn-info" data-id="${citaId}">
+                            <button type="button" onclick="cargarDetalleCon(this);" class="btn btn-sm btn-info" data-id="${citaId}">
                                 <i class="fas fa-circle-info"></i> Detalles
                             </button>
                         </td>

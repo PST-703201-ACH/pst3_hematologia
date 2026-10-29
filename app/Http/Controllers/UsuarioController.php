@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Persona;
 use App\Models\User;
 use App\Models\Rol;
@@ -275,5 +276,21 @@ class UsuarioController extends Controller
 
         return response()->json($query->get());
     }
+
+    public function auditarPdf()
+    {
+
+        $auditorias = Auditoria::with('usuario.persona')->get();
+
+        $data = [
+            'auditorias' => $auditorias,
+            'fecha_emision' => now()->format('d/m/Y H:i:s')
+        ];
+
+        $pdf = Pdf::loadView('reportes.auditoria_pdf', $data);
+
+        return $pdf->download("reporte_auditoria_" . date('Ymd_His') . ".pdf");
+    }
+
 
 }

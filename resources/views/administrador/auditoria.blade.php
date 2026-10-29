@@ -9,12 +9,18 @@
 
 		    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
 		    	<div class="d-flex gap-2">
-					<button id="btnRefrescarAud" class="btn btn-primary" onclick="listarAuditoria()"><i class="fas fa-undo" aria-hidden="true"></i>
+					<button class="btn btn-primary" onclick="listarAuditoria()"><i class="fas fa-undo" aria-hidden="true"></i>
 					</button>
-				</div>
-		    </div>
 
-		    <div id="btnPagAud" class="d-flex gap-1"></div>
+					<a href="/admin/obtener-reportes" class="btn btn-danger">
+					    <i class="fas fa-file-pdf"></i>
+					</a>
+
+					<button class="btn btn-success" onclick="excelAuditoria()"><i class="fas fa-regular fa-file-excel"></i></button>
+				</div>
+
+				<div id="btnPagAud" class="d-flex gap-1"></div>
+		    </div>
 
 		    <form onsubmit="event.preventDefault();" class="d-flex align-items-center m-0" id="formBusquedaAud">
 		        <input
