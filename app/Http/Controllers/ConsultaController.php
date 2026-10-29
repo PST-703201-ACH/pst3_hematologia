@@ -735,4 +735,9 @@ class ConsultaController extends Controller
             ]);
         }
     }
+
+    public function ver($id) {
+        $detalles = Cita::with('consulta', 'consulta.paciente', 'consulta.medico', 'consulta.enfermedad', 'consulta.medico.persona', 'consulta.paciente.persona')->where('cita_id', $id)->first();
+        return response()->json($detalles);
+    }
 }

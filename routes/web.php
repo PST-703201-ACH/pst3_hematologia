@@ -84,6 +84,7 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             Route::get('/cambiar-status/{id}', 'nuevo_status');
             Route::get('/obtener-enfermedades', 'listarEnf');
             Route::get('/obtener-auditoria', 'auditar');
+            Route::get('/obtener-reportes', 'auditarPdf');
         });
 
         Route::controller(GerenteController::class)->group(function () {
@@ -163,6 +164,7 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
         Route::post('/consulta-registrar2', 'registrarCon2');
         Route::get('/obtener-protocolos', 'precargarProts');
         Route::get('/obtener-medicinasProt/{id}', 'precargarMeds');
+        Route::get('/obtener-detalles-consulta/{id}', 'ver');
     });
 
     Route::controller(TratamientoController::class)->group(function () {
