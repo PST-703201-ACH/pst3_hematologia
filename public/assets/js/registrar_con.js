@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     async function cargarParroquias() {
-        const select = document.getElementById('parroquiaPaConReg');
+
+        const select = document.querySelector('select[name="parroquiaPaConReg"]');
 
         try {
             const respuesta = await fetch('/obtener-parroquias');
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function cargarMunicipios() {
-        const select = document.getElementById('muniPaConReg');
+        const select = document.querySelector('select[name="muniPaConReg"]');
 
         try {
             const respuesta = await fetch('/obtener-municipios');
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function cargarEstados() {
-        const select = document.getElementById('estadoPaConReg');
+        const select = document.querySelector('select[name="estadoPaConReg"]');
 
         try {
             const respuesta = await fetch('/obtener-estados');
@@ -96,13 +97,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </button>
                             </div>
                         `;
-                        document.getElementById('alertCreateCon').innerHTML = alertaCon;
+                        document.getElementById('alertCon').innerHTML = alertaCon;
+                        document.getElementById('medsTrat').innerHTML = '';
                         listarConsultaP();
                         setTimeout(function (){
-                            document.getElementById('alertCreateCon').innerHTML = "";
+                            document.getElementById('alertCon').innerHTML = "";
                         }, 3000);
 
                         formularioCon.reset();
+                        intercambiarVista('seccion-consultas');
                     }else if(resultado.status === "error") {
                         let alertaCon = `
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -118,22 +121,42 @@ document.addEventListener('DOMContentLoaded', function() {
                             document.getElementById('alertCreateCon').innerHTML = "";
                         }, 3000);
 
-                    }else if (resultado.status === "errores") {
-                        for (let campo in resultado.errores) {
-                        const elemento = document.getElementById(campo);
-                            if (elemento) {
-                            const originalValue = elemento.value;
-                            elemento.className = 'form-control border border-danger text-danger';
-                            elemento.value = resultado.errores[campo]; 
-                            elemento.style.pointerEvents = 'none';
+                        if (resultado.errores) {
+                            for (let campo in resultado.errores) {
+                            let elemento = document.getElementById(campo);
+                                if (elemento) {
+                                elemento.textContent = resultado.errores[campo]; 
+                                elemento.style.pointerEvents = 'none';
 
-                                setTimeout(function(){
-                                  elemento.className = 'form-control';
-                                  elemento.style.pointerEvents = '';
-                                  elemento.value = originalValue;
-                                }, 3000);
+                                    setTimeout(function(){
+                                      elemento.style.pointerEvents = '';
+                                      elemento.textContent = "";
+                                    }, 3000);
+                                }
                             }
                         }
+
+                        if (resultado.errores && resultado.errores['via']) {
+                            
+                            const elementosVias = document.querySelectorAll('.seleccion-via');
+
+                            elementosVias.forEach(elemento => {
+                                const originalValue = elemento.value;
+
+                                if (elemento.value === "" || elemento.value === null) {
+                                    
+                                    elemento.className = 'form-control border border-danger text-danger';
+                                    elemento.style.pointerEvents = 'none';
+
+                                    setTimeout(function() {
+                                        elemento.className = 'form-control';
+                                        elemento.style.pointerEvents = '';
+                                        elemento.value = originalValue;
+                                    }, 3000);
+                                }
+                            });
+                        }
+
                     }     
                 } catch (error) {
                     console.error("Error:", error);
@@ -154,7 +177,7 @@ async function precargarDatosCon(boton) {
     try {
         var respuesta = await fetch(`/medico/obtener-enfermedades`);
         const datosEnf = await respuesta.json();
-        const selectEnf = document.getElementById('enfConReg');
+        const selectEnf = document.querySelector('select[name="enfConReg"]');
         selectEnf.innerHTML = '';
         selectEnf.innerHTML = '<option value="" disabled selected>Seleccione la enfermedad</option>';
 
@@ -168,7 +191,12 @@ async function precargarDatosCon(boton) {
         respuesta = await fetch(`/medico/precargar-con/${id}`);
         const datosCon = await respuesta.json();
 
-        let enfCon = datosCon.enfermedad_id;
+        let enfCon = datosCon?.consulta?.enfermedad?.enfermedad_id;
+
+        if (enfCon === null || enfCon === undefined) {
+            enfCon = '';
+        }
+
         let nombresPa = datosCon.consulta.paciente.persona.nombres;
         let apellidosPa = datosCon.consulta.paciente.persona.apellidos;
 
@@ -209,9 +237,36 @@ async function precargarDatosCon(boton) {
         boton4.className = 'btn btn-outline-primary m-1';
         boton4.textContent = '4';
         boton4.type = 'button';
+
+        function actualizarBotones() {
+            if (seccion1.classList.contains('d-none')) {
+                boton1.className = 'btn btn-outline-primary m-1';
+            } else {
+                boton1.className = 'btn btn-primary m-1';
+            }
+
+            if (seccion2.classList.contains('d-none')) {
+                boton2.className = 'btn btn-outline-primary m-1';
+            } else {
+                boton2.className = 'btn btn-primary m-1';
+            }
+
+            if (seccion3.classList.contains('d-none')) {
+                boton3.className = 'btn btn-outline-primary m-1';
+            } else {
+                boton3.className = 'btn btn-primary m-1';
+            }
+        }
+
+        seccion4.classList.add('d-none');
+        seccion3.classList.add('d-none');
+        seccion2.classList.add('d-none');
+        seccion1.classList.remove('d-none');
+        actualizarBotones();
         
         if (datosCon.consulta.tipo == 1){
             tipo = 'Primera consulta';
+            document.getElementById('formRegCon').action = '/medico/consulta-registrar1';
 
             document.getElementById('btnPagsConReg').innerHTML = '';
             document.getElementById('btnPagsConReg').appendChild(boton1);
@@ -241,44 +296,26 @@ async function precargarDatosCon(boton) {
                 actualizarBotones();
             });
 
-            function actualizarBotones() {
-                if (seccion1.classList.contains('d-none')) {
-                    boton1.className = 'btn btn-outline-primary m-1';
-                } else {
-                    boton1.className = 'btn btn-primary m-1';
-                }
-
-                if (seccion2.classList.contains('d-none')) {
-                    boton2.className = 'btn btn-outline-primary m-1';
-                } else {
-                    boton2.className = 'btn btn-primary m-1';
-                }
-
-                if (seccion3.classList.contains('d-none')) {
-                    boton3.className = 'btn btn-outline-primary m-1';
-                } else {
-                    boton3.className = 'btn btn-primary m-1';
-                }
-            }
-
             document.getElementById('nombrePaConReg').textContent = paciente;
             document.getElementById('nombreRepConReg').textContent = representante;
             document.getElementById('hcConReg').textContent = hc;
             document.getElementById('tipoConReg').textContent = tipo;
             document.getElementById('consultaReg').value = datosCon.consulta.consulta_id;
             document.getElementById('usuConReg').value = document.getElementById('usuario').textContent;
-            document.getElementById('nombrePa1ConReg').value = nombrePa[0];
-            document.getElementById('nombrePa2ConReg').value = nombrePa[1];
-            document.getElementById('apellidoPa1ConReg').value = nombrePa[2];
-            document.getElementById('apellidoPa2ConReg').value = nombrePa[3];
-            document.getElementById('hcPaConReg').value = hc;
-            document.getElementById('nacPaConReg').value = cedulaPa[0];
-            document.getElementById('cedulaPaConReg').value = cedulaPa[1];
+            
+            document.querySelector('input[name="nombrePa1ConReg"]').value = nombrePa[0];
+            document.querySelector('input[name="nombrePa2ConReg"]').value = nombrePa[1];
+            document.querySelector('input[name="apellidoPa1ConReg"]').value = nombrePa[2];
+            document.querySelector('input[name="apellidoPa2ConReg"]').value = nombrePa[3];
+            document.querySelector('input[name="hcPaConReg"]').value = hc;
+            document.querySelector('select[name="nacPaConReg"]').value = cedulaPa[0];
+            document.querySelector('input[name="cedulaPaConReg"]').value = cedulaPa[1];
 
 
         }else if (datosCon.consulta.tipo == 2){
+
             tipo = 'Consulta de control';
-            document.getElementById('formRegCon').action = 'medico.consultas.registrar2';
+            document.getElementById('formRegCon').action = '/medico/consulta-registrar2';
 
             document.getElementById('btnPagsConReg').innerHTML = '';
             document.getElementById('btnPagsConReg').appendChild(boton1);
@@ -345,10 +382,10 @@ async function precargarDatosCon(boton) {
                 }
             }
 
-            document.getElementById('enfConReg').value = enfCon;
-            document.getElementById('antePersoConReg').value = datosCon.consulta.ante_personal;
-            document.getElementById('anteFamiConReg').value = datosCon.consulta.ante_familiar;
-            document.getElementById('signosConReg').value = datosCon.consulta.sintomas;
+            document.querySelector('select[name="enfConReg"]').value = enfCon;
+            document.querySelector('textarea[name="antePersoConReg"]').value = datosCon.consulta.ante_personal;
+            document.querySelector('textarea[name="anteFamiConReg"]').value = datosCon.consulta.ante_familiar;
+            document.querySelector('textarea[name="signosConReg"]').value = datosCon.consulta.sintomas;
 
             document.getElementById('nombrePaConReg').textContent = paciente;
             document.getElementById('nombreRepConReg').textContent = representante;
@@ -356,21 +393,24 @@ async function precargarDatosCon(boton) {
             document.getElementById('tipoConReg').textContent = tipo;
             document.getElementById('consultaReg').value = datosCon.consulta.consulta_id;
             document.getElementById('usuConReg').value = document.getElementById('usuario').textContent;
-            document.getElementById('nombrePa1ConReg').value = nombrePa[0];
-            document.getElementById('nombrePa2ConReg').value = nombrePa[1];
-            document.getElementById('apellidoPa1ConReg').value = nombrePa[2];
-            document.getElementById('apellidoPa2ConReg').value = nombrePa[3];
-            document.getElementById('hcPaConReg').value = hc;
-            document.getElementById('naciPaConReg').value = naciPa;
-            document.getElementById('sexoPaConReg').value = sexoPa;
-            document.getElementById('emailPaConReg').value = emailPa;
-            document.getElementById('tlfPaConReg').value = telfPa;
-            document.getElementById('dirPaConReg').value = dirPa;
-            document.getElementById('estadoPaConReg').value = estPa;
-            document.getElementById('muniPaConReg').value = muniPa;
-            document.getElementById('parroquiaPaConReg').value = parroquiaPa;
-            document.getElementById('nacPaConReg').value = cedulaPa[0];
-            document.getElementById('cedulaPaConReg').value = cedulaPa[1];
+            
+            document.querySelector('input[name="nombrePa1ConReg"]').value = nombrePa[0];
+            document.querySelector('input[name="nombrePa2ConReg"]').value = nombrePa[1];
+            document.querySelector('input[name="apellidoPa1ConReg"]').value = nombrePa[2];
+            document.querySelector('input[name="apellidoPa2ConReg"]').value = nombrePa[3];
+            document.querySelector('input[name="hcPaConReg"]').value = hc;
+            document.querySelector('select[name="nacPaConReg"]').value = cedulaPa[0];
+            document.querySelector('input[name="cedulaPaConReg"]').value = cedulaPa[1];
+            
+            document.querySelector('input[name="naciPaConReg"]').value = naciPa;
+            document.querySelector('select[name="sexoPaConReg"]').value = sexoPa;
+            document.querySelector('input[name="emailPaConReg"]').value = emailPa;
+            document.querySelector('input[name="tlfPaConReg"]').value = telfPa;
+            document.querySelector('textarea[name="dirPaConReg"]').value = dirPa;
+            document.querySelector('select[name="estadoPaConReg"]').value = estPa;
+            document.querySelector('select[name="muniPaConReg"]').value = muniPa;
+            document.querySelector('select[name="parroquiaPaConReg"]').value = parroquiaPa;
+
         }
 
     } catch (error) { 
@@ -395,6 +435,14 @@ precargarProts();
 
 const protocolosSeleccionables = [...protocolos];
 
+function enumerarMedProt(tbody) {
+    const nums = tbody.querySelectorAll('.numMed');
+
+    nums.forEach((num, index) => {
+        num.textContent = index + 1; 
+    });
+}
+
 function asignarProt() {
     // Creacion de tabla
     const contenedorTabla = document.getElementById('medsTrat');
@@ -411,13 +459,6 @@ function asignarProt() {
     thProt0.colSpan = 3;
     const selectProt = document.createElement('select');
 
-
-
-
-
-
-
-
     selectProt.className = 'form-control seleccion-prot';
     selectProt.innerHTML = '<option value="" disabled selected>Seleccione un protocolo</option>';
 
@@ -433,16 +474,12 @@ function asignarProt() {
     btnEliminarProt.appendChild(iconoBoton0);
     thProt1.appendChild(btnEliminarProt);
 
-    // Boton para eliminar un protocolo
     btnEliminarProt.addEventListener('click', function() {
         const protocolo = btnEliminarProt.closest('table');
         if (protocolo) {
             protocolo.remove();
-            if (typeof enumerarFases === 'function') {
-                enumerarFases();
-            }
+            filtrarProtocolos();
         }
-        return;
     });
     
     trProt0.appendChild(thProt0);
@@ -454,6 +491,9 @@ function asignarProt() {
         selectProt.disabled = true;
 
         const id = selectProt.value;
+        selectProt.name = `protocolo[${id}]`;
+
+        filtrarProtocolos();
 
         async function precargarProts() {
             const respuesta = await fetch(`/medico/obtener-medicinasProt/${id}`);
@@ -474,9 +514,13 @@ function asignarProt() {
             medicinas.forEach(med => {
                 const trProt2 = document.createElement('tr');
                 const tdProt1 = document.createElement('td');
-                tdProt1.textContent = '1';
+                tdProt1.className = 'numMed';
                 const tdProt2 = document.createElement('td');
-                tdProt2.textContent = med.medicina.descripcion;
+                const inputMed = document.createElement('input');
+                inputMed.className = 'form-control';
+                inputMed.value = `${med.medicina.descripcion}`;
+                inputMed.name = `protocolos[${id}][medicinas][${med.medicina.medicina_id}]`;
+                inputMed.readOnly = true;
                 const tdProt3 = document.createElement('td');
                 const selectVia = document.createElement('select');
                 selectVia.className = 'form-control seleccion-via';
@@ -484,7 +528,9 @@ function asignarProt() {
                 +'<option value="1">Intramuscular</option>'
                 +'<option value="2">Indovenoso</option>'
                 +'<option value="3">Oral</option>';
+                selectVia.name = `protocolos[${id}][vias][${med.medicina.medicina_id}]`;
                 tdProt3.appendChild(selectVia);
+                tdProt2.appendChild(inputMed);
 
                 const tdProt4 = document.createElement('td');
                 const btnEliminarMed = document.createElement('button');
@@ -501,6 +547,9 @@ function asignarProt() {
                 trProt2.appendChild(tdProt4);
 
                 tbodyProt.appendChild(trProt2);
+
+                enumerarMedProt(tbodyProt);
+
                 tablaProt.appendChild(tbodyProt);
 
                 btnEliminarMed.addEventListener('click', function () {
@@ -508,9 +557,10 @@ function asignarProt() {
                     
                     if (medicina) {
                         medicina.remove();
+                        enumerarMedProt(tbodyProt); 
                     }
-                    return;
                 });
+
             });
         }
 
@@ -532,10 +582,28 @@ function asignarProt() {
 
 }
 
-// Boton de crear nueva fase
+function filtrarProtocolos() {
+    const seleccionados = Array.from(document.querySelectorAll('.seleccion-prot'))
+   .map(select => select.value)
+   .filter(val => val !== "");
+
+    // Busca todos los selects y deshabilita las opciones que ya se usaron
+    document.querySelectorAll('.seleccion-prot').forEach(select => {
+        select.querySelectorAll('option').forEach(option => {
+            if (option.value !== "" && seleccionados.includes(option.value) && select.value !== option.value) {
+                option.hidden = true;
+            } else {
+                option.hidden = false;
+            }
+        });
+    });
+}
+
+// Boton de crear nuevo protocolo
 document.getElementById('btnNuevoProt').addEventListener('click', () => {
     asignarProt();
 
+    filtrarProtocolos();
 });
 
 

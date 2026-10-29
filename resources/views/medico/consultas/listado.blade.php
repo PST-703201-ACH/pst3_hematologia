@@ -57,6 +57,7 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Paciente</th>
                                 <th scope="col">Nº de H.C</th>
+                                <th scope="col">Tipo</th>
                                 <th scope="col">Fecha y hora de atencion</th>
                                 <th scope="col">Enfermedad</th>
                                 <th style="text-align: center;">Acciones</th>
@@ -120,4 +121,5 @@
         	</div>
         </div>
 	</div>
+    <div id="alertCon"></div>
 </div>

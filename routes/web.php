@@ -159,8 +159,8 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
         Route::get('/obtener-consultasR', 'listarConR')->name('medico.pacientes.consultasR');
         Route::get('/obtener-enfermedades', 'obtenerEnf');
         Route::get('/precargar-con/{id}', 'precargarConP');
-        Route::post('/consulta-registrar1', 'registrarCon1')->name('medico.consultas.registrar1');
-        Route::post('/consulta-registrar2', 'registrarCon2')->name('medico.consultas.registrar2');
+        Route::post('/consulta-registrar1', 'registrarCon1');
+        Route::post('/consulta-registrar2', 'registrarCon2');
         Route::get('/obtener-protocolos', 'precargarProts');
         Route::get('/obtener-medicinasProt/{id}', 'precargarMeds');
     });

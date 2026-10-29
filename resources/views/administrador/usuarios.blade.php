@@ -63,5 +63,16 @@
 				</tbody>
 			</table>
 		</div>
+
+		<div class="clinical-history-entry mt-3">
+			<div>
+				<strong>Consulta la trayectoria clínica de un paciente</strong>
+				<p class="text-muted mb-0">Busca por nombre o historia clínica. La ficha actual es una demostración visual.</p>
+			</div>
+			<button type="button" class="btn btn-primary" id="btnHistoriaClinica">
+				<i class="fas fa-notes-medical mr-1" aria-hidden="true"></i>
+				Historia Clínica
+			</button>
+		</div>
 	</div>	
 </div>

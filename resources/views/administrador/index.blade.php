@@ -13,6 +13,7 @@
 
     <!-- Custom App CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/historia-clinica.css') }}">
 
     @stack('styles')
 </head>
@@ -41,6 +42,10 @@
 
                 <div id="seccion-usuarios" class="vista_admin d-none">
                     @include('administrador.usuarios')
+                </div>
+
+                <div id="seccion-historia-clinica" class="vista_admin d-none">
+                    @include('administrador.historia_clinica')
                 </div>
 
                 <div id="registro-usuario" class="vista_admin d-none">
@@ -105,6 +110,9 @@
 <script src="{{ asset('assets/js/listar_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/dashboards_admin.js') }}"></script>
 <script src="{{ asset('assets/js/ver_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/historia-clinica-data.js') }}"></script>
+<script src="{{ asset('assets/js/historia-clinica-templates.js') }}"></script>
+<script src="{{ asset('assets/js/historia-clinica-controller.js') }}"></script>
 <script src="{{ asset('assets/js/actualizar_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/status_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/catalogo_med.js') }}"></script>

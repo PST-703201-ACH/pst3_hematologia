@@ -107,6 +107,7 @@ async function listarConsultaP(termino = '', fecha = '') {
             let paciente = '';
             let hc = '';
             let enfermedad = '';
+            let tipo = '';
 
             itemsVisibles.forEach(con => {
                 const persona = con.paciente?.persona;
@@ -121,6 +122,12 @@ async function listarConsultaP(termino = '', fecha = '') {
                     enfermedad = 'No definida';
                 }
 
+                if (con.tipo == 1) {
+                    tipo = 'Primera consulta';
+                } else if (con.tipo == 2){
+                    tipo = 'Consulta de control';
+                }
+
                 const citaId = con.cita?.cita_id ?? con.consulta_id ?? '';
 
                 filas += `
@@ -128,6 +135,7 @@ async function listarConsultaP(termino = '', fecha = '') {
                         <td>${id++}</td>
                         <td>${paciente}</td>
                         <td>${hc}</td>
+                        <td>${tipo}</td>
                         <td>${con.fecha_hora}</td>
                         <td>${enfermedad}</td>
                         <td class="text-center">

@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Bienvenido, Dr. {{ Auth::user()->persona->nombres }} {{ Auth::user()->persona->apellidos }}</h3>
+        <h3 class="card-title">Bienvenido al panel de Médico</h3>
     </div>
     <div class="card-body">
         <p>Desde aquí podrá gestionar historias clínicas, interconsultas y protocolos de tratamiento</p>
@@ -46,5 +46,56 @@
                 </div>
             </div>
         </div>
+
+        <!-- TEMPORAL: gráficos con datos ficticios. Si no se aprueba, eliminar esta sección y las referencias Chart.js/CSS/JS del index del panel Médico. -->
+        <section class="medico-dashboard-demo" aria-labelledby="medico-dashboard-demo-title">
+            <div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
+                <div>
+                    <h4 id="medico-dashboard-demo-title" class="h5 mb-1">Resumen clínico</h4>
+                </div>
+                <span class="badge badge-warning">Demostración</span>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-4 col-md-6">
+                    <article class="card card-outline card-primary h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <h5 class="card-title">Pacientes por enfermedad</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="medico-dashboard-chart">
+                                <canvas id="graficoPacientesEnfermedad" role="img" aria-label="Gráfico demostrativo de pacientes por enfermedad"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-xl-4 col-md-6">
+                    <article class="card card-outline card-primary h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <h5 class="card-title">Pacientes por sexo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="medico-dashboard-chart">
+                                <canvas id="graficoPacientesSexo" role="img" aria-label="Gráfico circular demostrativo de pacientes por sexo"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-xl-4 col-md-12">
+                    <article class="card card-outline card-primary h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <h5 class="card-title">Tratamientos por protocolo y medicamento</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="medico-dashboard-chart">
+                                <canvas id="graficoTratamientosAsignados" role="img" aria-label="Gráfico demostrativo de tratamientos asignados por protocolo y medicamento"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
     </div>
 </div>

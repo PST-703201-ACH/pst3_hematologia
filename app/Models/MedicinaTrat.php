@@ -8,7 +8,7 @@ class MedicinaTrat extends Model
 {
     protected $table = 'logistica.medicina_trat';
     protected $primaryKey = 'id';
-    protected $fillable = ['paciente_id', 'consulta_id', 'protocolo_id', 'medico_id', 'medicina_id', 'via_admin'];
+    protected $fillable = ['paciente_id', 'consulta_id', 'protocolo_id', 'medico_id', 'medicina_id', 'via_admin', 'status'];
     public $incrementing = true;
     public $timestamps = false;
 
