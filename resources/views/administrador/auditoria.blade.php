@@ -17,6 +17,14 @@
 					</a>
 
 					<button class="btn btn-success" onclick="excelAuditoria()"><i class="fas fa-regular fa-file-excel"></i></button>
+
+					{{-- El formulario POST conserva la sesión y protege la solicitud con el token CSRF. --}}
+					<form method="POST" action="{{ route('admin.backup.database') }}" class="d-inline">
+						@csrf
+						<button type="submit" class="btn btn-info" title="Descargar respaldo de la base de datos" aria-label="Descargar respaldo de la base de datos">
+							<i class="fas fa-database" aria-hidden="true"></i>
+						</button>
+					</form>
 				</div>
 
 				<div id="btnPagAud" class="d-flex gap-1"></div>

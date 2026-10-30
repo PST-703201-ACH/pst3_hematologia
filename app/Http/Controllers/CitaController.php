@@ -8,6 +8,9 @@ use App\Models\Cita;
 use App\Models\Consulta;
 use App\Models\Paciente;
 use App\Models\Persona;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 class CitaController extends Controller
 {
@@ -241,6 +244,99 @@ class CitaController extends Controller
         $citas = Cita::with('consulta')->get();
         
         return response()->json($citas);
+    }
+
+    public function exportarPdf()
+    {
+        $citas = $this->filasExportacion();
+        $fechaEmision = Carbon::now();
+
+        return Pdf::loadView('reportes.citas_pdf', [
+            'citas' => $citas,
+            'fecha_emision' => $fechaEmision->format('d/m/Y H:i'),
+        ])->setPaper('a4', 'landscape')
+            ->download('reporte_citas_' . $fechaEmision->format('Ymd_His') . '.pdf');
+    }
+
+    public function exportarExcel()
+    {
+        $citas = $this->filasExportacion();
+        $nombreArchivo = 'reporte_citas_' . Carbon::now()->format('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($citas) {
+            $salida = fopen('php://output', 'w');
+
+            if ($salida === false) {
+                throw new \RuntimeException('No se pudo generar el archivo de citas.');
+            }
+
+            if (fwrite($salida, "\xEF\xBB\xBF") === false || fputcsv($salida, [
+                'Fecha y hora (cita)',
+                'Número de historia clínica',
+                'Nombre del paciente',
+                'Nombre del representante',
+                'Consulta asociada',
+                'Citas registradas en la fecha',
+            ], ';', '"', '\\') === false) {
+                throw new \RuntimeException('No se pudo escribir el archivo de citas.');
+            }
+
+            foreach ($citas as $cita) {
+                $valores = [
+                    $cita['fecha_hora'],
+                    $cita['numero_hc'],
+                    $cita['paciente'],
+                    $cita['representante'],
+                    $cita['consulta'],
+                    $cita['conteo_fecha'],
+                ];
+                $valores = array_map(static function ($valor) {
+                    $valor = (string) $valor;
+
+                    return preg_match('/^[=+\-@\t\r]/', $valor) === 1 ? "'" . $valor : $valor;
+                }, $valores);
+
+                if (fputcsv($salida, $valores, ';', '"', '\\') === false) {
+                    throw new \RuntimeException('No se pudo escribir una cita en el archivo.');
+                }
+            }
+
+            fclose($salida);
+        }, $nombreArchivo, ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    private function filasExportacion(): Collection
+    {
+        $citas = Cita::with('consulta.enfermedad')
+            ->orderBy('fecha_hora')
+            ->get();
+
+        $conteosPorFecha = $citas->countBy(function (Cita $cita) {
+            return $cita->fecha_hora
+                ? Carbon::parse($cita->fecha_hora)->toDateString()
+                : 'sin-fecha';
+        });
+
+        return $citas->map(function (Cita $cita) use ($conteosPorFecha) {
+            $fecha = $cita->fecha_hora ? Carbon::parse($cita->fecha_hora) : null;
+            $consulta = $cita->consulta;
+            $consultaAsociada = $consulta
+                ? 'Consulta #' . $consulta->consulta_id
+                : 'Sin consulta asociada';
+
+            if ($consulta?->enfermedad?->descripcion) {
+                $consultaAsociada .= ' - ' . $consulta->enfermedad->descripcion;
+            }
+
+            return [
+                'fecha_hora' => $fecha?->format('d/m/Y H:i') ?? 'Sin fecha',
+                'numero_hc' => $cita->numero_hc ?? 'No registrado',
+                'paciente' => trim(($cita->nombres_paciente ?? '') . ' ' . ($cita->apellidos_paciente ?? '')) ?: 'No registrado',
+                'representante' => trim(($cita->nombres_representante ?? '') . ' ' . ($cita->apellidos_representante ?? '')) ?: 'No registrado',
+                'consulta' => $consultaAsociada,
+                'conteo_fecha' => $conteosPorFecha[$fecha?->toDateString() ?? 'sin-fecha'],
+            ];
+        });
     }
 
 
