@@ -30,63 +30,15 @@
                         @include('enfermeria.jornada')
                     </div>
 
-                    <div class="tab-pane fade" id="sala-enfermeria" role="tabpanel">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card card-warning card-outline">
-                            <div class="card-header"><h3 class="card-title">Observación de sala</h3></div>
-                            <div class="card-body">
-                                <p class="text-muted">Formulario visual con datos estáticos de ejemplo.</p>
-                                <form>
-                                    <div class="form-group">
-                                        <label for="obs-paciente">Paciente (opcional)</label>
-                                        <select class="form-control" id="obs-paciente" name="paciente_id">
-                                            <option value="">Sin paciente asociado</option>
-                                            <option value="ejemplo">Paciente de ejemplo — H.C. 000000</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="obs-gravedad">Gravedad</label>
-                                        <select class="form-control" id="obs-gravedad" name="gravedad">
-                                            <option value="baja">Baja</option>
-                                            <option value="moderada">Moderada</option>
-                                            <option value="alta">Alta</option>
-                                            <option value="critica">Crítica</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="obs-descripcion">Descripción</label>
-                                        <textarea class="form-control" id="obs-descripcion" name="descripcion" rows="3" maxlength="5000" placeholder="Escriba una observación de ejemplo"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="obs-accion">Acción tomada</label>
-                                        <textarea class="form-control" id="obs-accion" name="accion_tomada" rows="2" maxlength="5000" placeholder="Escriba una acción de ejemplo"></textarea>
-                                    </div>
-                                    <button class="btn btn-warning" type="button">Guardar observación</button>
-                                </form>
-                            </div>
-                        </div>
+                    <div class="vista_enf d-none" id="seccion-sala">
+                        @include('enfermeria.observaciones')
+                    </div>
+
+                    <div class="vista_enf d-none" id="seccion-registrar-obs">
+                        @include('enfermeria.registrar_obs')
                     </div>
                 </div>
 
-                <div class="card card-secondary card-outline">
-                    <div class="card-header"><h3 class="card-title">Recomendaciones</h3></div>
-                    <div class="card-body table-responsive">
-                        <p class="text-muted">Datos estáticos de ejemplo.</p>
-                        <table class="table table-sm table-striped">
-                            <thead><tr><th>Fecha</th><th>Paciente / H.C.</th><th>Gravedad</th></tr></thead>
-                            <tbody>
-                                <tr>
-                                    <td>Ejemplo</td>
-                                    <td>Paciente de ejemplo — H.C. 000000</td>
-                                    <td>Baja</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                    </div>
-                </div>
             </div>
         </section>
     </div>
@@ -96,6 +48,8 @@
 <script src="{{ asset('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
 <script src="{{ asset('assets/js/listar_jornada.js') }}"></script>
+<script src="{{ asset('assets/js/registrar_obs.js') }}"></script>
+<script src="{{ asset('assets/js/listar_observacion.js') }}"></script>
 <script src="{{ asset('assets/js/botones_enf.js') }}"></script>
 </body>
 </html>

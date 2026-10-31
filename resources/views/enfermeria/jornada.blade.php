@@ -13,11 +13,13 @@
                     <label for="filtro-estado">Status</label>
                     <select class="form-control" name="busqueda_status">
                         <option value="">Todos</option>
+                        <option value="1" class="text-success">Observado</option>
+                        <option value="0" class="text-danger">No observado</option>
                     </select>
                 </div>
 
-                <div class="form-group d-none" id="contenedor-limpiar">
-                    <button class="btn btn-danger btn-block" type="button" id="btnLimpiar_jor">Limpiar</button>
+                <div class="form-group">
+                    <button class="btn btn-danger btn-block d-none" type="button" id="btnLimpiar_jor">Limpiar</button>
                 </div>
 
                 <div class="form-group col-md-1">
@@ -41,6 +43,7 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Paciente / H.C.</th>
                         <th>Status</th>
                         <th>Acción</th>
@@ -51,5 +54,6 @@
                 </tbody>
             </table>
         </div>
+        <div id="alertRegJor"></div>
     </div>
 </div>

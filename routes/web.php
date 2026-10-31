@@ -177,18 +177,16 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
 // ---------------------------------------------------------------------
 // ENFERMERÍA
 // ---------------------------------------------------------------------
-Route::middleware('role:4')->prefix('enf')->controller(EnfermeriaController::class)->group(function () {
-    Route::get('/', function () {
-        return view('enfermeria.index');
-    })->name('enf.index');
+    Route::middleware('role:4')->prefix('enf')->controller(EnfermeriaController::class)->group(function () {
+        Route::get('/', function () {
+            return view('enfermeria.index');
+        })->name('enf.index');
 
-    Route::get('/obtener-jornada', 'listarJor');
+        Route::get('/obtener-jornada', 'listarJor');
+        Route::get('/obtener-observacion', 'listarObs');
+        Route::get('/precargar-trat/{id}', 'precargarTrat');
+        Route::post('/observacion-guardar', 'registrarObs')->name('observacion.registrar');
 
-
-    Route::post('/sesiones/{sesionId}/aplicar', 'aplicarSesion')->name('enfermeria.sesiones.aplicar');
-    Route::post('/transfusiones/{transfusionId}/aplicar', 'aplicarTransfusion')->name('enfermeria.transfusiones.aplicar');
-    Route::post('/observaciones', 'storeObservacion')->name('enfermeria.observaciones.store');
-    Route::post('/reacciones-adversas', 'storeReaccion')->name('enfermeria.reacciones.store');
-});
+    });
 
 });

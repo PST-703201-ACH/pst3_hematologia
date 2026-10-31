@@ -30,11 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
         btnLimpiar.addEventListener('click', function() {
             if (inputBusqueda) inputBusqueda.value = '';
             if (selectStatus) selectStatus.value = '';
-            if (inputFecha) inputFecha.value = '';
             this.classList.add('d-none');
-            listarJornada('', '', '');
+            listarJornada('', '');
         });
     }
+
+    listarJornada();
 });
 
 let paginaActualJor = 1;
@@ -42,7 +43,7 @@ const elementosPorPaginaJor = 5;
 
 async function listarJornada(paciente = '', status = '') {
     try {
-        paginaActualJor = 1; 
+        paginaActualJor = 1;
 
         let parametros = [];
             
@@ -69,16 +70,29 @@ async function listarJornada(paciente = '', status = '') {
             let filas = '';
             let id = (paginaActualJor - 1) * elementosPorPaginaJor + 1;
             let paciente = '';
+            let status = '';
             
             itemsVisibles.forEach(jor => {
-                paciente = jor.paciente.persona.nombres+' '+jor.paciente.persona.apellidos;
+                paciente = jor.medicina[0].paciente.persona.nombres+' '+jor.medicina[0].paciente.persona.apellidos;
+                hc = jor.medicina[0].paciente.hc;
+
+                if (jor.status === 1) {
+                    status = '<p class="text-success">Observado</p>';
+                }
+
+                if (jor.status === 0) {
+                    status = '<p class="text-danger">No observado</p>';
+                }
                 
                 filas += `
                     <tr>
                         <td>${id++}</td>
-                        <td>${paciente}</td>
-                        <td>Aca va el sn los botones
-                        <td>Aca van los botones</td>
+                        <td>${paciente} / H.C: ${hc}</td>
+                        <td>${status}</td>
+                        <td><button type="button" onclick="intercambiarVista('seccion-registrar-obs'); precargarDatosTrat(this);" class="btn btn-sm btn-warning" data-id="${jor.tratamiento_id}">
+                                <i class="fas fa-notes-medical"></i> Registrar
+                            </button>
+                        </td>
                     </tr>
                 `;
             });

@@ -14,3 +14,17 @@ document.getElementById('btnJornada').addEventListener('click', function(jornada
     jornada.preventDefault();
     intercambiarVista('seccion-jornada');
 });
+
+document.getElementById('btnSalirRegObs').addEventListener('click', function(cancelarRegJor) {
+    listarJornada();
+
+    cancelarRegJor.preventDefault();
+    intercambiarVista('seccion-jornada');
+});
+
+document.getElementById('btnSala').addEventListener('click', function(observaciones) {
+
+    observaciones.preventDefault();
+    intercambiarVista('seccion-sala');
+    listarObservacion();
+});

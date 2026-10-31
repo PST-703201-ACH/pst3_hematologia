@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Protocolo;
 use App\Models\MedicinaProt;
 use App\Models\MedicinaTrat;
+use App\Models\Tratamiento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -168,6 +169,14 @@ class ConsultaController extends Controller
                 $errores['citaFechaConReg'] = "Complete esta informacion";
             }
 
+            $fechaAgendada = new \DateTime($request->citaFechaConReg);
+            $fechaActual = new \DateTime();
+
+            if ($fechaAgendada <= $fechaActual) {
+                $errores['citaFechaConReg'] = "La fecha debe ser después de la actual";
+            }
+
+
             if (empty($request->citaHoraConReg)) {
                 $errores['citaHoraConReg'] = "Complete esta informacion";
             }
@@ -186,7 +195,6 @@ class ConsultaController extends Controller
             }
 
                     $fechaNacimiento = new \DateTime($request->naciPaConReg);
-                    $fechaActual = new \DateTime();
 
 
                         $diferencia = $fechaActual->diff($fechaNacimiento);
@@ -472,6 +480,13 @@ class ConsultaController extends Controller
                 $errores['citaFechaConReg'] = "Complete esta informacion";
             }
 
+            $fechaAgendada = new \DateTime($request->citaFechaConReg);
+            $fechaActual = new \DateTime();
+
+            if ($fechaAgendada <= $fechaActual) {
+                $errores['citaFechaConReg'] = "La fecha debe ser después de la actual";
+            }
+
             if (empty($request->citaHoraConReg)) {
                 $errores['citaHoraConReg'] = "Complete esta informacion";
             }
@@ -489,19 +504,15 @@ class ConsultaController extends Controller
                 $errores['naciPaConReg'] = "Complete esta informacion";
             }
 
-                    $fechaNacimiento = new \DateTime($request->naciPaConReg);
-                    $fechaActual = new \DateTime();
+            $fechaNacimiento = new \DateTime($request->naciPaConReg);
 
+            $diferencia = $fechaActual->diff($fechaNacimiento);
+            $edad = $diferencia->y;
 
-                        $diferencia = $fechaActual->diff($fechaNacimiento);
-                        $edad = $diferencia->y;
-
-                        if ($edad >= 18) {
-                            $errores['naciPaConReg'] = "El paciente debe ser menor de 18 años";
-                        }
+            if ($edad >= 18) {
+                $errores['naciPaConReg'] = "El paciente debe ser menor de 18 años";
+            }
                     
-
-
             if ($request->cedulaPaConReg === null || trim($request->cedulaPaConReg) === '') {
                 $errores['cedulaPaConReg'] = "Complete esta informacion";
             } elseif (!ctype_digit($request->cedulaPaConReg)) {
@@ -667,6 +678,10 @@ class ConsultaController extends Controller
                         'protocolos' => 'required|array',
                     ]);
 
+                    $tratamiento = Tratamiento::create([
+                        'status' => 0
+                    ]);
+
                     $datosProtocolos = $request->input('protocolos');
 
                     foreach ($datosProtocolos as $protocolo => $contenido) {
@@ -683,6 +698,7 @@ class ConsultaController extends Controller
                                 'protocolo_id' => $protocolo,
                                 'medico_id' => $request->usuConReg,
                                 'medicina_id' => $medicina,
+                                'tratamiento_id' => $tratamiento->tratamiento_id,
                                 'via_admin' => $via,
                                 'status' => 0,
                             ]);

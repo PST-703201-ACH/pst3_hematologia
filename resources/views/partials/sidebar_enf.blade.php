@@ -1,5 +1,6 @@
 @php
     $usuarioActual = Auth::user();
+    $id = $usuarioActual?->usuario_id;
     $personaActual = $usuarioActual?->persona;
     $nombres = explode(' ', trim($personaActual?->nombres ?? ''));
     $nombre = $nombres[0] ?: 'Usuario';
@@ -26,7 +27,7 @@
             <div class="d-flex flex-column">
                 <h5 class="d-block text-success mb-0">{{ $nombreSidebar }}</h5>
                 <h5 class="d-block text-primary mb-0">{{ $cedulaSidebar }}</h5>
-                <span hidden id="user"></span>
+                <span hidden id="usuario">{{ $id }}</span>
             </div>
         </div>
 

@@ -8,7 +8,7 @@ class MedicinaTrat extends Model
 {
     protected $table = 'logistica.medicina_trat';
     protected $primaryKey = 'id';
-    protected $fillable = ['paciente_id', 'consulta_id', 'protocolo_id', 'medico_id', 'medicina_id', 'via_admin', 'status'];
+    protected $fillable = ['paciente_id', 'consulta_id', 'protocolo_id', 'medico_id', 'medicina_id', 'tratamiento_id', 'via_admin', 'status'];
     public $incrementing = true;
     public $timestamps = false;
 
@@ -29,11 +29,16 @@ class MedicinaTrat extends Model
 
     public function medico()
     {
-        return $this->belongsTo(Usuario::class, 'usuario_id', 'usuario_id');
+        return $this->belongsTo(User::class, 'usuario_id', 'usuario_id');
     }
 
     public function medicina()
     {
         return $this->belongsTo(Medicina::class, 'medicina_id', 'medicina_id');
+    }
+
+    public function tratamiento()
+    {
+        return $this->belongsTo(Tratamiento::class, 'tratamiento_id', 'tratamiento_id');
     }
 }
