@@ -49,4 +49,5 @@ class StoreReaccionAdversaRequest extends FormRequest
             'fecha_hora.required' => 'Indique cuándo ocurrió la reacción.',
         ];
     }
+    
 }

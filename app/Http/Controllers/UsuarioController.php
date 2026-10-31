@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Persona;
@@ -10,6 +13,7 @@ use App\Models\User;
 use App\Models\Rol;
 use App\Mail\ClaveOlvidada;
 use App\Models\Auditoria;
+use Symfony\Component\Process\Process;
 
 
 class UsuarioController extends Controller
@@ -290,6 +294,134 @@ class UsuarioController extends Controller
         $pdf = Pdf::loadView('reportes.auditoria_pdf', $data);
 
         return $pdf->download("reporte_auditoria_" . date('Ymd_His') . ".pdf");
+    }
+
+    /**
+     * Genera un respaldo SQL de PostgreSQL, registra la descarga y entrega el archivo al administrador.
+     */
+    public function respaldarBaseDatos()
+    {
+        // El respaldo usa la conexión PostgreSQL nombrada, aunque otra conexión sea la predeterminada.
+        $configuracion = config('database.connections.pgsql');
+        $pgDump = config('database.pg_dump_binary');
+
+        if (
+            !is_array($configuracion)
+            || empty($configuracion['host'])
+            || empty($configuracion['port'])
+            || empty($configuracion['database'])
+            || empty($configuracion['username'])
+        ) {
+            throw new \RuntimeException('La configuración de conexión PostgreSQL está incompleta.');
+        }
+
+        // Valida que el ejecutable configurado sea una ruta absoluta existente.
+        $rutaAbsoluta = PHP_OS_FAMILY === 'Windows'
+            ? preg_match('/^[A-Za-z]:[\\\\\/]/', (string) $pgDump) === 1
+            : str_starts_with((string) $pgDump, '/');
+
+        if (!$rutaAbsoluta || !is_file($pgDump)) {
+            throw new \RuntimeException('Configura PG_DUMP_BINARY con la ruta absoluta existente de pg_dump.exe.');
+        }
+
+        // El respaldo se crea en almacenamiento privado con un nombre apto para descarga.
+        $directorio = storage_path('app/backups');
+        File::ensureDirectoryExists($directorio, 0700, true);
+        $rutaAbsolutaSalida = storage_path('app/backups/backup_' . date('Y_m_d_His') . '.sql');
+
+        $respaldoListo = false;
+
+        try {
+            // Una llave criptográficamente aleatoria permite que pg_dump no dependa de la generación aleatoria de Windows.
+            $restrictKey = bin2hex(random_bytes(32));
+
+            // Symfony escapa cada placeholder dinámico para el shell de Windows y mantiene la sintaxis --llave=valor.
+            $comandoString = '"${:PG_DUMP}" "${:HOST_ARG}" "${:PORT_ARG}" "${:USER_ARG}" "${:DATABASE_ARG}" "${:FORMAT_ARG}" "${:RESTRICT_ARG}" "${:FILE_ARG}"';
+            $variablesProceso = [
+                'PG_DUMP' => $pgDump,
+                'HOST_ARG' => '--host=' . $configuracion['host'],
+                'PORT_ARG' => '--port=' . $configuracion['port'],
+                'USER_ARG' => '--username=' . $configuracion['username'],
+                'DATABASE_ARG' => '--dbname=' . $configuracion['database'],
+                'FORMAT_ARG' => '--format=plain',
+                'RESTRICT_ARG' => '--restrict-key=' . $restrictKey,
+                'FILE_ARG' => '--file=' . $rutaAbsolutaSalida,
+                'PGPASSWORD' => (string) ($configuracion['password'] ?? ''),
+                'PGSSLMODE' => (string) ($configuracion['sslmode'] ?? 'prefer'),
+            ];
+
+            // Conserva las rutas del sistema en el entorno hijo para que Windows cargue sus proveedores criptográficos.
+            if (PHP_OS_FAMILY === 'Windows') {
+                $directorioWindows = getenv('SYSTEMROOT') ?: getenv('WINDIR');
+
+                if (!$directorioWindows) {
+                    throw new \RuntimeException('Windows no expuso SYSTEMROOT ni WINDIR al proceso de Laravel.');
+                }
+
+                $variablesProceso['SYSTEMROOT'] = $directorioWindows;
+                $variablesProceso['WINDIR'] = $directorioWindows;
+            }
+
+            // Se ejecuta la misma línea de comandos que en CMD y se conserva la contraseña fuera de ella.
+            $proceso = Process::fromShellCommandline($comandoString, base_path(), $variablesProceso);
+            $proceso->setTimeout(3600);
+            $proceso->run();
+
+            if (!$proceso->isSuccessful()) {
+                // pg_dump suele emitir texto CP1252 en Windows; convertirlo evita errores UTF-8 en el log.
+                $detalleError = mb_convert_encoding($proceso->getErrorOutput(), 'UTF-8', 'CP1252');
+                $detalleError = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $detalleError) ?? '';
+
+                // Conserva el diagnóstico en el log sin insertar texto inválido en la página de error.
+                Log::error('Falló la generación del respaldo PostgreSQL con pg_dump.', [
+                    'exit_code' => $proceso->getExitCode(),
+                    'stdout' => mb_substr(
+                        mb_convert_encoding($proceso->getOutput(), 'UTF-8', 'CP1252'),
+                        0,
+                        1000,
+                        'UTF-8'
+                    ),
+                    'stderr' => mb_substr($detalleError, 0, 4000, 'UTF-8'),
+                    'command' => $proceso->getCommandLine(),
+                ]);
+
+                throw new \RuntimeException(
+                    'No se pudo generar el respaldo PostgreSQL. Revisa la configuración de pg_dump y los registros de Laravel.'
+                );
+            }
+
+            if (!is_file($rutaAbsolutaSalida) || filesize($rutaAbsolutaSalida) === 0) {
+                throw new \RuntimeException('pg_dump no generó un archivo de respaldo válido.');
+            }
+
+            $administrador = Auth::user();
+            abort_unless($administrador instanceof User, 403);
+
+            // La descarga queda auditada antes de enviar el archivo al navegador.
+            $auditoria = new Auditoria();
+            $auditoria->descripcion = 'Descarga de respaldo de la base de datos PostgreSQL';
+            $auditoria->modulo = 'Seguridad / Backup';
+            // La tabla usuarios.auditoria usa id_usuario para guardar el usuario_id autenticado.
+            $auditoria->id_usuario = $administrador->usuario_id;
+            $auditoria->accion = 'Respaldo';
+            $auditoria->fecha_hora = now();
+            $auditoria->saveOrFail();
+
+            // Evita almacenar el respaldo tras la descarga y deshabilita su almacenamiento en caché.
+            $respuesta = response()->download($rutaAbsolutaSalida, basename($rutaAbsolutaSalida), [
+                'Content-Type' => 'application/sql; charset=UTF-8',
+                'Cache-Control' => 'no-store, private',
+            ])->deleteFileAfterSend(true);
+
+            $respaldoListo = true;
+
+            return $respuesta;
+        } finally {
+            // Si el proceso falla antes de iniciar la descarga, elimina el archivo parcial.
+            if (!$respaldoListo && is_file($rutaAbsolutaSalida)) {
+                File::delete($rutaAbsolutaSalida);
+            }
+        }
     }
 
 

@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 // RUTAS PÚBLICAS Y DE BIENVENIDA
 // =========================================================================
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.portal');
 });
 
 // =========================================================================
@@ -85,6 +85,8 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
             Route::get('/obtener-enfermedades', 'listarEnf');
             Route::get('/obtener-auditoria', 'auditar');
             Route::get('/obtener-reportes', 'auditarPdf');
+            // El respaldo queda restringido al middleware role:1 de este grupo administrativo.
+            Route::post('/respaldar-base-datos', 'respaldarBaseDatos')->name('admin.backup.database');
         });
 
         Route::controller(GerenteController::class)->group(function () {
@@ -119,6 +121,8 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
         Route::controller(CitaController::class)->group(function () {
             Route::post('/cita-agendar', 'agendar')->name('cita.agendar');
             Route::get('/obtener-citas', 'listarCitas')->name('citas.json');
+            Route::get('/citas/exportar/pdf', 'exportarPdf')->name('citas.exportar.pdf');
+            Route::get('/citas/exportar/excel', 'exportarExcel')->name('citas.exportar.excel');
             Route::get('/precargar-cita/{id}', 'precargar');
             Route::post('/cita-rep', 'reprogramar')->name('cita.rep');
         });

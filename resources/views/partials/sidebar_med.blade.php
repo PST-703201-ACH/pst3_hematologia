@@ -66,6 +66,15 @@
                                 <p>Listado de Pacientes</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="#"
+                               class="nav-link"
+                               id="btnHistoriaClinicaMed"
+                               onclick="event.preventDefault();">
+                                <i class="nav-icon fas fa-notes-medical"></i>
+                                <p>Historia Clínica</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item has-treeview">

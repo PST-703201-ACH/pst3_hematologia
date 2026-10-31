@@ -26,7 +26,7 @@ class LoginController extends Controller
             return redirect()->intended($user->getDashboardUrl());
         }
 
-        return view('auth.login');
+        return view('auth.portal');
     }
 
     /**

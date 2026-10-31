@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/historia-clinica.css') }}">
+    <!-- TEMPORAL: retirar junto con los gráficos demo si se descarta la propuesta. -->
+    <link rel="stylesheet" href="{{ asset('assets/css/medico-dashboard-demo.css') }}">
 
     @stack('styles')
 </head>
@@ -38,12 +41,16 @@
                     @include('medico.dashboard')
                 </div>
 
-                <div id="seccion-pacientes_listados" class="vista_med">
+                <div id="seccion-pacientes_listados" class="vista_med d-none">
                     @include('medico.pacientes.listado')
                 </div>
 
                 <div id="seccion-paciente_detalle" class="vista_med d-none">
                     <div id="contenedor-paciente-detalle"></div>
+                </div>
+
+                <div id="seccion-historia-clinica" class="vista_med d-none">
+                    @include('administrador.historia_clinica')
                 </div>
 
                 <div id="seccion-consultas" class="vista_med d-none">
@@ -66,8 +73,15 @@
 <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
+<!-- TEMPORAL: Chart.js solo se requiere para los gráficos demostrativos del dashboard Médico. -->
+<script src="{{ asset('assets/adminlte/plugins/chart.js/Chart.min.js') }}"></script>
+
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/botones_med.js') }}"></script>
+<script src="{{ asset('assets/js/medico-dashboard-demo.js') }}"></script>
+<script src="{{ asset('assets/js/historia-clinica-data.js') }}"></script>
+<script src="{{ asset('assets/js/historia-clinica-templates.js') }}"></script>
+<script src="{{ asset('assets/js/historia-clinica-controller.js') }}"></script>
 <script src="{{ asset('assets/js/listar_consulta.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_con.js') }}"></script>
 <script src="{{ asset('assets/js/ver_consulta.js') }}"></script>

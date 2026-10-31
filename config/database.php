@@ -17,6 +17,8 @@ return [
     */
 
     'default' => env('DB_CONNECTION', 'sqlite'),
+    // Sobrescribe PG_DUMP_BINARY en .env si la versión o ubicación instalada es diferente.
+    'pg_dump_binary' => env('PG_DUMP_BINARY', 'C:\\Program Files\\PostgreSQL\\18\\bin\\pg_dump.exe'),
 
     /*
     |--------------------------------------------------------------------------
