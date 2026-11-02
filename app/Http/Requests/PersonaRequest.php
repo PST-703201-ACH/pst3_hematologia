@@ -5,9 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Validation\Rule; 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Models\User;
 
 class PersonaRequest extends FormRequest
 {
@@ -36,7 +36,7 @@ class PersonaRequest extends FormRequest
                 'required',
                 'numeric',
                 'digits_between:7,8',
-                'unique:usuario,username',
+                Rule::unique(User::class, 'username'),
                 Rule::unique('persona', 'cedula'),
             ],
             'nacionalidad' => $isUpdate ? 'nullable' : 'required|string',
@@ -46,26 +46,59 @@ class PersonaRequest extends FormRequest
             'estado' => 'required|integer',
             'municipio' => 'required|integer',
             'parroquia' => 'required|integer',
-            'direccion' => ['required', 'regex:/^[a-zA-Z0-9 ]+$/'],
+            'direccion' => ['required', 'regex:/^[\p{L}\p{N}\s.,#\-\/]+$/u'],
             'rol' => 'required|integer',
             'persona' => $isUpdate ? 'required|exists:persona,persona_id' : 'nullable', // Valida que exista al actualizar
         ];
     }
 
-    // se crea un bloque de codigo para generar mensajes exactos dependiendo de lo necesitado att jeandel XD
     public function messages(): array
     {
         return [
-            'fecha_nac.before_or_equal' => 'El nuevo usuario es menor de edad.',
-            'telefono.regex' => 'Código de número telefónico inválido.',
+            'required' => 'El campo :attribute es obligatorio.',
+            'date' => 'El campo :attribute debe ser una fecha válida.',
+            'before_or_equal' => 'El usuario debe tener al menos 18 años.',
+            'regex' => 'El campo :attribute contiene caracteres o un formato no válido.',
+            'email' => 'Ingrese un correo electrónico válido.',
+            'numeric' => 'El campo :attribute debe contener solo números.',
+            'digits' => 'El campo :attribute debe tener exactamente :digits dígitos.',
+            'digits_between' => 'El campo :attribute debe tener entre :min y :max dígitos.',
+            'unique' => 'El :attribute ya está registrado.',
+            'integer' => 'Seleccione un :attribute válido.',
+            'exists' => 'El :attribute seleccionado no es válido.',
+            'string' => 'El campo :attribute debe ser texto.',
             'cedula.unique' => 'Esta cédula ya está registrada.',
-            // Puedes agregar el resto de tus mensajes personalizados aquí... que si te pica la nariz o x cosa
+            'correo.unique' => 'Este correo electrónico ya está registrado.',
+            'telefono.regex' => 'El teléfono debe iniciar con un código móvil válido: 412, 414, 416, 424 o 426.',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'nombre1' => 'primer nombre',
+            'nombre2' => 'segundo nombre',
+            'apellido1' => 'primer apellido',
+            'apellido2' => 'segundo apellido',
+            'tipo_reg' => 'tipo de registro',
+            'tipo_up' => 'tipo de actualización',
+            'fecha_nac' => 'fecha de nacimiento',
+            'sexo' => 'sexo',
+            'cedula' => 'cédula',
+            'nacionalidad' => 'nacionalidad',
+            'telefono' => 'teléfono',
+            'correo' => 'correo electrónico',
+            'estado' => 'estado',
+            'municipio' => 'municipio',
+            'parroquia' => 'parroquia',
+            'direccion' => 'dirección',
+            'rol' => 'rol',
+            'persona' => 'persona',
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
-        \Illuminate\Support\Facades\Log::info('FAILED VALIDATION CALLED IN PERSONAREQUEST');
         $response = response()->json([
             'status' => 'errores',
             'errores' => $validator->errors()->messages(),

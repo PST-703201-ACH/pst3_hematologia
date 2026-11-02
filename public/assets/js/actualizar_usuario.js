@@ -1,197 +1,147 @@
+let catalogosDeUsuarioListos = Promise.resolve(true);
+let datosInicialesUsuario = null;
+const camposEditablesUsuario = [
+    'nombre1',
+    'nombre2',
+    'apellido1',
+    'apellido2',
+    'fecha_nac',
+    'sexo',
+    'telefono',
+    'correo',
+    'estado',
+    'municipio',
+    'parroquia',
+    'direccion',
+    'rol'
+];
+
 document.addEventListener('DOMContentLoaded', function () {
-    async function cargarParroquias() {
-        const select = document.getElementById('actualizar9');
-
-        try {
-            const respuesta = await fetch('/obtener-parroquias');
-            const parroquias = await respuesta.json();
-
-
-            parroquias.forEach(parroquia => {
-                const option = document.createElement('option');
-                option.value = parroquia.parroquia_id;
-                option.textContent = parroquia.nombre;
-                select.appendChild(option);
-            });
-
-        } catch (error) {
-            console.error("Error al cargar parroquias:", error);
-        }
-    }
-
-    async function cargarMunicipios() {
-        const select = document.getElementById('actualizar8');
-
-        try {
-            const respuesta = await fetch('/obtener-municipios');
-            const municipios = await respuesta.json();
-
-
-            municipios.forEach(municipio => {
-                const option = document.createElement('option');
-                option.value = municipio.municipio_id;
-                option.textContent = municipio.nombre;
-                select.appendChild(option);
-            });
-
-        } catch (error) {
-            console.error("Error al cargar municipios:", error);
-        }
-    }
-
-    async function cargarEstados() {
-        const select = document.getElementById('actualizar7');
-
-        try {
-            const respuesta = await fetch('/obtener-estados');
-            const estados = await respuesta.json();
-
-
-            estados.forEach(estado => {
-                const option = document.createElement('option');
-                option.value = estado.estado_id;
-                option.textContent = estado.nombre;
-                select.appendChild(option);
-            });
-
-        } catch (error) {
-            console.error("Error al cargar estados:", error);
-        }
-    }
-
-    async function cargarRoles() {
-        const select = document.getElementById('actualizar11');
-
-        try {
-            const respuesta = await fetch('/obtener-roles');
-            const roles = await respuesta.json();
-
-
-            roles.forEach(rol => {
-                const option = document.createElement('option');
-                option.value = rol.rol_id;
-                option.textContent = rol.nombre;
-                select.appendChild(option);
-            });
-
-        } catch (error) {
-            console.error("Error al cargar roles:", error);
-        }
-    }
-    cargarEstados();
-    cargarMunicipios();
-    cargarParroquias();
-    cargarRoles();
-
     const formulario = document.getElementById('formUp');
-    const actualizacionModal = new bootstrap.Modal(document.getElementById('actualizandoModal'));
+    if (!formulario) return;
 
-    if (formulario) {
-        formulario.addEventListener('submit', async function(e) {
-            const confirmacion = confirm("¿Está seguro de actualizar este usuario?");
-            e.preventDefault();
-            if (confirmacion) {
-                const datos = new FormData(formulario);
-                actualizacionModal.show();
-
-                try {
-                    const respuesta = await fetch(formulario.action, {
-                        method: 'POST',
-                        body: datos,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    });
-
-                    const resultado = await respuesta.json();
-
-                    if(resultado.status === "exito") {
-                        let alertaUsu = `
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <i class="icon fas fa-check"></i> 
-                                ${resultado.mensaje}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        `;
-                        document.getElementById('alertUpdate').innerHTML = alertaUsu;
-                        listarUsuarios();
-                        cargarEstadisticas();
-                        setTimeout(function (){
-                            document.getElementById('alertUpdate').innerHTML = "";
-                        }, 3000);
-                        
-                    }else if(resultado.status === "error") {
-                        let alertaUsu = `
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <i class="icon fas fa-xmark"></i> 
-                                ${resultado.mensaje}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        `;
-                        document.getElementById('alertUpdate').innerHTML = alertaUsu;
-                        setTimeout(function (){
-                            document.getElementById('alertUpdate').innerHTML = "";
-                        }, 3000);
-
-                    }else if (resultado.status === "errores") {
-                        for (let campo in resultado.errores) {
-                        const elemento = document.getElementById(campo);
-                            if (elemento) {
-                            const originalValue = elemento.value;
-                            elemento.className = 'form-control border border-danger text-danger';
-                            elemento.value = resultado.errores[campo]; 
-                            elemento.style.pointerEvents = 'none';
-
-                                setTimeout(function(){
-                                  elemento.className = 'form-control';
-                                  elemento.style.pointerEvents = '';
-                                  elemento.value = originalValue;
-                                }, 3000);
-                            }
-                        }
-                    }     
-                } catch (error) {
-                    console.error("Error:", error);
-                } finally {
-                    setTimeout(() => {
-                    actualizacionModal.hide();
-                    }, 500);
-                }
-            }
+    const contenedorAlerta = document.getElementById('alertUpdate');
+    catalogosDeUsuarioListos = cargarCatalogosPersona(formulario)
+        .then(() => true)
+        .catch(error => {
+            console.error('Error al cargar los catálogos de actualización:', error);
+            mostrarAlertaPersona(
+                contenedorAlerta,
+                'danger',
+                'No se pudieron cargar los datos de selección. Recargue la página e inténtelo de nuevo.'
+            );
+            return false;
         });
+
+    formulario.addEventListener('submit', async function (evento) {
+        evento.preventDefault();
+
+        limpiarErroresPersona(formulario, contenedorAlerta);
+        if (!validarCamposRequeridosPersona(formulario, contenedorAlerta)) return;
+        if (!(await catalogosDeUsuarioListos)) return;
+
+        const datosActuales = obtenerDatosEditablesUsuario(formulario);
+        if (datosInicialesUsuario && JSON.stringify(datosActuales) === JSON.stringify(datosInicialesUsuario)) {
+            mostrarAlertaPersona(contenedorAlerta, 'warning', 'No hay cambios para guardar.');
+            return;
+        }
+
+        if (!confirm('¿Está seguro de actualizar este usuario?')) return;
+
+        const botonActualizacion = formulario.querySelector('[type="submit"]');
+        botonActualizacion.disabled = true;
+        const cerrarModalCarga = mostrarModalCargaPersona('#actualizandoModal');
+        let respuesta;
+        try {
+            respuesta = await fetch(formulario.action, {
+                method: 'POST',
+                body: new FormData(formulario),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const resultado = await respuesta.json();
+
+            if (resultado.status === 'exito') {
+                mostrarAlertaPersona(contenedorAlerta, 'success', resultado.mensaje);
+                listarUsuarios();
+                cargarEstadisticas();
+                datosInicialesUsuario = datosActuales;
+            } else if (resultado.status === 'error') {
+                mostrarAlertaPersona(contenedorAlerta, 'danger', resultado.mensaje);
+            } else if (resultado.status === 'errores' && resultado.errores) {
+                mostrarErroresPersona(formulario, contenedorAlerta, resultado.errores);
+            } else {
+                mostrarAlertaPersona(
+                    contenedorAlerta,
+                    'danger',
+                    'No se pudo completar la actualización. Inténtelo nuevamente.'
+                );
+            }
+        } catch (error) {
+            console.error('Error al actualizar usuario:', error);
+            mostrarAlertaPersona(
+                contenedorAlerta,
+                'danger',
+                respuesta
+                    ? `El servidor respondió con HTTP ${respuesta.status}. No se pudo completar la actualización.`
+                    : 'No se pudo conectar con el servidor. Verifique su conexión e inténtelo nuevamente.'
+            );
+        } finally {
+            cerrarModalCarga();
+            botonActualizacion.disabled = false;
+        }
+    });
+});
+
+async function precargarDatos(boton) {
+    const formulario = document.getElementById('formUp');
+    const contenedorAlerta = document.getElementById('alertUpdate');
+    datosInicialesUsuario = null;
+    limpiarErroresPersona(formulario, contenedorAlerta);
+
+    try {
+        if (!(await catalogosDeUsuarioListos)) return;
+
+        const respuesta = await fetch(`/admin/precargar-usu/${boton.dataset.id}`);
+        if (!respuesta.ok) throw new Error('No se pudieron cargar los datos del usuario.');
+
+        const usuario = await respuesta.json();
+        if (!usuario.persona) throw new Error('La respuesta no contiene los datos de la persona.');
+
+        const persona = usuario.persona;
+        const [nombre1 = '', nombre2 = ''] = persona.nombres.split(' ');
+        const [apellido1 = '', apellido2 = ''] = persona.apellidos.split(' ');
+
+        asignarValorPersona(formulario, 'nombre1', nombre1);
+        asignarValorPersona(formulario, 'nombre2', nombre2);
+        asignarValorPersona(formulario, 'apellido1', apellido1);
+        asignarValorPersona(formulario, 'apellido2', apellido2);
+        asignarValorPersona(formulario, 'fecha_nac', persona.fecha_nacimiento);
+        asignarValorPersona(formulario, 'sexo', persona.sexo);
+        asignarValorPersona(formulario, 'telefono', persona.telefono.replace(/^0/, ''));
+        asignarValorPersona(formulario, 'correo', persona.email);
+        asignarValorPersona(formulario, 'estado', persona.estado_id);
+        asignarValorPersona(formulario, 'municipio', persona.municipio_id);
+        asignarValorPersona(formulario, 'parroquia', persona.parroquia_id);
+        asignarValorPersona(formulario, 'direccion', persona.direccion_exacta);
+        asignarValorPersona(formulario, 'rol', usuario.id_rol);
+        asignarValorPersona(formulario, 'persona', usuario.persona_id);
+        datosInicialesUsuario = obtenerDatosEditablesUsuario(formulario);
+    } catch (error) {
+        console.error('Error al precargar datos del usuario:', error);
+        mostrarAlertaPersona(
+            contenedorAlerta,
+            'danger',
+            'No se pudieron cargar los datos del usuario. Recargue la página e inténtelo de nuevo.'
+        );
     }
-})
-	async function precargarDatos(boton) {
-		const id = boton.getAttribute('data-id');
+}
 
-		try {
-			const respuesta = await fetch(`/admin/precargar-usu/${id}`);
-			const datos = await respuesta.json();
+function asignarValorPersona(formulario, nombreCampo, valor) {
+    const campo = formulario.elements.namedItem(nombreCampo);
+    if (campo) campo.value = valor ?? '';
+}
 
-			const [nombre1, nombre2] = datos.persona.nombres.split(" ");
-			document.getElementById('actualizar0').value = nombre1;
-			document.getElementById('actualizar0.5').value = nombre2;
-			const [apellido1, apellido2] = datos.persona.apellidos.split(" ");
-			document.getElementById('actualizar1').value = apellido1;
-			document.getElementById('actualizar1.5').value = apellido2;
-			document.getElementById('actualizar2').value = datos.persona.fecha_nacimiento;
-			document.getElementById('actualizar3').value = datos.persona.sexo;
-			const telefono = datos.persona.telefono.replace(/^0/, "");
-			document.getElementById('actualizar5').value = telefono;
-			document.getElementById('actualizar6').value = datos.persona.email;
-			document.getElementById('actualizar7').value = datos.persona.estado_id;
-			document.getElementById('actualizar8').value = datos.persona.municipio_id;
-			document.getElementById('actualizar9').value = datos.persona.parroquia_id;
-			document.getElementById('actualizar10').value = datos.persona.direccion_exacta;
-			document.getElementById('actualizar11').value = datos.id_rol;
-            document.getElementById('X').value = datos.persona_id;
-
-		} catch (error) { 
-			console.error("Error al pre-cargar datos:", error);
-		} 
-	}
-
+function obtenerDatosEditablesUsuario(formulario) {
+    const datos = new FormData(formulario);
+    return camposEditablesUsuario.map(nombreCampo => [nombreCampo, datos.get(nombreCampo) ?? '']);
+}

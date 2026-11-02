@@ -106,14 +106,15 @@
 <script src="{{ asset('assets/js/app.js') }}"></script>
 
 <script src="{{ asset('assets/js/botones_admin.js') }}"></script>
-<script src="{{ asset('assets/js/registrar_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/persona_validacion.js') }}?v={{ filemtime(public_path('assets/js/persona_validacion.js')) }}"></script>
+<script src="{{ asset('assets/js/registrar_usuario.js') }}?v={{ filemtime(public_path('assets/js/registrar_usuario.js')) }}"></script>
 <script src="{{ asset('assets/js/listar_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/dashboards_admin.js') }}"></script>
 <script src="{{ asset('assets/js/ver_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/historia-clinica-data.js') }}"></script>
 <script src="{{ asset('assets/js/historia-clinica-templates.js') }}"></script>
 <script src="{{ asset('assets/js/historia-clinica-controller.js') }}"></script>
-<script src="{{ asset('assets/js/actualizar_usuario.js') }}"></script>
+<script src="{{ asset('assets/js/actualizar_usuario.js') }}?v={{ filemtime(public_path('assets/js/actualizar_usuario.js')) }}"></script>
 <script src="{{ asset('assets/js/status_usuario.js') }}"></script>
 <script src="{{ asset('assets/js/catalogo_med.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_prot.js') }}"></script>

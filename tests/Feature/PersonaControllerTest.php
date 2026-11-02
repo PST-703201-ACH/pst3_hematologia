@@ -181,6 +181,105 @@ it('rolls back registration and reports an SMTP failure clearly', function () {
         ->and(User::count())->toBe(0);
 });
 
+it('returns registration validation errors in Spanish', function () {
+    $personaAdmin = Persona::create([
+        'nombres' => 'Admin',
+        'apellidos' => 'Prueba',
+        'fecha_nacimiento' => '1980-01-20',
+        'sexo' => 'F',
+        'cedula' => 'V-87654321',
+        'telefono' => '04141234568',
+        'email' => 'admin@example.com',
+        'estado_id' => 1,
+        'municipio_id' => 1,
+        'parroquia_id' => 1,
+        'direccion_exacta' => 'Calle Admin',
+    ]);
+
+    $admin = User::create([
+        'username' => '87654321',
+        'password_hash' => bcrypt('secret'),
+        'persona_id' => $personaAdmin->persona_id,
+        'id_rol' => 1,
+        'status' => 1,
+    ]);
+
+    Auth::login($admin);
+
+    /** @var \Tests\TestCase $this */
+    $this->postJson('/admin/usuario-guardar', ['tipo_reg' => 'usuario'])
+        ->assertUnprocessable()
+        ->assertJsonPath('status', 'errores')
+        ->assertJsonPath('errores.nombre1.0', 'El campo primer nombre es obligatorio.')
+        ->assertJsonPath('errores.correo.0', 'El campo correo electrónico es obligatorio.');
+});
+
+it('validates registration usernames against the User model table', function () {
+    $request = new PersonaRequest();
+
+    $rules = array_map('strval', $request->rules()['cedula']);
+
+    expect($rules)->toContain('unique:App\\Models\\User,username,NULL,id');
+});
+
+it('updates a user and accepts Spanish characters and address punctuation', function () {
+    DB::table('rol')->insert(['rol_id' => 2, 'nombre' => 'Administrativo']);
+
+    $persona = Persona::create([
+        'nombres' => 'Ana',
+        'apellidos' => 'Pérez',
+        'fecha_nacimiento' => '1995-01-20',
+        'sexo' => 'F',
+        'cedula' => 'V-12345678',
+        'telefono' => '04141234567',
+        'email' => 'ana@example.com',
+        'estado_id' => 1,
+        'municipio_id' => 1,
+        'parroquia_id' => 1,
+        'direccion_exacta' => 'Calle 1',
+    ]);
+
+    $admin = User::create([
+        'username' => '12345678',
+        'password_hash' => bcrypt('secret'),
+        'persona_id' => $persona->persona_id,
+        'id_rol' => 1,
+        'status' => 1,
+    ]);
+
+    Auth::login($admin);
+
+    /** @var \Tests\TestCase $this */
+    $this->postJson('/admin/usuario-actualizar', [
+        'persona' => $persona->persona_id,
+        'tipo_up' => 'usuario',
+        'nombre1' => 'María',
+        'nombre2' => 'José',
+        'apellido1' => 'Gómez',
+        'apellido2' => 'Pérez',
+        'fecha_nac' => '1995-01-20',
+        'sexo' => 'F',
+        'telefono' => '4141234567',
+        'correo' => 'ana@example.com',
+        'estado' => 1,
+        'municipio' => 1,
+        'parroquia' => 1,
+        'direccion' => 'Av. José #12-A, Centro',
+        'rol' => 2,
+    ])
+        ->assertOk()
+        ->assertJsonPath('status', 'exito');
+
+    $persona->refresh();
+    $admin->refresh();
+
+    expect($persona->nombres)->toBe('María José')
+        ->and($persona->apellidos)->toBe('Gómez Pérez')
+        ->and($persona->direccion_exacta)->toBe('Av. José #12-A, Centro')
+        ->and($persona->telefono)->toBe('04141234567')
+        ->and($admin->id_rol)->toBe(2);
+});
+
 it('does not update the person or user when the update type is unsupported', function () {
     $persona = Persona::create([
         'nombres' => 'Ana',
