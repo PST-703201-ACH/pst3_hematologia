@@ -190,6 +190,7 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
         Route::get('/obtener-observacion', 'listarObs');
         Route::get('/precargar-trat/{id}', 'precargarTrat');
         Route::post('/observacion-guardar', 'registrarObs')->name('observacion.registrar');
+        Route::get('/obtener-detalles-obs/{id}', 'verObs');
 
     });
 

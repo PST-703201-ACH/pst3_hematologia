@@ -100,6 +100,11 @@ async function listarObservacion(busqueda = '', gravedad = '', fecha = '') {
                         <td>${enfermero}</td>
                         <td>${paciente}</td>
                         <td>${gra}</td>
+                        <td>
+                            <button type="button" onclick="cargarDetalleObs(this);" class="btn btn-sm btn-info" data-id="${obs.observacion_id}">
+                                <i class="fas fa-circle-info"></i> Detalles
+                            </button>
+                        </td>
                     </tr>
                 `;
             });

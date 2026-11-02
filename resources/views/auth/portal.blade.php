@@ -26,8 +26,6 @@
 
                 @auth
                     <a href="{{ Auth::user()->getDashboardUrl() }}" class="portal-header-link">Ir al panel <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                @else
-                    <a href="#portal-login" class="portal-header-link">Iniciar sesión <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 @endauth
             </header>
 

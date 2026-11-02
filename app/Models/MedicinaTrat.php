@@ -29,7 +29,7 @@ class MedicinaTrat extends Model
 
     public function medico()
     {
-        return $this->belongsTo(User::class, 'usuario_id', 'usuario_id');
+        return $this->belongsTo(User::class, 'medico_id', 'usuario_id');
     }
 
     public function medicina()

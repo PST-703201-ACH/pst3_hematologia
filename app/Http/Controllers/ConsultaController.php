@@ -605,7 +605,10 @@ class ConsultaController extends Controller
                     $viaSeleccionada = $vias[$medicinaId] ?? null;
 
                     if ($viaSeleccionada === null || trim($viaSeleccionada) === '') {
-                        $errores['via'] = "error"; 
+                        return response()->json([
+                            "status" => "error",
+                            "mensaje" => "Complete la informacion correctamente"
+                        ]);
                     }
                 }
             }

@@ -70,7 +70,28 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }, 3000);
                             }
                         }
-                    }     
+                    }
+
+                    if (resultado.errores && resultado.errores['omision']) {
+                        
+                        const elementosOmi = document.querySelectorAll('.input-omision');
+
+                        elementosOmi.forEach(elemento => {
+                            const originalValue = elemento.value;
+
+                            if (elemento.value === "" || elemento.value === null) {
+                                
+                                elemento.className = 'form-control border border-danger text-danger';
+                                elemento.style.pointerEvents = 'none';
+
+                                setTimeout(function() {
+                                    elemento.className = 'form-control';
+                                    elemento.style.pointerEvents = '';
+                                    elemento.value = originalValue;
+                                }, 3000);
+                            }
+                        });
+                    }
                 } catch (error) {
                     console.error("Error:", error);
                 } finally {
@@ -151,12 +172,12 @@ async function precargarDatosTrat(boton) {
                         <div class="d-flex gap-5 justify-content-center">
                             
                             <div class="form-check mx-1">
-                                <input class="form-check-input border-success" type="radio" name="medicinas[${meds.id}][status]" value="1">
+                                <input class="form-check-input border-success input-cumpli" type="radio" name="medicinas[${meds.id}][status]" value="1">
                                 <label class="form-check-label text-success">Sí</label>
                             </div>
                             
                             <div class="form-check mx-1">
-                                <input class="form-check-input border-danger" type="radio" name="medicinas[${meds.id}][status]" value="0">
+                                <input class="form-check-input border-danger input-cumpli" type="radio" name="medicinas[${meds.id}][status]" value="0">
                                 <label class="form-check-label text-danger">No</label>
                             </div>
                             
@@ -191,9 +212,8 @@ async function precargarDatosTrat(boton) {
                         nuevoTd.innerHTML = `
                             <input type="text" 
                             name="medicinas[${meds.id}][omision]" 
-                            class="form-control" 
-                            placeholder="Motivo de omision" 
-                            required>
+                            class="form-control input-omision" 
+                            placeholder="Motivo de omision">
                         `;
                         
                         fila.appendChild(nuevoTd);

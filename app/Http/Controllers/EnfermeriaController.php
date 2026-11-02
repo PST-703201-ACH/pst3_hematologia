@@ -56,17 +56,45 @@ class EnfermeriaController extends Controller
     public function registrarObs(Request $request) {
         $errores = [];
 
-        if (empty($request->graObsReg)) {
+        if ($request->graObsReg === '') {
             $errores['graObsReg'] = "Seleccione un tipo de gravedad de caso";
         }
 
-        if (empty($request->descripObsReg)) {
-            $errores['descripObsReg'] = "Debe escribir una descripcion de su observacion";
+        $descripObsReg = trim($request->descripObsReg ?? '');
+        $accObsReg = trim($request->accObsReg ?? '');
+
+        $MIN_CARACTERES = 10;
+        $MAX_CARACTERES = 2000;
+
+        if (empty($descripObsReg)) {
+            $errores['descripObsReg'] = "Debe escribir una descripción de su observación.";
+        } else {
+            $longitudDesc = mb_strlen($descripObsReg, 'UTF-8');
+            
+            if ($longitudDesc < $MIN_CARACTERES) {
+                $errores['descripObsReg'] = "La descripción es muy corta. Debe tener al menos {$MIN_CARACTERES} caracteres.";
+            } elseif ($longitudDesc > $MAX_CARACTERES) {
+                $errores['descripObsReg'] = "La descripción supera el límite permitido de {$MAX_CARACTERES} caracteres (actual: {$longitudDesc}).";
+            }
         }
 
-        if (empty($request->accObsReg)) {
-            $errores['accObsReg'] = "Debe describir las acciones realizadas";
+        if (empty($accObsReg)) {
+            $errores['accObsReg'] = "Debe describir las acciones realizadas.";
+        } else {
+            $longitudAcc = mb_strlen($accObsReg, 'UTF-8');
+            
+            if ($longitudAcc < $MIN_CARACTERES) {
+                $errores['accObsReg'] = "La descripción de acciones es muy corta. Debe tener al menos {$MIN_CARACTERES} caracteres.";
+            } elseif ($longitudAcc > $MAX_CARACTERES) {
+                $errores['accObsReg'] = "Las acciones superan el límite permitido de {$MAX_CARACTERES} caracteres (actual: {$longitudAcc}).";
+            }
         }
+
+        if (empty($errores)) {
+            $descripObsRegLimpio = htmlspecialchars($descripObsReg, ENT_QUOTES, 'UTF-8');
+            $accObsRegLimpio = htmlspecialchars($accObsReg, ENT_QUOTES, 'UTF-8');
+        }
+
 
         if (!empty($errores)) {
             return response()->json([
@@ -81,19 +109,79 @@ class EnfermeriaController extends Controller
                 $tiempoActual = new \DateTime();
                 $fechaHora = $tiempoActual->format('Y-m-d H:i:s');
                 
-               $medicinas = $request->input('medicinas', []);
+                $medicinas = $request->input('medicinas');
 
-                foreach ($medicinas as $medicinaId => $datos) {
+                if (empty($medicinas)) {
+                    return response()->json([
+                        "status" => "error",
+                        "mensaje" => "Error, no ha seleccionado la informacion de cumplimiento de tratamiento"
+                    ], 400);
+                }
+
+                $medicinas = $request->input('medicinas');
+
+                if (empty($medicinas) || !is_array($medicinas)) {
+                    return response()->json([
+                        "status" => "error",
+                        "mensaje" => "Error, no ha seleccionado la información de cumplimiento de tratamiento"
+                    ], 400);
+                }
+
+                $medicinasValidas = array_filter($medicinas, function($datos) {
+                    if (!isset($datos['status'])) return false;
+                    return $datos['status'] == '1' || $datos['status'] == '0';
+                });
+
+                $cantidadEnviada = count($medicinasValidas);
+
+                $cantidadEsperada = MedicinaTrat::where('tratamiento_id', $request->tratObsReg)->count();
+
+                if ($cantidadEnviada !== $cantidadEsperada) {
+                    return response()->json([
+                        "status" => "error",
+                        "mensaje" => "Error, la cantidad de medicinas evaluadas no coincide con el tratamiento"
+                    ], 400);
+                }
+
+                $erroresGrupales = [];
+
+                foreach ($medicinasValidas as $medicinaId => $datos) {
                     $statusActual = $datos['status'];
 
-                    $omision = ($statusActual == "0") ? ($datos['omision'] ?? null) : null;
+                    if ($statusActual === "0") {
+                        $omision = $datos['omision'] ?? null;
+                        $longitud = mb_strlen(trim($omision), 'UTF-8');
+
+                        if ($longitud === 0) {
+                            return response()->json([
+                                "status" => "error",
+                                "mensaje" => "Error, debe justificar todos los medicamentos omitidos"
+                            ], 400);
+                        } elseif ($longitud > 500) {
+                            return response()->json([
+                                "status" => "error",
+                                "mensaje" => "Error, la justificacion es muy larga, no debe superar los 500 caracteres"
+                            ], 400);
+                        }
+                    }
+                }
+
+                if (!empty($erroresGrupales)) {
+                    return response()->json([
+                        "status" => "errores",
+                        "errores" => $erroresGrupales
+                    ], 422);
+                }
+
+                foreach ($medicinasValidas as $medicinaId => $datos) {
+                    $statusActual = $datos['status'];
+                    $omision = ($statusActual == "0") ? trim($datos['omision']) : null;
 
                     MedicinaTrat::where('id', $medicinaId)->update([
                         'status' => $statusActual,
                         'omision' => $omision
                     ]);
                 }
-
 
                 $tratamiento = Tratamiento::where('tratamiento_id', $request->tratObsReg)->first();
                 $tratamiento->status = 1;
@@ -113,8 +201,6 @@ class EnfermeriaController extends Controller
                         return response()->json(['status' => 'exito', 'mensaje' => 'Se ha registrado la medicina exitosamente']);    
                     }
                 }
-
-
                 
             } catch (\Exception $e) {
                 return response()->json([
@@ -160,5 +246,10 @@ class EnfermeriaController extends Controller
         }
 
         return response()->json($query->get());
+    }
+
+    public function verObs($id){
+        $detalles = Observacion::with('tratamiento', 'enfermero', 'paciente', 'tratamiento.medicina.medicina', 'enfermero.persona', 'paciente.persona', 'tratamiento.medicina.medico.persona', 'tratamiento.medicina.consulta.enfermedad')->where('observacion_id', $id)->get();
+        return response()->json($detalles);
     }
 }

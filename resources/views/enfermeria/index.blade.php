@@ -37,6 +37,9 @@
                     <div class="vista_enf d-none" id="seccion-registrar-obs">
                         @include('enfermeria.registrar_obs')
                     </div>
+
+                    @include('enfermeria.ver_observacion')
+
                 </div>
 
             </div>
@@ -51,5 +54,6 @@
 <script src="{{ asset('assets/js/registrar_obs.js') }}"></script>
 <script src="{{ asset('assets/js/listar_observacion.js') }}"></script>
 <script src="{{ asset('assets/js/botones_enf.js') }}"></script>
+<script src="{{ asset('assets/js/ver_observacion.js') }}"></script>
 </body>
 </html>
