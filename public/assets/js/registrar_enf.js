@@ -83,3 +83,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.querySelector('input[name="userEnfReg"]').value = document.getElementById('usuario').textContent;

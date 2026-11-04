@@ -1,9 +1,19 @@
 async function cargarDetalle(boton){	
 	const id = boton.getAttribute('data-id');
 	const modalDetalle = document.getElementById('modalDetalle');
+
+	const usuario = document.getElementById('usuario').textContent;
+
+    let url = `/admin/obtener-detalles/${id}`;
+    
+    if (usuario) {
+        url += `?usuario=${encodeURIComponent(usuario)}`;
+    }
+
 	try {
-		const respuesta = await fetch(`/admin/obtener-detalles/${id}`);
-		const detalle = await respuesta.json();
+		const respuesta = await fetch(url);
+        
+        const detalle = await respuesta.json();
 		if (detalle.status == 1) {
 			detalle.status = '<p class="text-success">Activo</p>';
 		} else if (detalle.status == 0) {

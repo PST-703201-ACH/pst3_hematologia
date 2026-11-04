@@ -14,6 +14,7 @@
                             <div class="form-group">
                                 <label for="nombreEnfReg">Nombre</label>
                                 <input type="text" name="nombreEnfReg" id="nombreEnfReg" class="form-control" autocomplete="off" placeholder="Ingrese el nombre de la enfermedad">
+                                <input type="hidden" name="userEnfReg">
                             </div>
                         </div>
                         <div class="col-md-5">

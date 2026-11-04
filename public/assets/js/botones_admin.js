@@ -33,8 +33,7 @@ document.getElementById('btnCancelarReg').addEventListener('click', function(can
 document.getElementById('btnCatalogo').addEventListener('click', function(catalogo) {
     catalogo.preventDefault();
     listarProtocolo();
-    listarEnfermedad();
-    listarMedicina();
+
     intercambiarVista('seccion-catalogo');
 });
 

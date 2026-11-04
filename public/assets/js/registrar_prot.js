@@ -1,3 +1,5 @@
+document.querySelector('input[name="userProtReg"]').value = document.getElementById('usuario').textContent;
+
 // Precargar medicinas
 let medicinas = [];
 async function cargarMedicinas() {
@@ -237,6 +239,7 @@ document.getElementById('btnNuevaFase').addEventListener('click', () => {
     crearFase();
     enumerarFases();
 });
+
 
 // Control de envio y respuesta de registro de protocolo
 document.addEventListener('DOMContentLoaded', function() {

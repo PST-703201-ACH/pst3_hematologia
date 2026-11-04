@@ -12,9 +12,9 @@
 					<button class="btn btn-primary" onclick="listarAuditoria()"><i class="fas fa-undo" aria-hidden="true"></i>
 					</button>
 
-					<a href="/admin/obtener-reportes" class="btn btn-danger">
+					<button onclick="audiPdf()" class="btn btn-danger">
 					    <i class="fas fa-file-pdf"></i>
-					</a>
+					</button>
 
 					<button class="btn btn-success" onclick="excelAuditoria()"><i class="fas fa-regular fa-file-excel"></i></button>
 
@@ -50,17 +50,18 @@
 		        >
 		        <select name="filtroMod_aud" class="form-control">
 		        	<option value="" disabled selected>Seleccione un modulo</option>
-		        	<option value="Informacion medica">Informacion Medica</option>
-		        	<option value="Atencion clinica">Atencion clinica</option>
-		        	<option value="Protocolos">Protocolos</option>
-		        	<option value="Laboratorios">Laboratorios</option>
+
 		        	<option value="Usuarios">Usuarios</option>
+		        	<option value="Catalogo Medico">Catalogo Medico</option>
+		        	<option value="Auditoria">Auditoria</option>
+		        	
 		        </select>
 		        <select name="filtroAcc_aud" class="form-control">
 		        	<option value="" disabled selected>Seleccione una accion</option>
 		        	<option value="Registro">Registro</option>
 		        	<option value="Listado">Listado</option>
 		        	<option value="Actualizacion">Actualizacion</option>
+		        	<option value="Exportacion">Exportacion</option>
 		        	<option value="Habilitacion">Habilitacion</option>
 		        	<option value="Inhabilitacion">Inhabilitacion</option>
 		        	<option value="Consulta">Consulta</option>

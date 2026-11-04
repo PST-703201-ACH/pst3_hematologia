@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectRol = document.querySelector('select[name="filtroRol_usu"]');
     const btnLimpiar = document.getElementById('btnLimpiar_usu');
     const inputBusqueda = document.querySelector('input[name="busqueda_usu"]');
+    
 
     function buscarCombinado() {
         const texto = inputBusqueda ? inputBusqueda.value.trim() : '';
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        listarUsuarios(texto, status, rol); 
+        listarUsuarios(texto, status, rol);
     }
 
     if (inputBusqueda) {
@@ -44,10 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-async function listarUsuarios(termino = '', status = '', rol = '') {
+async function listarUsuarios(termino = '', status = '', rol = '', usuario) {
     try {
 
-        let usuario = document.getElementById('user').textContent;
+        usuario = document.getElementById('usuario').textContent;
 
         let parametros = [];
                 
@@ -61,6 +62,10 @@ async function listarUsuarios(termino = '', status = '', rol = '') {
 
             if (rol !== '') {
                 parametros.push(`rol=${encodeURIComponent(rol)}`);
+            }
+
+            if (usuario) {
+                parametros.push(`usuario=${encodeURIComponent(usuario)}`);
             }
 
             const url = parametros.length > 0 ? `/admin/obtener-usuarios?${parametros.join('&')}` : '/admin/obtener-usuarios';

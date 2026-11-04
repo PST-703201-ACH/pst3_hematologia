@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Rol;
 use App\Models\Enfermedad;
 use App\Models\Medicina;
+use App\Models\Auditoria;
 use App\Models\Fase;
 use App\Models\MedicinaProt;
 use App\Models\Protocolo;
@@ -48,6 +49,8 @@ class GerenteController extends Controller
 
     public function registrarProt(Request $request)
     {
+
+        $usuario = $request->userProtReg;
 
         $errores = [];
 
@@ -102,12 +105,21 @@ class GerenteController extends Controller
                     }
                 }
 
+                // Guardar para auditar
+                $aud = new Auditoria;
+                $aud->descripcion = 'Registro el nuevo protocolo '.$nombre.' en el sistema';
+                $aud->modulo = 'Catalogo Medico';
+                $aud->id_usuario = $usuario;
+                $aud->accion = "Registro";
+
                 DB::commit();
 
-                return response()->json([
-                    'status' => 'exito', 
-                    'mensaje' => 'Se ha registrado el protocolo exitosamente'
-                ]);
+                if ($aud->save()) {
+                    return response()->json([
+                        'status' => 'exito', 
+                        'mensaje' => 'Se ha registrado el protocolo exitosamente'
+                    ]);
+                }
 
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -133,12 +145,40 @@ class GerenteController extends Controller
             });     
         }
 
-        return response()->json($query->get());
+        if ($request->input('usuario')) {
+            $usuario = $request->input('usuario');
+        }
+
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Ingreso al listado de protocolos en el catalogo medico';
+        $aud->modulo = 'Catalogo Medico';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Listado";
+
+        if ($aud->save()) {
+            return response()->json($query->get());
+        }
     }
 
-    public function verFases($id){
+    public function verFases(Request $request, $id){
+
+        $usuario = $request->input('usuario');
+
         $fases = MedicinaProt::with('protocolo', 'medicina', 'fase')->where('id_protocolo', $id)->get();
-        return response()->json($fases);
+
+        $nombreProt = $fases[0]->protocolo->nombre;
+        
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Consulto la informacion de fases del protocolo: '.$nombreProt;
+        $aud->modulo = 'Catalogo Medico';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Consulta";
+
+        if ($aud->save()) {
+            return response()->json($fases);
+        }
     }
 
     public function listarEnf(Request $request)
@@ -159,11 +199,26 @@ class GerenteController extends Controller
             $query->where('tipo', (int)$tipo); 
         }
 
-        return response()->json($query->get());
+        if ($request->input('usuario')) {
+            $usuario = $request->input('usuario');
+        }
+
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Ingreso al listado de enfermedades en el catalogo medico';
+        $aud->modulo = 'Catalogo Medico';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Listado";
+
+        if ($aud->save()) {
+            return response()->json($query->get());
+        }
     }
 
     public function registrarEnf(Request $request)
     {
+
+        $usuario = $request->userEnfReg;
 
         $errores = [];
 
@@ -185,14 +240,29 @@ class GerenteController extends Controller
 
             try {
 
+                $nombre = $request->nombreEnfReg;
+
                 $enfermedad = new Enfermedad;
 
-                $enfermedad->descripcion = $request->nombreEnfReg;
+                $enfermedad->descripcion = $nombre;
                 $enfermedad->tipo = $request->tipEnfReg;
 
                 if ($enfermedad->save()) {
-                    return response()->json(['status' => 'exito', 'mensaje' => 'Se ha registrado la enfermedad exitosamente']);    
-                }               
+                    // Guardar para auditar
+                    $aud = new Auditoria;
+                    $aud->descripcion = 'Registro la enfermedad '.$nombre.' en el sistema';
+                    $aud->modulo = 'Catalogo Medico';
+                    $aud->id_usuario = $usuario;
+                    $aud->accion = "Registro";
+
+                    if ($aud->save()) {
+                        return response()->json([
+                            'status' => 'exito', 
+                            'mensaje' => 'Se ha registrado la enfermedad exitosamente'
+                        ]);
+                    }
+                }
+                               
             } catch (\Exception $e) {
                 return response()->json([
                     'status' => 'error',
@@ -209,6 +279,8 @@ class GerenteController extends Controller
 
     public function actualizarEnf(Request $request)
     {
+        $usuario = $request->userEnfUp;
+
         $errores = [];
 
         if (empty($request->nombreEnfUp)) {
@@ -231,12 +303,26 @@ class GerenteController extends Controller
 
                 $enfermedad = Enfermedad::findOrFail($request->enfermedadUp);
 
+                $nombre = $enfermedad->descripcion;
+
                 $enfermedad->update([
                     'descripcion' => $request->nombreEnfUp,
                     'tipo' => $request->tipEnfUp
                 ]);
 
-                return response()->json(['status' => 'exito', 'mensaje' => 'Se ha actualizado la enfermedad exitosamente']);                   
+                // Guardar para auditar
+                $aud = new Auditoria;
+                $aud->descripcion = 'Actualizo la enfermedad '.$nombre.' en el sistema';
+                $aud->modulo = 'Catalogo Medico';
+                $aud->id_usuario = $usuario;
+                $aud->accion = "Actualizacion";
+
+                if ($aud->save()) {
+                    return response()->json([
+                        'status' => 'exito', 
+                        'mensaje' => 'Se ha actualizado la enfermedad exitosamente'
+                    ]);
+                }                   
             } catch (\Exception $e) {
                 return response()->json([
                     'status' => 'error',
@@ -258,7 +344,20 @@ class GerenteController extends Controller
             });     
         }
 
-        return response()->json($query->get());
+        if ($request->input('usuario')) {
+            $usuario = $request->input('usuario');
+        }
+
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Ingreso al listado de medicinas en el catalogo medico';
+        $aud->modulo = 'Catalogo Medico';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Listado";
+
+        if ($aud->save()) {
+            return response()->json($query->get());
+        }
     }
 
     public function listarMedDis()
@@ -271,13 +370,13 @@ class GerenteController extends Controller
 
     public function registrarMed(Request $request)
     {
+        $usuario = $request->userMedReg;
 
         $errores = [];
 
         if (empty($request->nombreMedReg)) {
             $errores['nombreMedReg'] = "Ingrese el nombre de la medicina";
         }
-        
 
         if (!empty($errores)) {
             return response()->json([
@@ -291,11 +390,25 @@ class GerenteController extends Controller
 
                 $medicina = new Medicina;
 
-                $medicina->descripcion = $request->nombreMedReg;
+                $nombre = $request->nombreMedReg;
 
+                $medicina->descripcion = $nombre;
 
                 if ($medicina->save()) {
-                    return response()->json(['status' => 'exito', 'mensaje' => 'Se ha registrado la medicina exitosamente']);    
+                    // Guardar para auditar
+                    $aud = new Auditoria;
+                    $aud->descripcion = 'Registro el medicamento '.$nombre.' en el sistema';
+                    $aud->modulo = 'Catalogo Medico';
+                    $aud->id_usuario = $usuario;
+                    $aud->accion = "Registro";
+
+                    if ($aud->save()) {
+                        return response()->json([
+                            'status' => 'exito', 
+                            'mensaje' => 'Se ha registrado el medicamento exitosamente'
+                        ]);
+                    }
+                
                 }               
             } catch (\Exception $e) {
                 return response()->json([
@@ -313,6 +426,8 @@ class GerenteController extends Controller
 
     public function actualizarMed(Request $request)
     {
+        $usuario = $request->userMedUp;
+
         $errores = [];
 
         if (empty($request->nombreMedUp)) {
@@ -331,11 +446,24 @@ class GerenteController extends Controller
 
                 $medicina = Medicina::findOrFail($request->medicinaUp);
 
+                $nombre = $medicina->descripcion;
                 $medicina->update([
                     'descripcion' => $request->nombreMedUp
                 ]);
 
-                return response()->json(['status' => 'exito', 'mensaje' => 'Se ha actualizado la medicina exitosamente']);                   
+                // Guardar para auditar
+                $aud = new Auditoria;
+                $aud->descripcion = 'Actualizo el medicamento '.$nombre.' en el sistema';
+                $aud->modulo = 'Catalogo Medico';
+                $aud->id_usuario = $usuario;
+                $aud->accion = "Actualizacion";
+
+                if ($aud->save()) {
+                    return response()->json([
+                        'status' => 'exito', 
+                        'mensaje' => 'Se ha actualizado el medicamento exitosamente'
+                    ]);
+                }                   
             } catch (\Exception $e) {
                 return response()->json([
                     'status' => 'error',

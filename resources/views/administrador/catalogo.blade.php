@@ -6,17 +6,17 @@
 	<div class="card-body">
 		<ul class="nav nav-tabs" id="tabMenu">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" data-target="#tabProtocolos" href="#">
+                <a class="nav-link active" data-toggle="tab" data-target="#tabProtocolos" href="#" onclick="listarProtocolo()">
                     <i class="fas fa-solid fa-clipboard-list mr-2"></i>Protocolos
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" data-target="#tabEnfermedades" href="#">
+                <a class="nav-link" data-toggle="tab" data-target="#tabEnfermedades" href="#" onclick="listarEnfermedad()">
                     <i class="fas fa-solid fa-virus"></i>Enfermedades
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" data-target="#tabMedicamentos" href="#">
+                <a class="nav-link" data-toggle="tab" data-target="#tabMedicamentos" href="#" onclick="listarMedicina()">
                     <i class="fas fa-solid fa-briefcase-medical"></i>Medicamentos
                 </a>
             </li>
@@ -124,7 +124,7 @@
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
                             <div class="d-flex gap-2">
                                 <button class="btn btn-success" id="btnRegMed">Nueva</button>
-                                <button class="btn btn-primary"><i class="fas fa-undo" aria-hidden="true"></i>
+                                <button class="btn btn-primary"><i class="fas fa-undo" aria-hidden="true" onclick="listarMedicina()"></i>
                                 </button>
                             </div>
                             

@@ -14,6 +14,7 @@
                             <div class="form-group">
                                 <label for="nombreProtReg">Nombre</label>
                                 <input type="text" name="nombreProtReg" id="nombreProtReg" class="form-control" autocomplete="off" placeholder="Ingrese el nombre del protocolo">
+                                <input type="hidden" name="userProtReg">
                             </div>
                         </div>
                     </div>

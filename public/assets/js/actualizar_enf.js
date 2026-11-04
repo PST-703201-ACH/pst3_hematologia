@@ -89,6 +89,8 @@ async function precargarDatosEnf(boton) {
 		const respuesta = await fetch(`/admin/precargar-enf/${id}`);
 		const datos = await respuesta.json();
 
+        document.querySelector('input[name="userEnfUp"]').value = document.getElementById('usuario').textContent;
+
 		document.getElementById('nombreEnfUp').value = datos.descripcion;
 		document.getElementById('tipEnfUp').value = datos.tipo;
         document.getElementById('enfermedadUp').value = datos.enfermedad_id;

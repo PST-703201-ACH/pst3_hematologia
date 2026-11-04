@@ -9,6 +9,7 @@ use App\Models\Enfermedad;
 use App\Models\Paciente;
 use App\Models\Persona;
 use App\Models\User;
+use App\Models\Auditoria;
 use App\Models\Protocolo;
 use App\Models\MedicinaProt;
 use App\Models\MedicinaTrat;
@@ -48,7 +49,20 @@ class ConsultaController extends Controller
             $query->whereDate('fecha_hora', $request->input('fecha'));
         }
 
-        return response()->json($query->get());
+        if ($request->input('usuario')) {
+            $usuario = $request->input('usuario');
+        }
+
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Ingreso al listado de consultas pendientes';
+        $aud->modulo = 'Consulta Medica';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Listado";
+
+        if ($aud->save()) {
+            return response()->json($query->get());
+        }
     }
 
     public function listarConR(Request $request)
@@ -80,7 +94,20 @@ class ConsultaController extends Controller
             $query->whereDate('fecha_hora', $request->input('fecha'));
         }
 
-        return response()->json($query->get());
+        if ($request->input('usuario')) {
+            $usuario = $request->input('usuario');
+        }
+
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Ingreso al listado de consultas realizadas';
+        $aud->modulo = 'Consulta Medica';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Listado";
+
+        if ($aud->save()) {
+            return response()->json($query->get());
+        }
     }
 
     public function obtenerEnf(){
@@ -755,8 +782,21 @@ class ConsultaController extends Controller
         }
     }
 
-    public function ver($id) {
+    public function ver(Request $request, $id) {
+        
+        $usuario = $request->input('usuario');
+
         $detalles = Cita::with('consulta', 'consulta.paciente', 'consulta.medico', 'consulta.enfermedad', 'consulta.medico.persona', 'consulta.paciente.persona')->where('cita_id', $id)->first();
-        return response()->json($detalles);
+
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Consulto la informacion de una consulta medica realizada';
+        $aud->modulo = 'Usuarios';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Consulta";
+
+        if ($aud->save()) {
+            return response()->json($detalles);
+        }
     }
 }

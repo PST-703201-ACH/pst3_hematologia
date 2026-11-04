@@ -53,8 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
 let paginaActualAud = 1;
 const elementosPorPaginaAud = 5; 
 
-async function listarAuditoria(termino = '', mod = '', acc = '', fecha = '') {
+async function listarAuditoria(termino = '', mod = '', acc = '', fecha = '', usuario) {
     try {
+
+        usuario = document.getElementById('usuario').textContent;
+
         paginaActualAud = 1; 
 
         let parametros = [];
@@ -73,6 +76,10 @@ async function listarAuditoria(termino = '', mod = '', acc = '', fecha = '') {
 
         if (fecha) {
             parametros.push(`fecha=${encodeURIComponent(fecha)}`);
+        }
+
+        if (usuario) {
+            parametros.push(`usuario=${encodeURIComponent(usuario)}`);
         }
 
         const url = parametros.length > 0 ? `/admin/obtener-auditoria?${parametros.join('&')}` : '/admin/obtener-auditoria';
@@ -94,7 +101,12 @@ async function listarAuditoria(termino = '', mod = '', acc = '', fecha = '') {
             let accion = '';
 
             itemsVisibles.forEach(aud => {
-                nombre = aud.usuario.persona.nombres+' '+aud.usuario.persona.apellidos;
+                if (!aud.usuario || !aud.usuario.persona) {
+                    nombre = "Usuario no disponible";
+                } else {
+                    nombre = aud.usuario.persona.nombres + ' ' + aud.usuario.persona.apellidos;
+                }
+                
                 modulo = `<h4 class="badge badge-light">${aud.modulo}</h4>`;
                 
 
@@ -109,6 +121,9 @@ async function listarAuditoria(termino = '', mod = '', acc = '', fecha = '') {
                 }
                 else if (aud.accion == 'Actualizacion') {
                     accion = `<h4 class="badge badge-primary">${aud.accion}</h4>`;
+                }
+                else if (aud.accion == 'Exportar') {
+                    accion = `<h4 class="badge badge-secondary">${aud.accion}</h4>`;
                 }
                 else if (aud.accion == 'Habilitacion/Inhabilitacion') {
                     accion = `<h4 class="badge badge-danger">${aud.accion}</h4>`;
@@ -177,5 +192,22 @@ async function listarAuditoria(termino = '', mod = '', acc = '', fecha = '') {
         renderizarPaginador();
     } catch (error) {
         console.error("Error al listar:", error);
+    }
+}
+
+function audiPdf() {
+    try {
+        const usuario = document.getElementById('usuario').textContent;
+        
+        let url = '/admin/obtener-reportes';
+        
+        if (usuario) {
+            url += `?usuario=${encodeURIComponent(usuario)}`;
+        }
+
+        window.location.href = url;
+
+    } catch (error) {
+        console.error("Error al generar el PDF:", error);
     }
 }

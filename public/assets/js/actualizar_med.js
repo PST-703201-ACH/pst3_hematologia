@@ -88,6 +88,8 @@ async function precargarDatosMed(boton) {
 		const respuesta = await fetch(`/admin/precargar-med/${id}`);
 		const datos = await respuesta.json();
 
+        document.querySelector('input[name="userMedUp"]').value = document.getElementById('usuario').textContent;
+
 		document.getElementById('nombreMedUp').value = datos.descripcion;
         document.getElementById('medicinaUp').value = datos.medicina_id;
 

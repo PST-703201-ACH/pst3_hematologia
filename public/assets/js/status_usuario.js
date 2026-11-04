@@ -3,9 +3,16 @@ async function cambiarStatus(boton){
 	const fila = boton.closest('tr');
 	const celdaStatus = fila.querySelector('.status');
 
+	const usuario = document.getElementById('usuario').textContent;
+
+    let url = `/admin/cambiar-status/${id}`;
+    
+    if (usuario) {
+        url += `?usuario=${encodeURIComponent(usuario)}`;
+    }
 
 	try {
-		const respuesta = await fetch(`/admin/cambiar-status/${id}`);
+		const respuesta = await fetch(url);
 		const nuevo = await respuesta.json();
 
 		if (nuevo.status == "exito") {

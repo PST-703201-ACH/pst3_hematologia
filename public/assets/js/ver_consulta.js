@@ -1,8 +1,17 @@
 async function cargarDetalleCon(boton){	
 	const id = boton.getAttribute('data-id');
 	const modalDetalle = document.getElementById('modalDetalleCon');
+
+	const usuario = document.getElementById('usuario').textContent;
+
+    let url = `/medico/obtener-detalles-consulta/${id}`;
+    
+    if (usuario) {
+        url += `?usuario=${encodeURIComponent(usuario)}`;
+    }
+
 	try {
-		const respuesta = await fetch(`/medico/obtener-detalles-consulta/${id}`);
+		const respuesta = await fetch(url);
 		const detalle = await respuesta.json();
 
 		let tipo = '';

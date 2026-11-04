@@ -83,3 +83,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.querySelector('input[name="userMedReg"]').value = document.getElementById('usuario').textContent;

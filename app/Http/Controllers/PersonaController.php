@@ -6,6 +6,7 @@ use App\Http\Requests\PersonaRequest;
 use App\Mail\UsuarioNuevo;
 use App\Models\Persona;
 use App\Models\User;
+use App\Models\Auditoria;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -118,13 +119,25 @@ class PersonaController extends Controller
                     'direccion_exacta' => $request->direccion,
                 ]);
 
-                $usuario = User::where('persona_id', $persona->persona_id)->firstOrFail();
-                $usuario->update(['id_rol' => $request->rol]);
+                $user = User::where('persona_id', $persona->persona_id)->firstOrFail();
+                $user->update(['id_rol' => $request->rol]);
 
-                return response()->json([
-                    'status' => 'exito',
-                    'mensaje' => 'Usuario actualizado con exito',
-                ]);
+                $usuario = $request->userUp;
+
+                // Guardar para auditar
+                $aud = new Auditoria;
+                $aud->descripcion = 'Actualizo el perfil de '.$user->persona->nombres.' '.$user->persona->apellidos;
+                $aud->modulo = 'Usuarios';
+                $aud->id_usuario = $usuario;
+                $aud->accion = "Actualizacion";
+
+                if ($aud->save()) {
+                    return response()->json([
+                        'status' => 'exito',
+                        'mensaje' => 'Usuario actualizado con exito',
+                    ]);
+                }
+
             });
         } catch (Exception $e) {
             Log::error('Fallo en PersonaController::actualizar: ' . $e->getMessage());

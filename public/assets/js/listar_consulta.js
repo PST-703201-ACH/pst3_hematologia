@@ -76,8 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
 let paginaActualConP = 1;
 const elementosPorPaginaConP = 5; 
 
-async function listarConsultaP(termino = '', fecha = '') {
+async function listarConsultaP(termino = '', fecha = '', usuario) {
     try {
+
+        usuario = document.getElementById('usuario').textContent;
+
         paginaActualConP = 1; 
 
         let parametros = [];
@@ -88,6 +91,10 @@ async function listarConsultaP(termino = '', fecha = '') {
         
         if (fecha) {
             parametros.push(`fecha=${encodeURIComponent(fecha)}`);
+        }
+
+        if (usuario) {
+            parametros.push(`usuario=${encodeURIComponent(usuario)}`);
         }
 
         const url = parametros.length > 0 ? `/medico/obtener-consultasP?${parametros.join('&')}` : '/medico/obtener-consultasP';
@@ -207,8 +214,11 @@ async function listarConsultaP(termino = '', fecha = '') {
 let paginaActualConR = 1;
 const elementosPorPaginaConR = 5; 
 
-async function listarConsultaR(termino = '', fecha = '') {
+async function listarConsultaR(termino = '', fecha = '', usuario) {
     try {
+
+        usuario = document.getElementById('usuario').textContent;
+
         paginaActualConR = 1; 
 
         let parametros = [];
@@ -219,6 +229,10 @@ async function listarConsultaR(termino = '', fecha = '') {
         
         if (fecha) {
             parametros.push(`fecha=${encodeURIComponent(fecha)}`);
+        }
+
+        if (usuario) {
+            parametros.push(`usuario=${encodeURIComponent(usuario)}`);
         }
 
         const url = parametros.length > 0 ? `/medico/obtener-consultasR?${parametros.join('&')}` : '/medico/obtener-consultasR';

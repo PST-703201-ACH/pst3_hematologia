@@ -15,6 +15,7 @@
                                 <label for="nombreMedUp">Nombre</label>
                                 <input type="text" name="nombreMedUp" id="nombreMedUp" class="form-control" autocomplete="off" placeholder="Ingrese el nombre de la medicina">
                                 <input type="hidden" name="medicinaUp" id="medicinaUp">
+                                <input type="hidden" name="userMedUp">
                             </div>
                         </div>
                     </div>

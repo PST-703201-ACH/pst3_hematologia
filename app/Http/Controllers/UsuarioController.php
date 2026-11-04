@@ -49,11 +49,15 @@ class UsuarioController extends Controller
             $query->where('id_rol', (int)$rol); 
         }
 
+        if ($request->input('usuario')) {
+            $usuario = $request->input('usuario');
+        }
+
         // Guardar para auditar
         $aud = new Auditoria;
         $aud->descripcion = 'Ingreso al listado de usuarios en el sistema';
         $aud->modulo = 'Usuarios';
-        $aud->id_usuario = 1;
+        $aud->id_usuario = $usuario;
         $aud->accion = "Listado";
 
         if ($aud->save()) {
@@ -61,9 +65,22 @@ class UsuarioController extends Controller
         }
     }    
 
-    public function ver($id){
-        $usuario = User::with('persona.estado', 'persona.municipio', 'persona.parroquia', 'rol')->where('persona_id', $id)->first();
-        return response()->json($usuario);
+    public function ver(Request $request, $id){
+
+        $usuario = $request->input('usuario');
+
+        $user = User::with('persona.estado', 'persona.municipio', 'persona.parroquia', 'rol')->where('persona_id', $id)->first();
+
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Consulto el perfil de '.$user->persona->nombres.' '.$user->persona->apellidos;
+        $aud->modulo = 'Usuarios';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Consulta";
+
+        if ($aud->save()) {
+            return response()->json($user);
+        }
     }
 
     public function precargar($id){
@@ -71,26 +88,39 @@ class UsuarioController extends Controller
         return response()->json($usuario);
     }
 
-    public function nuevo_status($id){
-        $usuario = User::where('persona_id', $id)->first();
+    public function nuevo_status(Request $request, $id){
+        
+        $user = User::where('persona_id', $id)->first();
 
-        if ($usuario) {
+        $usuario = $request->input('usuario');
+
+        if ($user) {
             try{
-                switch ($usuario->status) {
-                    case '1':
-                        $usuario->update([
-                            'status' => '0'
-                        ]);
-                        return response()->json(['status' => 'exito', 'contenido' => '<p class="text-danger">Inactivo</p>']);
-                    break;
+                // Guardar para auditar
+                $aud = new Auditoria;
+                $aud->descripcion = 'Actualizo el status del perfil de '.$user->persona->nombres.' '.$user->persona->apellidos;
+                $aud->modulo = 'Usuarios';
+                $aud->id_usuario = $usuario;
+                $aud->accion = "Habilitacion/Inhabilitacion";
 
-                    case '0':
-                        $usuario->update([
-                            'status' => '1'
-                        ]);
-                        return response()->json(['status' => 'exito', 'contenido' => '<p class="text-success">Activo</p>']);
-                    break;
+                if ($aud->save()) {
+                    switch ($user->status) {
+                        case '1':
+                            $user->update([
+                                'status' => '0'
+                            ]);
+                            return response()->json(['status' => 'exito', 'contenido' => '<p class="text-danger">Inactivo</p>']);
+                        break;
+
+                        case '0':
+                            $user->update([
+                                'status' => '1'
+                            ]);
+                            return response()->json(['status' => 'exito', 'contenido' => '<p class="text-success">Activo</p>']);
+                        break;
+                    }
                 }
+                
             } catch (\Exception $e) {
                 return response()->json([
                     'status' => 'error'
@@ -278,22 +308,50 @@ class UsuarioController extends Controller
             $query->whereDate('fecha_hora', $request->input('fecha'));
         }
 
+        if ($request->input('usuario')) {
+            $usuario = $request->input('usuario');
+        }
+
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Ingreso a la auditoria de usuarios en el sistema';
+        $aud->modulo = 'Auditoria';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Listado";
+
+        if ($aud->save()) {
+            return response()->json($query->get());
+        }
+
         return response()->json($query->get());
     }
 
-    public function auditarPdf()
+    public function auditarPdf(Request $request)
     {
+        if ($request->input('usuario')) {
+            $usuario = $request->input('usuario');
+        }
 
-        $auditorias = Auditoria::with('usuario.persona')->get();
+        // Guardar para auditar
+        $aud = new Auditoria;
+        $aud->descripcion = 'Genero un reporte de auditoria en PDF';
+        $aud->modulo = 'Auditoria';
+        $aud->id_usuario = $usuario;
+        $aud->accion = "Exportacion";
 
-        $data = [
-            'auditorias' => $auditorias,
-            'fecha_emision' => now()->format('d/m/Y H:i:s')
-        ];
+        if ($aud->save()) {
 
-        $pdf = Pdf::loadView('reportes.auditoria_pdf', $data);
+            $auditorias = Auditoria::with('usuario.persona')->get();
 
-        return $pdf->download("reporte_auditoria_" . date('Ymd_His') . ".pdf");
+            $data = [
+                'auditorias' => $auditorias,
+                'fecha_emision' => now()->format('d/m/Y H:i:s')
+            ];
+
+            $pdf = Pdf::loadView('reportes.auditoria_pdf', $data);
+
+            return $pdf->download("reporte_auditoria_" . date('Ymd_His') . ".pdf");
+        }
     }
 
     /**
@@ -400,10 +458,10 @@ class UsuarioController extends Controller
             // La descarga queda auditada antes de enviar el archivo al navegador.
             $auditoria = new Auditoria();
             $auditoria->descripcion = 'Descarga de respaldo de la base de datos PostgreSQL';
-            $auditoria->modulo = 'Seguridad / Backup';
+            $auditoria->modulo = 'Auditoria';
             // La tabla usuarios.auditoria usa id_usuario para guardar el usuario_id autenticado.
             $auditoria->id_usuario = $administrador->usuario_id;
-            $auditoria->accion = 'Respaldo';
+            $auditoria->accion = 'Exportacion';
             $auditoria->fecha_hora = now();
             $auditoria->saveOrFail();
 

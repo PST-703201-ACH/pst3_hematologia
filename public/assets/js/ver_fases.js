@@ -1,8 +1,17 @@
 async function verFases(boton){	
 	const id = boton.getAttribute('data-id');
 	const modalFases = document.getElementById('modalFases');
+
+	const usuario = document.getElementById('usuario').textContent;
 	try {
-		const respuesta = await fetch(`/admin/obtener-protocolo-fases/${id}`);
+
+		let url = `/admin/obtener-protocolo-fases/${id}`;
+    
+	    if (usuario) {
+	        url += `?usuario=${encodeURIComponent(usuario)}`;
+	    }
+
+		const respuesta = await fetch(url);
 		const protocolo = await respuesta.json();
 
 		var nombreProtocolo = protocolo[0].protocolo.nombre;

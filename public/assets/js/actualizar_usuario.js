@@ -111,6 +111,8 @@ async function precargarDatos(boton) {
         const [nombre1 = '', nombre2 = ''] = persona.nombres.split(' ');
         const [apellido1 = '', apellido2 = ''] = persona.apellidos.split(' ');
 
+        document.querySelector('input[name="userUp"]').value = document.getElementById('usuario').textContent;
+
         asignarValorPersona(formulario, 'nombre1', nombre1);
         asignarValorPersona(formulario, 'nombre2', nombre2);
         asignarValorPersona(formulario, 'apellido1', apellido1);

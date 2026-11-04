@@ -6,12 +6,12 @@
 	<div class="card-body">
 		<ul class="nav nav-tabs" id="tabCon">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" data-target="#tabConP" href="#">
+                <a class="nav-link active" data-toggle="tab" data-target="#tabConP" href="#" onclick="listarConsultaP()">
                     <i class="fas fa-solid fa-circle mr-2"></i>Pendientes
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" data-target="#tabConR" href="#">
+                <a class="nav-link" data-toggle="tab" data-target="#tabConR" href="#" onclick="listarConsultaR()">
                     <i class="fas fa-solid fa-circle-check"></i>Realizadas
                 </a>
             </li>

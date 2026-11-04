@@ -90,6 +90,7 @@
 			</div>
 
 			<div id="alertUpdate"></div>
+			<input type="hidden" name="userUp">
 
 			<div class="form-group mt-2">
 				<button type="submit" class="btn btn-success">Actualizar</button>

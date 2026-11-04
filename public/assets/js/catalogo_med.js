@@ -87,14 +87,21 @@ document.addEventListener('DOMContentLoaded', () => {
 let paginaActualMed = 1;
 const elementosPorPaginaMed = 5; 
 
-async function listarMedicina(termino = '') {
+async function listarMedicina(termino = '', usuario) {
     try {
+
+        usuario = document.getElementById('usuario').textContent;
+
         paginaActualMed = 1; 
 
         let parametros = [];
             
         if (termino) {
             parametros.push(`busqueda=${encodeURIComponent(termino)}`);
+        }
+
+        if (usuario) {
+            parametros.push(`usuario=${encodeURIComponent(usuario)}`);
         }
 
         const url = parametros.length > 0 ? `/admin/obtener-medicinas?${parametros.join('&')}` : '/admin/obtener-medicinas';
@@ -194,8 +201,11 @@ async function listarMedicina(termino = '') {
 let paginaActualEnf = 1;
 const elementosPorPaginaEnf = 5;
 
-async function listarEnfermedad(termino = '', tip = '') {
+async function listarEnfermedad(termino = '', tip = '', usuario) {
     try {
+
+        usuario = document.getElementById('usuario').textContent;
+
         paginaActualEnf = 1; 
 
         let parametros = [];
@@ -206,6 +216,10 @@ async function listarEnfermedad(termino = '', tip = '') {
         
         if (tip !== '') {
             parametros.push(`tip=${encodeURIComponent(tip)}`);
+        }
+
+        if (usuario) {
+            parametros.push(`usuario=${encodeURIComponent(usuario)}`);
         }
 
         const url = parametros.length > 0 ? `/admin/obtener-enfermedades?${parametros.join('&')}` : '/admin/obtener-enfermedades';
@@ -307,14 +321,21 @@ async function listarEnfermedad(termino = '', tip = '') {
 let paginaActualProt = 1;
 const elementosPorPaginaProt = 5;
 
-async function listarProtocolo(termino = '') {
+async function listarProtocolo(termino = '', usuario) {
     try {
+
+        usuario = document.getElementById('usuario').textContent;
+
         paginaActualProt = 1;
 
         let parametros = [];
             
         if (termino) {
             parametros.push(`busqueda=${encodeURIComponent(termino)}`);
+        }
+
+        if (usuario) {
+            parametros.push(`usuario=${encodeURIComponent(usuario)}`);
         }
         
         const url = parametros.length > 0 ? `/admin/obtener-protocolos?${parametros.join('&')}` : '/admin/obtener-protocolos';
