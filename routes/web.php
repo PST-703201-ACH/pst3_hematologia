@@ -6,6 +6,7 @@ use App\Http\Controllers\EnfermeriaController;
 use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\GerenteController;
+use App\Http\Controllers\HistoriaClinicaController;
 use App\Http\Controllers\AdmvoController;
 use App\Http\Controllers\MedicoController;
 use App\Http\Controllers\MunicipioController;
@@ -133,14 +134,12 @@ Route::get('/obtener-roles', [RolController::class, 'getRoles'])->name('roles.js
 // ---------------------------------------------------------------------
 Route::middleware('role:3')->prefix('medico')->group(function () {
 
-    Route::get('/', function (\Illuminate\Http\Request $request) {
-                $pacientes = \App\Models\Paciente::with('persona')->get();
-                $estados = \App\Models\Estado::all();
-                $representantes = collect();
-                $vistaInicial = $request->query('vista');
+    Route::get('/', [MedicoController::class, 'dashboard'])->name('medico.index');
 
-                return view('medico.index', compact('pacientes', 'estados', 'representantes', 'vistaInicial'));
-    })->name('medico.index');
+    Route::controller(HistoriaClinicaController::class)->prefix('historias-clinicas')->group(function () {
+        Route::get('/pacientes', 'pacientes')->name('medico.historia-clinica.pacientes');
+        Route::get('/pacientes/{pacienteId}', 'detalle')->name('medico.historia-clinica.detalle');
+    });
 
     // Gestión de Pacientes por el Médico
     Route::controller(MedicoController::class)->group(function () {

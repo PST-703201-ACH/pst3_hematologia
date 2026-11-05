@@ -2,29 +2,27 @@
  * Historia clínica: estilos de búsqueda, perfil, pestañas, tarjetas y timeline.
  * Define exclusivamente los componentes visuales de la vista y reutiliza AdminLTE/Bootstrap.
  */
-.clinical-history-entry {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1rem 1.15rem;
-    border: 1px solid #dce6f2;
-    border-radius: 0.5rem;
-    background: linear-gradient(110deg, #f7faff, #fff);
+.clinical-history-results[aria-busy="true"] {
+    opacity: 0.6;
+    pointer-events: none;
 }
 
-.clinical-history-entry strong {
-    color: #233e5d;
+.clinical-history-results-heading .badge {
+    font-size: 0.72rem;
 }
 
-.clinical-history-entry .btn {
-    flex: 0 0 auto;
+.clinical-history-results .clinical-history-option {
+    cursor: pointer;
 }
 
-.clinical-history-demo-alert {
-    border: 0;
-    border-left: 4px solid #e0a800;
-    box-shadow: 0 2px 8px rgba(27, 55, 85, 0.05);
+.clinical-history-record + .clinical-history-record {
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #edf1f5;
+}
+
+.clinical-history-field dd {
+    white-space: pre-line;
 }
 
 .clinical-history-workspace {
@@ -392,29 +390,6 @@
     line-height: 1.45;
 }
 
-.clinical-history-chip-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    padding: 0.85rem 0.9rem;
-}
-
-.clinical-history-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.55rem;
-    border: 1px solid #e1eaf4;
-    border-radius: 999px;
-    background: #f5f8fc;
-    color: #3f5b78;
-    font-size: 0.7rem;
-}
-
-.clinical-history-chip i {
-    color: #5085ba;
-}
-
 .clinical-history-timeline {
     position: relative;
     display: grid;
@@ -467,24 +442,6 @@
     font-size: 0.84rem;
 }
 
-.clinical-history-visit p {
-    margin: 0.4rem 0;
-    color: #556a81;
-    font-size: 0.77rem;
-    line-height: 1.55;
-}
-
-.clinical-history-visit p strong {
-    color: #3c536d;
-}
-
-.clinical-history-disclaimer {
-    margin-top: 1rem;
-    color: #8190a1;
-    font-size: 0.71rem;
-    line-height: 1.5;
-}
-
 @media (max-width: 991.98px) {
     .clinical-history-workspace {
         grid-template-columns: minmax(0, 1fr);
@@ -508,15 +465,6 @@
 }
 
 @media (max-width: 575.98px) {
-    .clinical-history-entry {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .clinical-history-entry .btn {
-        width: 100%;
-    }
-
     .clinical-history-results,
     .clinical-history-cards {
         grid-template-columns: minmax(0, 1fr);

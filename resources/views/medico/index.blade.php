@@ -11,8 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/historia-clinica.css') }}">
-    <!-- TEMPORAL: retirar junto con los gráficos demo si se descarta la propuesta. -->
-    <link rel="stylesheet" href="{{ asset('assets/css/medico-dashboard-demo.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/medico-dashboard.css') }}">
 
     @stack('styles')
 </head>
@@ -73,13 +72,12 @@
 <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
-<!-- TEMPORAL: Chart.js solo se requiere para los gráficos demostrativos del dashboard Médico. -->
+<!-- Chart.js se usa para los gráficos del dashboard Médico. -->
 <script src="{{ asset('assets/adminlte/plugins/chart.js/Chart.min.js') }}"></script>
 
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/botones_med.js') }}"></script>
-<script src="{{ asset('assets/js/medico-dashboard-demo.js') }}"></script>
-<script src="{{ asset('assets/js/historia-clinica-data.js') }}"></script>
+<script src="{{ asset('assets/js/medico-dashboard.js') }}"></script>
 <script src="{{ asset('assets/js/historia-clinica-templates.js') }}"></script>
 <script src="{{ asset('assets/js/historia-clinica-controller.js') }}"></script>
 <script src="{{ asset('assets/js/listar_consulta.js') }}"></script>

@@ -7,12 +7,30 @@ use App\Models\Estado;
 use App\Models\Paciente;
 use App\Models\Consulta;
 use App\Models\Persona;
+use App\Services\MedicoDashboardMetrics;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class MedicoController extends Controller
 {
+
+    public function dashboard(Request $request, MedicoDashboardMetrics $metrics)
+    {
+        $pacientes = Paciente::with('persona')->get();
+        $estados = Estado::all();
+        $representantes = collect();
+        $vistaInicial = $request->query('vista');
+        $dashboardMetrics = $metrics->build();
+
+        return view('medico.index', compact(
+            'pacientes',
+            'estados',
+            'representantes',
+            'vistaInicial',
+            'dashboardMetrics'
+        ));
+    }
 
     public function index()
     {

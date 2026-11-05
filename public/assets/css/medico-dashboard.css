@@ -1,15 +1,17 @@
-/*
- * TEMPORAL: dimensiones de los gráficos demo del panel Médico.
- * Eliminar este archivo y su enlace en medico/index.blade.php si se descarta la propuesta.
- */
 .medico-dashboard-chart {
     position: relative;
     min-height: 260px;
 }
 
-.medico-dashboard-demo .card-title {
+.medico-dashboard .card-title {
     margin-bottom: 0;
     font-size: 1rem;
+}
+
+.medico-dashboard-empty {
+    margin: 0;
+    color: #6c757d;
+    text-align: center;
 }
 
 @media (max-width: 575.98px) {
