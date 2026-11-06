@@ -1,21 +1,3 @@
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="icon fas fa-check"></i> {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    @if($errors->has('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="icon fas fa-ban"></i> {{ $errors->first('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
     <div class="card card-primary card-outline">
         <div class="card-header">
             <h3 class="card-title">Pacientes en Sistema</h3>
@@ -32,7 +14,6 @@
                         <th>Nombre Completo</th>
                         <th>Sexo</th>
                         <th>Status</th>
-                        <th style="width: 250px;">Acciones</th>
                     </tr>
                 </thead>
                 
@@ -47,22 +28,6 @@
                                 <span class="badge {{ (int) $paciente->status === 1 ? 'badge-success' : 'badge-danger' }}">
                                     {{ (int) $paciente->status === 1 ? 'Activo' : 'Inactivo' }}
                                 </span>
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('medico.pacientes.show', $paciente->paciente_id) }}" class="btn btn-primary btn-sm js-ver-paciente" data-paciente-id="{{ $paciente->paciente_id }}" title="Ver Información">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-success btn-sm" title="Historia Clínica">
-                                        <i class="fas fa-notes-medical"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-info btn-sm" title="Datos de Laboratorio">
-                                        <i class="fas fa-microscope"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-warning btn-sm" title="Actualizar Datos">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
                             </td>
                         </tr>
                     @endforeach 

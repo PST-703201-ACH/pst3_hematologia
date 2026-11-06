@@ -6,10 +6,13 @@ async function precargarCita(boton){
         const respuesta = await fetch(`/admvo/precargar-cita/${id}`);
         const cita = await respuesta.json();
 
+        document.getElementById('usuCitaRep').value = document.getElementById('usuario').textContent;
+
         const [nombre1P, nombre2P] = cita.nombres_paciente.split(" ");
         const [apellido1P, apellido2P] = cita.apellidos_paciente.split(" ");
         const [nombre1R, nombre2R] = cita.nombres_representante.split(" ");
         const [apellido1R, apellido2R] = cita.apellidos_representante.split(" ");
+        const cedulaPa = cita.consulta.paciente.persona.cedula.split("-");
 
         document.getElementById('pacienteNombreRep1').value = nombre1P;
         
@@ -36,6 +39,8 @@ async function precargarCita(boton){
         }
 
         document.getElementById('hcRep').value = cita.numero_hc;
+        document.querySelector('select[name="nacPaRep"]').value = cedulaPa[0];
+        document.querySelector('input[name="cedulaPaRep"]').value = cedulaPa[1];
 
             const info = new bootstrap.Modal(modalReprogramar);
             info.show();
@@ -121,15 +126,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         for (let campo in resultado.errores) {
                         const elemento = document.getElementById(campo);
                             if (elemento) {
-                            const originalValue = elemento.value;
-                            elemento.className = 'form-control border border-danger text-danger';
-                            elemento.value = resultado.errores[campo]; 
+                            elemento.textContent = resultado.errores[campo]; 
                             elemento.style.pointerEvents = 'none';
 
                                 setTimeout(function(){
-                                  elemento.className = 'form-control';
                                   elemento.style.pointerEvents = '';
-                                  elemento.value = originalValue;
+                                  elemento.textContent = '';
                                 }, 3000);
                             }
                         }

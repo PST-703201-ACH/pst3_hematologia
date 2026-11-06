@@ -19,23 +19,18 @@
                             <small class="text-danger" id="hcPaConReg"></small>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-8">
-                        <label for="cedula">Cédula de Identidad <span class="text-danger">*</span></label>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <select name="nacPaConReg" class="form-control">
-                                    <option value="" disabled selected>Seleccione una nacionalidad</option>
-                                    <option value="V">V (Venezolano)</option>
-                                    <option value="E">E (Extranjero)</option>
-                                </select>
-                                <small class="text-danger" id="nacPaConReg"></small>
-                            </div>
+                <div class="col-md-8">
+                    <label for="cedula">Cédula de Identidad <span class="text-danger">*</span></label>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span name="nacPaConReg" class="form-control" readonly></span>
+                            
+                        </div>
 
-                            <div class="col-md-4">
-                                <input type="text" name="cedulaPaConReg" class="form-control" placeholder="Ej: 25123456">
-                                <small class="text-danger" id="cedulaPaConReg"></small>
-                            </div>
+                        <div class="col-md-4">
+                            <span class="form-control" name="cedulaPaConReg" readonly></span>
                         </div>
                     </div>
                 </div>
@@ -74,15 +69,7 @@
                     </div>
                 </div>
 
-                <div class="row mt-2">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Fecha de Nacimiento <span class="text-danger">*</span></label>
-                            <input type="date" name="naciPaConReg" class="form-control">
-                            <small class="text-danger" id="naciPaConReg"></small>
-                        </div>
-                    </div>
-                    
+                <div class="row mt-2">                    
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Sexo <span class="text-danger">*</span></label>

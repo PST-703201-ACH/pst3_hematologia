@@ -8,6 +8,7 @@ use App\Models\Cita;
 use App\Models\Consulta;
 use App\Models\Paciente;
 use App\Models\Persona;
+use App\Models\Auditoria;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -20,19 +21,46 @@ class CitaController extends Controller
         $errores = [];
 
         if (empty($request->pacienteNombre1)) {
-            $errores['pacienteNombre1'] = "Solo debe ingresar el primer nombre";
+            $errores['pacienteNombre1'] = "Complete esta informacion";
         }
 
         if (empty($request->pacienteApellido1)) {
-            $errores['pacienteApellido1'] = "Solo debe ingresar el segundo nombre";
+            $errores['pacienteApellido1'] = "Complete esta informacion";
+        }
+
+        if ($request->naciPaReg === null || trim($request->naciPaReg) === '') {
+
+            $errores['naciPaReg'] = "Ingrese la fecha de nacimiento del paciente";
+        }
+
+        if (empty($request->nacPaReg)) {
+            $errores['nacPaReg'] = "Complete esta informacion";
+        }
+
+        if ($request->cedulaPaReg === null || trim($request->cedulaPaReg) === '') {
+            $errores['cedulaPaReg'] = "Complete esta informacion";
+        } elseif (!ctype_digit($request->cedulaPaReg)) {
+            $errores['cedulaPaReg'] = "La cédula debe contener solo números";
+        } elseif (strlen($request->cedulaPaReg) < 7 || strlen($request->cedulaPaReg) > 8) {
+            $errores['cedulaPaReg'] = "La cédula debe tener entre 7 y 8 dígitos";
+        }
+
+        $fechaActual = new \DateTime();
+        $fechaNacimiento = new \DateTime($request->naciPaReg);
+
+        $diferencia = $fechaActual->diff($fechaNacimiento);
+        $edad = $diferencia->y;
+
+        if ($edad >= 18) {
+            $errores['naciPaReg'] = "El paciente debe ser menor de 18 años";
         }
 
         if (empty($request->represNombre1)) {
-            $errores['represNombre1'] = "Solo debe ingresar el primer apellido";
+            $errores['represNombre1'] = "Complete esta informacion";
         }
 
         if (empty($request->represApellido1)) {
-            $errores['represApellido1'] = "Solo debe ingresar el segundo apellido";
+            $errores['represApellido1'] = "Complete esta informacion";
         }
 
         if (empty($request->hc)) {
@@ -46,7 +74,13 @@ class CitaController extends Controller
         }
 
         if (empty($request->fechaHora)) {
-            $errores['fechaHora'] = "Debe ingresar la hora para la cita";
+            $errores['fechaHora'] = "Complete esta informacion";
+        }
+
+        $fechaAgendada = new \DateTime($request->fechaCita);
+
+        if ($fechaAgendada <= $fechaActual) {
+            $errores['fechaCitaReg'] = "La fecha debe ser después de la actual";
         }
 
         if (!empty($errores)) {
@@ -72,6 +106,11 @@ class CitaController extends Controller
                 $persona->apellidos = $request->pacienteApellido1;
             }
 
+            $cedulaPa = $request->nacPaReg.'-'.$request->cedulaPaReg;
+
+            $persona->fecha_nacimiento = $request->naciPaReg;
+            $persona->cedula = $cedulaPa;
+
             if ($persona->save()) {
                 $paciente = new Paciente();
                 $paciente->persona_id = $persona->persona_id;
@@ -82,6 +121,7 @@ class CitaController extends Controller
                     $consulta = new Consulta();
                     $consulta->paciente_id = $paciente->paciente_id;
                     $consulta->status = 0;
+                    $consulta->tipo = 1;
                     if ($consulta->save()) {
                         $cita = new Cita();
 
@@ -114,7 +154,20 @@ class CitaController extends Controller
                         $cita->consulta_id = $consulta->consulta_id;
 
                         if ($cita->save()) {
-                            return response()->json(['status' => 'exito', 'mensaje' => 'Cita agendada con exito']);
+
+                            $usuario = $request->usuCitaReg;
+
+                            // Guardar para auditar
+                            $aud = new Auditoria;
+                            $aud->descripcion = 'Agendo una cita para una Primera Consulta a '.$cita->nombres_paciente.' '.$cita->apellidos_paciente;
+                            $aud->modulo = 'Citas';
+                            $aud->id_usuario = $usuario;
+                            $aud->accion = "Registro";
+
+                            if ($aud->save()) {
+                                return response()->json(['status' => 'exito', 'mensaje' => 'Cita agendada con exito']);
+                            }
+                            
                         } else {
                             return response()->json(['status' => 'error', 'mensaje' => 'No se ha podido agendar la cita']);
                         }
@@ -132,7 +185,7 @@ class CitaController extends Controller
     }
 
     public function precargar($id){
-        $cita = Cita::where('cita_id', $id)->first();
+        $cita = Cita::with('consulta.paciente.persona')->where('cita_id', $id)->first();
         return response()->json($cita);
     }
 
@@ -164,6 +217,26 @@ class CitaController extends Controller
             $errores['fechaHoraRep'] = "Debe ingresar la hora para la cita";
         }
 
+        if (empty($request->nacPaRep)) {
+            $errores['nacPaRep'] = "Complete esta informacion";
+        }
+
+        if ($request->cedulaPaRep === null || trim($request->cedulaPaRep) === '') {
+            $errores['cedulaPaRep'] = "Complete esta informacion";
+        } elseif (!ctype_digit($request->cedulaPaRep)) {
+            $errores['cedulaPaRep'] = "La cédula debe contener solo números";
+        } elseif (strlen($request->cedulaPaRep) < 7 || strlen($request->cedulaPaRep) > 8) {
+            $errores['cedulaPaRep'] = "La cédula debe tener entre 7 y 8 dígitos";
+        }
+
+        $fechaActual = new \DateTime();
+
+        $fechaAgendada = new \DateTime($request->fechaCitaRep);
+
+        if ($fechaAgendada <= $fechaActual) {
+            $errores['fechaCitaRepro'] = "La fecha debe ser después de la actual";
+        }
+
         if (!empty($errores)) {
             return response()->json([
                 "status" => "errores",
@@ -174,6 +247,7 @@ class CitaController extends Controller
 
         try {
             $hc = $request->hcRep;
+            $cedulaPa = $request->nacPaReg.'-'.$request->cedulaPaReg;
 
             $persona = Persona::whereHas('paciente', function ($query) use ($hc) {
                 $query->where('hc', $hc);
@@ -181,6 +255,7 @@ class CitaController extends Controller
             ->first();
 
             if ($persona) {
+                
                 $pacienteId = $persona->paciente->paciente_id;
             }
 
@@ -198,7 +273,8 @@ class CitaController extends Controller
 
             if ($persona->update([
                 'nombres' => $nombres,
-                'apellidos' => $apellidos
+                'apellidos' => $apellidos,
+                'cedula' => $cedulaPa
             ])) {
                 $consulta = Consulta::where('paciente_id', $pacienteId)->first();
                 $consultaId = $consulta->consulta_id;
@@ -227,7 +303,20 @@ class CitaController extends Controller
                 'nombres_representante' => $nombresR,
                 'apellidos_representante' => $apellidosR,
                 'fecha_hora' => $request->fechaCitaRep.' '.$request->fechaHoraRep.':00'])) {
-                return response()->json(['status' => 'exito', 'mensaje' => 'Cita reprogramada con exito']);
+
+                $usuario = $request->usuCitaRep;
+
+                // Guardar para auditar
+                $aud = new Auditoria;
+                $aud->descripcion = 'Reprogramo una cita a '.$cita->nombres_paciente.' '.$cita->apellidos_paciente;
+                $aud->modulo = 'Citas';
+                $aud->id_usuario = $usuario;
+                $aud->accion = "Actualizacion";
+
+                if ($aud->save()) {
+                    return response()->json(['status' => 'exito', 'mensaje' => 'Cita reprogramada con exito']);
+                }
+
             } else {
                 return response()->json(['status' => 'error', 'mensaje' => 'No se ha podido reprogramar la cita']);
             }

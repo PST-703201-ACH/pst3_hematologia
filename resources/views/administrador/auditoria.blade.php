@@ -16,8 +16,6 @@
 					    <i class="fas fa-file-pdf"></i>
 					</button>
 
-					<button class="btn btn-success" onclick="excelAuditoria()"><i class="fas fa-regular fa-file-excel"></i></button>
-
 					{{-- El formulario POST conserva la sesión y protege la solicitud con el token CSRF. --}}
 					<form method="POST" action="{{ route('admin.backup.database') }}" class="d-inline">
 						@csrf
@@ -65,8 +63,6 @@
 		        	<option value="Habilitacion">Habilitacion</option>
 		        	<option value="Inhabilitacion">Inhabilitacion</option>
 		        	<option value="Consulta">Consulta</option>
-		        	<option value="Agendamiento">Agendamiento</option>
-		        	<option value="Reagendamiento">Reagendamiento</option>
 		        </select>
 		        <button type="button" id="btnLimpiar_aud" class="btn btn-danger d-none">Limpiar</button>
 		    </form>

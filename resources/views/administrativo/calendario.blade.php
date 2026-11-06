@@ -19,65 +19,104 @@
 		        <form id="formReg" action="{{ route('cita.agendar') }}" method="POST">
 		        	@csrf
 		        	<h4>DATOS DE PACIENTE</h4>
+		        	<input type="hidden" id="usuCitaReg" name="usuCitaReg">
 			        <div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteNombre1">Primer nombre del paciente</label>
-					    <input type="text" class="form-control" name="pacienteNombre1" id="pacienteNombre1" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteNombre1" autocomplete="off">
+					    <small class="text-danger" id="pacienteNombre1"></small>
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteNombre2">Segundo nombre del paciente</label>
-					    <input type="text" class="form-control" name="pacienteNombre2" id="pacienteNombre2" placeholder="(OPCIONAL)" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteNombre2" placeholder="(OPCIONAL)" autocomplete="off">
+					    <small class="text-danger" id="pacienteNombre2"></small>
 					  </div>
 					</div>
 
 					<div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteApellido1">Primer apellido del paciente</label>
-					    <input type="text" class="form-control" name="pacienteApellido1" id="pacienteApellido1" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteApellido1" autocomplete="off">
+					    <small class="text-danger" id="pacienteApellido1"></small>
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteApellido2">Segundo apellido del paciente</label>
-					    <input type="text" class="form-control" name="pacienteApellido2" id="pacienteApellido2" placeholder="(OPCIONAL)" autocomplete="off">
+					    <input type="text" class="form-control" name="pacienteApellido2" placeholder="(OPCIONAL)" autocomplete="off">
+					    <small class="text-danger" id="pacienteApellido2"></small>
 					  </div>
+					</div>
+
+					<div class="row">
+						<div class="form-group col-md-6 mb-3">
+							<label for="naciPaReg">Fecha de nacimiento</label>
+							<input type="date" class="form-control" name="naciPaReg" autocomplete="off">
+							<small class="text-danger" id="naciPaReg"></small>
+						</div>
 					</div>
 
 					<h4>DATOS DE REPRESENTANTE</h4>
 					<div class="row">
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represNombre1">Primer nombre del representante</label>
-					    <input type="text" class="form-control" name="represNombre1" id="represNombre1" autocomplete="off">
+					    <input type="text" class="form-control" name="represNombre1" autocomplete="off">
+					    <small class="text-danger" id="represNombre1"></small>
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represNombre2">Segundo nombre del representante</label>
-					    <input type="text" class="form-control" name="represNombre2" id="represNombre2" placeholder="(OPCIONAL)" autocomplete="off">
+					    <input type="text" class="form-control" name="represNombre2" placeholder="(OPCIONAL)" autocomplete="off">
+					    <small class="text-danger" id="represNombre2"></small>
 					  </div>
 					</div>
 
 					<div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represApellido1">Primer apellido del representante</label>
-					    <input type="text" class="form-control" name="represApellido1" id="represApellido1" autocomplete="off">
+					    <input type="text" class="form-control" name="represApellido1" autocomplete="off">
+					    <small class="text-danger" id="represApellido1"></small>
 					  </div>
 
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="represApellido2">Segundo apellido del representante</label>
-					    <input type="text" class="form-control" name="represApellido2" id="represApellido2" placeholder="(OPCIONAL)" autocomplete="off">
+					    <input type="text" class="form-control" name="represApellido2" placeholder="(OPCIONAL)" autocomplete="off">
+					    <small class="text-danger" id="represApellido2"></small>
 					  </div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-8">
+	                        <label for="cedula">Cédula de Identidad</label>
+	                        <div class="row">
+	                            <div class="form-group col-md-6 mb-3">
+	                                <select name="nacPaReg" class="form-control">
+	                                    <option value="" disabled selected>Seleccione una nacionalidad</option>
+	                                    <option value="V">V (Venezolano)</option>
+	                                    <option value="E">E (Extranjero)</option>
+	                                </select>
+	                                <small class="text-danger" id="nacPaReg"></small>
+	                            </div>
+
+	                            <div class="form-group col-md-6 mb-3">
+	                                <input type="text" name="cedulaPaReg" class="form-control" placeholder="Ej: 25123456">
+	                                <small class="text-danger" id="cedulaPaReg"></small>
+	                            </div>
+	                        </div>
+	                    </div>
 					</div>
 
 					<h4>DATOS DE CITA</h4>
 
 		          <div class="form-group">
 		            <label for="hc">Nº de Historia Clinica</label>
-		            <input type="text" onfocus="(this.type='number')" placeholder="Ingrese el Nº de historia clinica" onblur="(this.type='text')" class="form-control" name="hc" id="hc" autocomplete="off">
+		            <input type="text" onfocus="(this.type='number')" placeholder="Ingrese el Nº de historia clinica" onblur="(this.type='text')" class="form-control" name="hc" autocomplete="off">
 		          </div>
 
 		          <div class="form-group">
 		            <label for="fechaCita">Fecha</label>
 		            <input type="date" class="form-control" name="fechaCita" id="fechaCita" autocomplete="off" readonly>
+		            <small class="text-danger" id="fechaCitaReg"></small>
 		          </div>
 
 		          <div class="form-group">
@@ -126,6 +165,7 @@
 		        <form id="formRep" action="{{ route('cita.rep') }}" method="POST">
 		        	@csrf
 		        	<h4>DATOS DE PACIENTE</h4>
+		        	<input type="hidden" id="usuCitaRep" name="usuCitaRep">
 			        <div class="row">	
 					  <div class="form-group col-md-6 mb-3">
 					    <label for="pacienteNombreRep1">Primer nombre del paciente</label>
@@ -175,6 +215,27 @@
 					  </div>
 					</div>
 
+					<div class="row">
+						<div class="col-md-8">
+	                        <label for="cedula">Cédula de Identidad</label>
+	                        <div class="row">
+	                            <div class="form-group col-md-6 mb-3">
+	                                <select name="nacPaRep" class="form-control">
+	                                    <option value="" disabled selected>Seleccione una nacionalidad</option>
+	                                    <option value="V">V (Venezolano)</option>
+	                                    <option value="E">E (Extranjero)</option>
+	                                </select>
+	                                <small class="text-danger" id="nacPaRep"></small>
+	                            </div>
+
+	                            <div class="form-group col-md-6 mb-3">
+	                                <input type="text" name="cedulaPaRep" class="form-control" placeholder="Ej: 25123456">
+	                                <small class="text-danger" id="cedulaPaRep"></small>
+	                            </div>
+	                        </div>
+	                    </div>
+					</div>
+
 					<h4>DATOS DE CITA</h4>
 
 		          <div class="form-group">
@@ -185,11 +246,13 @@
 		          <div class="form-group">
 		            <label for="fechaCitaRep">Fecha</label>
 		            <input type="date" class="form-control" name="fechaCitaRep" id="fechaCitaRep" autocomplete="off">
+		            <small class="text-danger" id="fechaCitaRepro"></small>
 		          </div>
 
 		          <div class="form-group">
 		            <label for="fechaHoraRep">Hora</label>
-		            <input type="time" class="form-control" name="fechaHoraRep" id="fechaHoraRep" autocomplete="off">
+		            <input type="time" class="form-control" name="fechaHoraRep" autocomplete="off">
+		            <small class="text-danger" id="fechaHoraRep"></small>
 		          </div>
 		          <div class="modal-footer">
 			        <button type="button" class="btn btn-secondary" data-dismiss="modal">

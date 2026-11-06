@@ -82,7 +82,7 @@
                        class="nav-link"
                        onclick="event.preventDefault();">
                         <i class="nav-icon fas fa-stethoscope"></i>
-                        <p>Consultas</p>
+                        <p>Consultas Medicas</p>
                         <i class="right fas fa-angle-left"></i>
                     </a>
                     <ul class="nav nav-treeview">

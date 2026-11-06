@@ -107,6 +107,8 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         let vistaActual = info.view.type;
         document.getElementById('fechaHora').readOnly = false;
         document.getElementById('formReg').reset();
+
+        document.getElementById('usuCitaReg').value = document.getElementById('usuario').textContent;
         
         if (vistaActual === 'dayGridMonth') {
             document.getElementById('fechaCita').value = fechaExtraida;
