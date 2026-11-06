@@ -61,15 +61,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         for (let campo in resultado.errores) {
                         const elemento = document.getElementById(campo);
                             if (elemento) {
-                            const originalValue = elemento.value;
-                            elemento.className = 'form-control border border-danger text-danger';
-                            elemento.value = resultado.errores[campo]; 
+                            elemento.textContent = resultado.errores[campo]; 
                             elemento.style.pointerEvents = 'none';
 
                                 setTimeout(function(){
-                                  elemento.className = 'form-control';
                                   elemento.style.pointerEvents = '';
-                                  elemento.value = originalValue;
+                                  elemento.textContent = '';
                                 }, 3000);
                             }
                         }

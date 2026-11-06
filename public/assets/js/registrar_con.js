@@ -200,10 +200,13 @@ async function precargarDatosCon(boton) {
         let nombresPa = datosCon.consulta.paciente.persona.nombres;
         let apellidosPa = datosCon.consulta.paciente.persona.apellidos;
 
-        let paciente = nombresPa+' '+apellidosPa;
         let representante = datosCon.nombres_representante+' '+datosCon.apellidos_representante;
         let hc = datosCon.consulta.paciente.hc;
-        let nombrePa = paciente.split(" ");
+        let nombrePa = nombresPa.split(" ");
+        let apellidoPa = apellidosPa.split(" ");
+
+
+
         let cedula = datosCon.consulta.paciente.persona.cedula;
         let cedulaPa = cedula.split("-");
         let naciPa = datosCon.consulta.paciente.persona.fecha_nacimiento;
@@ -296,7 +299,7 @@ async function precargarDatosCon(boton) {
                 actualizarBotones();
             });
 
-            document.getElementById('nombrePaConReg').textContent = paciente;
+            document.getElementById('nombrePaConReg').textContent = nombresPa+' '+apellidosPa;
             document.getElementById('nombreRepConReg').textContent = representante;
             document.getElementById('hcConReg').textContent = hc;
             document.getElementById('tipoConReg').textContent = tipo;
@@ -304,12 +307,23 @@ async function precargarDatosCon(boton) {
             document.getElementById('usuConReg').value = document.getElementById('usuario').textContent;
             
             document.querySelector('input[name="nombrePa1ConReg"]').value = nombrePa[0];
-            document.querySelector('input[name="nombrePa2ConReg"]').value = nombrePa[1];
-            document.querySelector('input[name="apellidoPa1ConReg"]').value = nombrePa[2];
-            document.querySelector('input[name="apellidoPa2ConReg"]').value = nombrePa[3];
+            
+            if (nombrePa[1]) {
+                document.querySelector('input[name="nombrePa2ConReg"]').value = nombrePa[1];
+            }
+
+            document.querySelector('input[name="apellidoPa1ConReg"]').value = apellidoPa[0];
+            
+
+            if (apellidoPa[1]) {
+                document.querySelector('input[name="apellidoPa2ConReg"]').value = apellidoPa[1];
+            }
+
+            
+            
             document.querySelector('input[name="hcPaConReg"]').value = hc;
-            document.querySelector('select[name="nacPaConReg"]').value = cedulaPa[0];
-            document.querySelector('input[name="cedulaPaConReg"]').value = cedulaPa[1];
+            document.querySelector('span[name="nacPaConReg"]').textContent = cedulaPa[0];
+            document.querySelector('span[name="cedulaPaConReg"]').textContent = cedulaPa[1];
 
 
         }else if (datosCon.consulta.tipo == 2){
@@ -387,7 +401,7 @@ async function precargarDatosCon(boton) {
             document.querySelector('textarea[name="anteFamiConReg"]').value = datosCon.consulta.ante_familiar;
             document.querySelector('textarea[name="signosConReg"]').value = datosCon.consulta.sintomas;
 
-            document.getElementById('nombrePaConReg').textContent = paciente;
+            document.getElementById('nombrePaConReg').textContent = nombresPa+' '+apellidosPa;
             document.getElementById('nombreRepConReg').textContent = representante;
             document.getElementById('hcConReg').textContent = hc;
             document.getElementById('tipoConReg').textContent = tipo;
@@ -395,14 +409,22 @@ async function precargarDatosCon(boton) {
             document.getElementById('usuConReg').value = document.getElementById('usuario').textContent;
             
             document.querySelector('input[name="nombrePa1ConReg"]').value = nombrePa[0];
-            document.querySelector('input[name="nombrePa2ConReg"]').value = nombrePa[1];
-            document.querySelector('input[name="apellidoPa1ConReg"]').value = nombrePa[2];
-            document.querySelector('input[name="apellidoPa2ConReg"]').value = nombrePa[3];
-            document.querySelector('input[name="hcPaConReg"]').value = hc;
-            document.querySelector('select[name="nacPaConReg"]').value = cedulaPa[0];
-            document.querySelector('input[name="cedulaPaConReg"]').value = cedulaPa[1];
             
-            document.querySelector('input[name="naciPaConReg"]').value = naciPa;
+            if (nombrePa[1]) {
+                document.querySelector('input[name="nombrePa2ConReg"]').value = nombrePa[1];
+            }
+
+            document.querySelector('input[name="apellidoPa1ConReg"]').value = apellidoPa[0];
+            
+
+            if (apellidoPa[1]) {
+                document.querySelector('input[name="apellidoPa2ConReg"]').value = apellidoPa[1];
+            }
+
+            document.querySelector('input[name="hcPaConReg"]').value = hc;
+            document.querySelector('span[name="nacPaConReg"]').textContent = cedulaPa[0];
+            document.querySelector('span[name="cedulaPaConReg"]').textContent = cedulaPa[1];
+            
             document.querySelector('select[name="sexoPaConReg"]').value = sexoPa;
             document.querySelector('input[name="emailPaConReg"]').value = emailPa;
             document.querySelector('input[name="tlfPaConReg"]').value = telfPa;

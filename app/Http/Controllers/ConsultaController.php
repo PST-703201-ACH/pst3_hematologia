@@ -56,7 +56,7 @@ class ConsultaController extends Controller
         // Guardar para auditar
         $aud = new Auditoria;
         $aud->descripcion = 'Ingreso al listado de consultas pendientes';
-        $aud->modulo = 'Consulta Medica';
+        $aud->modulo = 'Consultas Medicas';
         $aud->id_usuario = $usuario;
         $aud->accion = "Listado";
 
@@ -101,7 +101,7 @@ class ConsultaController extends Controller
         // Guardar para auditar
         $aud = new Auditoria;
         $aud->descripcion = 'Ingreso al listado de consultas realizadas';
-        $aud->modulo = 'Consulta Medica';
+        $aud->modulo = 'Consultas Medicas';
         $aud->id_usuario = $usuario;
         $aud->accion = "Listado";
 
@@ -210,36 +210,7 @@ class ConsultaController extends Controller
 
             if (empty($request->hcPaConReg)) {
                 $errores['hcPaConReg'] = "Complete esta informacion";
-            }
-
-            if (empty($request->nacPaConReg)) {
-                $errores['nacPaConReg'] = "Complete esta informacion";
-            }
-
-            if ($request->naciPaConReg === null || trim($request->naciPaConReg) === '') {
-
-                $errores['naciPaConReg'] = "Complete esta informacion";
-            }
-
-                    $fechaNacimiento = new \DateTime($request->naciPaConReg);
-
-
-                        $diferencia = $fechaActual->diff($fechaNacimiento);
-                        $edad = $diferencia->y;
-
-                        if ($edad >= 18) {
-                            $errores['naciPaConReg'] = "El paciente debe ser menor de 18 años";
-                        }
-                    
-
-
-            if ($request->cedulaPaConReg === null || trim($request->cedulaPaConReg) === '') {
-                $errores['cedulaPaConReg'] = "Complete esta informacion";
-            } elseif (!ctype_digit($request->cedulaPaConReg)) {
-                $errores['cedulaPaConReg'] = "La cédula debe contener solo números";
-            } elseif (strlen($request->cedulaPaConReg) < 7 || strlen($request->cedulaPaConReg) > 8) {
-                $errores['cedulaPaConReg'] = "La cédula debe tener entre 7 y 8 dígitos";
-            }
+            }       
 
             if ($request->nombrePa1ConReg === null || trim($request->nombrePa1ConReg) === '') {
                 $errores['nombrePa1ConReg'] = "Complete esta informacion";
@@ -317,6 +288,8 @@ class ConsultaController extends Controller
                 exit;
             } else {
 
+                $usuario = $request->usuConReg;
+
                 $tiempoActual = new \DateTime();
                 $fechaHora = $tiempoActual->format('Y-m-d H:i:s');
                 $fechaHoraProx = new \DateTime("$request->citaFechaConReg $request->citaHoraConReg");
@@ -324,7 +297,7 @@ class ConsultaController extends Controller
 
                 $consulta = Consulta::with('paciente.persona')->where('consulta_id', $request->consultaReg)->first();
 
-                $consulta->medico_id = $request->usuConReg;
+                $consulta->medico_id = $usuario;
                 $consulta->enfermedad_id = $request->enfConReg;
                 $consulta->fecha_hora = $fechaHora;
                 $consulta->peso = $request->pesoConReg;
@@ -344,11 +317,19 @@ class ConsultaController extends Controller
 
                     $idPaciente = $consulta->paciente_id;
 
-                    $cedulaPa = $request->nacPaConReg.'-'.$request->cedulaPaConReg;
-                    $nombresPa = $request->nombrePa1ConReg.' '.$request->nombrePa2ConReg;
-                    $apellidosPa = $request->apellidoPa1ConReg.' '.$request->apellidoPa2ConReg;
+                    if (empty($request->nombrePa2ConReg)) {
+                        $nombresPa = $request->nombrePa1ConReg;
+                    } else {
+                        $nombresPa = $request->nombrePa1ConReg.' '.$request->nombrePa2ConReg;
+                    }
+                    
+                    if (empty($request->apellidoPa2ConReg)) {
+                        $apellidosPa = $request->apellidoPa1ConReg;
+                    } else {
+                        $apellidosPa = $request->apellidoPa1ConReg.' '.$request->apellidoPa2ConReg;
+                    }
+                    
                     $sexoPa = $request->sexoPaConReg;
-                    $naciPa = $request->naciPaConReg;
                     $emailPa = $request->emailPaConReg;
                     $telfPa = $request->tlfPaConReg;
                     $dirPa = $request->dirPaConReg;
@@ -360,9 +341,7 @@ class ConsultaController extends Controller
 
                     $paciente->persona->nombres = $nombresPa;
                     $paciente->persona->apellidos = $apellidosPa;
-                    $paciente->persona->fecha_nacimiento = $naciPa;
                     $paciente->persona->sexo = $sexoPa;
-                    $paciente->persona->cedula = $cedulaPa;
                     $paciente->persona->telefono = $telfPa;
                     $paciente->persona->email = $emailPa;
                     $paciente->persona->direccion_exacta = $dirPa;
@@ -400,10 +379,19 @@ class ConsultaController extends Controller
                                 
                                 DB::commit();
 
-                                return response()->json([
-                                    'status' => 'exito', 
-                                    'mensaje' => 'Se ha registrado la consulta exitosamente'
-                                ]);
+                                // Guardar para auditar
+                                $aud = new Auditoria;
+                                $aud->descripcion = 'Atendio una Primera Consulta';
+                                $aud->modulo = 'Consultas Medicas';
+                                $aud->id_usuario = $usuario;
+                                $aud->accion = "Registro";
+
+                                if ($aud->save()) {
+                                    return response()->json([
+                                        'status' => 'exito', 
+                                        'mensaje' => 'Se ha registrado la consulta exitosamente'
+                                    ]);
+                                }
                             }
                         }
                     }
@@ -522,32 +510,6 @@ class ConsultaController extends Controller
                 $errores['hcPaConReg'] = "Complete esta informacion";
             }
 
-            if (empty($request->nacPaConReg)) {
-                $errores['nacPaConReg'] = "Complete esta informacion";
-            }
-
-            if ($request->naciPaConReg === null || trim($request->naciPaConReg) === '') {
-
-                $errores['naciPaConReg'] = "Complete esta informacion";
-            }
-
-            $fechaNacimiento = new \DateTime($request->naciPaConReg);
-
-            $diferencia = $fechaActual->diff($fechaNacimiento);
-            $edad = $diferencia->y;
-
-            if ($edad >= 18) {
-                $errores['naciPaConReg'] = "El paciente debe ser menor de 18 años";
-            }
-                    
-            if ($request->cedulaPaConReg === null || trim($request->cedulaPaConReg) === '') {
-                $errores['cedulaPaConReg'] = "Complete esta informacion";
-            } elseif (!ctype_digit($request->cedulaPaConReg)) {
-                $errores['cedulaPaConReg'] = "La cédula debe contener solo números";
-            } elseif (strlen($request->cedulaPaConReg) < 7 || strlen($request->cedulaPaConReg) > 8) {
-                $errores['cedulaPaConReg'] = "La cédula debe tener entre 7 y 8 dígitos";
-            }
-
             if ($request->nombrePa1ConReg === null || trim($request->nombrePa1ConReg) === '') {
                 $errores['nombrePa1ConReg'] = "Complete esta informacion";
             } elseif (strlen(trim($request->nombrePa1ConReg)) < 2) {
@@ -649,6 +611,8 @@ class ConsultaController extends Controller
                 exit;
             }
 
+            $usuario = $request->usuConReg;
+
             $tiempoActual = new \DateTime();
             $fechaHora = $tiempoActual->format('Y-m-d H:i:s');
             $fechaHoraProx = new \DateTime("$request->citaFechaConReg $request->citaHoraConReg");
@@ -656,7 +620,7 @@ class ConsultaController extends Controller
 
             $consulta = Consulta::with('paciente.persona')->where('consulta_id', $request->consultaReg)->first();
 
-            $consulta->medico_id = $request->usuConReg;
+            $consulta->medico_id = $usuario;
             $consulta->enfermedad_id = $request->enfConReg;
             $consulta->fecha_hora = $fechaHora;
             $consulta->peso = $request->pesoConReg;
@@ -676,11 +640,9 @@ class ConsultaController extends Controller
 
                 $idPaciente = $consulta->paciente_id;
 
-                $cedulaPa = $request->nacPaConReg.'-'.$request->cedulaPaConReg;
                 $nombresPa = $request->nombrePa1ConReg.' '.$request->nombrePa2ConReg;
                 $apellidosPa = $request->apellidoPa1ConReg.' '.$request->apellidoPa2ConReg;
                 $sexoPa = $request->sexoPaConReg;
-                $naciPa = $request->naciPaConReg;
                 $emailPa = $request->emailPaConReg;
                 $telfPa = $request->tlfPaConReg;
                 $dirPa = $request->dirPaConReg;
@@ -692,9 +654,7 @@ class ConsultaController extends Controller
 
                 $paciente->persona->nombres = $nombresPa;
                 $paciente->persona->apellidos = $apellidosPa;
-                $paciente->persona->fecha_nacimiento = $naciPa;
                 $paciente->persona->sexo = $sexoPa;
-                $paciente->persona->cedula = $cedulaPa;
                 $paciente->persona->telefono = $telfPa;
                 $paciente->persona->email = $emailPa;
                 $paciente->persona->direccion_exacta = $dirPa;
@@ -763,10 +723,19 @@ class ConsultaController extends Controller
                             
                             DB::commit();
 
-                            return response()->json([
-                                'status' => 'exito', 
-                                'mensaje' => 'Se ha registrado la consulta exitosamente'
-                            ]);
+                            // Guardar para auditar
+                            $aud = new Auditoria;
+                            $aud->descripcion = 'Atendio una Consulta de Control';
+                            $aud->modulo = 'Consultas Medicas';
+                            $aud->id_usuario = $usuario;
+                            $aud->accion = "Registro";
+
+                            if ($aud->save()) {
+                                return response()->json([
+                                    'status' => 'exito', 
+                                    'mensaje' => 'Se ha registrado la consulta exitosamente'
+                                ]);
+                            }
                         }
                     }
                 }
@@ -791,7 +760,7 @@ class ConsultaController extends Controller
         // Guardar para auditar
         $aud = new Auditoria;
         $aud->descripcion = 'Consulto la informacion de una consulta medica realizada';
-        $aud->modulo = 'Usuarios';
+        $aud->modulo = 'Consultas Medicas';
         $aud->id_usuario = $usuario;
         $aud->accion = "Consulta";
 

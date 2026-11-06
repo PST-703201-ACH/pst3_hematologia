@@ -1,21 +1,3 @@
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="icon fas fa-check"></i> {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    @if($errors->has('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="icon fas fa-ban"></i> {{ $errors->first('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
     <div class="card card-primary card-outline">
         <div class="card-header">
             <h3 class="card-title">Pacientes en Sistema</h3>
