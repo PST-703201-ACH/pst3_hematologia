@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Paciente;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Entrega la historia clínica de solo lectura usando únicamente datos persistidos.
@@ -32,7 +35,8 @@ class HistoriaClinicaController extends Controller
                     ->orWhereHas('persona', function ($personas) use ($pattern): void {
                         $personas
                             ->whereRaw('LOWER(nombres) LIKE ?', [$pattern])
-                            ->orWhereRaw('LOWER(apellidos) LIKE ?', [$pattern]);
+                            ->orWhereRaw('LOWER(apellidos) LIKE ?', [$pattern])
+                            ->orWhereRaw("LOWER(nombres || ' ' || apellidos) LIKE ?", [$pattern]);
                     });
             });
         }
@@ -52,7 +56,7 @@ class HistoriaClinicaController extends Controller
         ]);
     }
 
-    public function detalle(int $pacienteId): JsonResponse
+    public function detalle(int $pacienteId): Response
     {
         $patient = Paciente::query()
             ->with([
@@ -65,44 +69,28 @@ class HistoriaClinicaController extends Controller
         // Limitar las consultas a las tablas principales evita depender de tablas
         // opcionales ausentes en algunas instalaciones y de esquemas desechables.
         $consultations = $patient->consultas()->with('enfermedad')->get();
+        $protocolTablesAvailable = Schema::hasTable('logistica.medicina_trat')
+            && Schema::hasTable('logistica.protocolo');
+        $protocolsByConsultation = collect();
 
-        return response()->json([
-            'paciente' => [
-                'paciente_id' => $patient->paciente_id,
-                'hc' => $patient->hc,
-                'status' => $patient->status,
-                'persona' => [
-                    'nombres' => $patient->persona?->nombres,
-                    'apellidos' => $patient->persona?->apellidos,
-                    'fecha_nacimiento' => $patient->persona?->fecha_nacimiento,
-                    'sexo' => $patient->persona?->sexo,
-                    'cedula' => $patient->persona?->cedula,
-                    'telefono' => $patient->persona?->telefono,
-                    'email' => $patient->persona?->email,
-                    'direccion_exacta' => $patient->persona?->direccion_exacta,
-                    'estado' => $patient->persona?->estado?->nombre,
-                    'municipio' => $patient->persona?->municipio?->nombre,
-                    'parroquia' => $patient->persona?->parroquia?->nombre,
-                ],
-            ],
-            'consultas' => $consultations->map(fn ($consultation): array => [
-                'consulta_id' => $consultation->consulta_id,
-                'tipo' => $consultation->tipo,
-                'fecha_hora' => $consultation->fecha_hora,
-                'enfermedad' => $consultation->enfermedad?->descripcion,
-                'status' => $consultation->status,
-                'peso' => $consultation->peso,
-                'talla' => $consultation->talla,
-                'sc' => $consultation->sc,
-                'fc' => $consultation->fc,
-                'fr' => $consultation->fr,
-                'ante_personal' => $consultation->ante_personal,
-                'ante_familiar' => $consultation->ante_familiar,
-                'sintomas' => $consultation->sintomas,
-                'subjetivo' => $consultation->subjetivo,
-                'plan_trabajo' => $consultation->plan_trabajo,
-                'proxima_cita' => $consultation->proxima_cita,
-            ])->values(),
+        // Los protocolos se vinculan a la consulta; una fila por medicina puede repetirlos.
+        if ($protocolTablesAvailable && $consultations->isNotEmpty()) {
+            $protocolsByConsultation = DB::table('logistica.medicina_trat as asignacion')
+                ->join('logistica.protocolo as protocolo', 'protocolo.protocolo_id', '=', 'asignacion.protocolo_id')
+                ->where('asignacion.paciente_id', $patient->paciente_id)
+                ->whereIn('asignacion.consulta_id', $consultations->pluck('consulta_id'))
+                ->select('asignacion.consulta_id', 'protocolo.protocolo_id', 'protocolo.nombre')
+                ->distinct()
+                ->orderBy('protocolo.nombre')
+                ->get()
+                ->groupBy('consulta_id')
+                ->map(fn ($protocols) => $protocols->pluck('nombre')->values()->all());
+        }
+
+        return response()->view('medico.pacientes.detalle_historia', [
+            'patient' => $patient,
+            'consultations' => $consultations,
+            'protocolsByConsultation' => $protocolsByConsultation,
         ]);
     }
 }

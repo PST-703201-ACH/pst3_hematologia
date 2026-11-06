@@ -96,6 +96,7 @@ it('builds dashboard metrics from clinical records and active protocol assignmen
 it('renders live dashboard indicators and uses the safe JavaScript data encoder', function () {
     $dashboard = file_get_contents(resource_path('views/medico/dashboard.blade.php'));
     $layout = file_get_contents(resource_path('views/medico/index.blade.php'));
+    $navbar = file_get_contents(resource_path('views/partials/navbar_med.blade.php'));
     $script = file_get_contents(public_path('assets/js/medico-dashboard.js'));
 
     expect($dashboard)
@@ -112,10 +113,21 @@ it('renders live dashboard indicators and uses the safe JavaScript data encoder'
         ->toContain('assets/js/medico-dashboard.js')
         ->not->toContain('dashboard-demo');
 
+    expect($navbar)
+        ->toContain("route('medico.index')")
+        ->toContain('fas fa-home')
+        ->toContain('Ir al panel principal del Médico');
+
     expect($script)
         ->toContain('metrics.pacientes_por_enfermedad')
         ->toContain('metrics.pacientes_por_sexo')
         ->toContain('metrics.usos_por_protocolo_medicina')
         ->toContain('metrics.protocolos_disponibles')
+        ->toContain("femenino: '#e83e8c'")
+        ->toContain("masculino: '#3c8dbc'")
+        ->toContain('text: `${row.label} (${Math.round((row.total / sexTotal) * 100)}%)`')
+        ->toContain('return rows;')
+        ->not->toContain('No especificado')
+        ->not->toContain('Chart.defaults.global.legend.labels.generateLabels')
         ->not->toContain('Medicamento alfa');
 });

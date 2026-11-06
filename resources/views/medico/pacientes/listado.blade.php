@@ -32,7 +32,7 @@
                         <th>Nombre Completo</th>
                         <th>Sexo</th>
                         <th>Status</th>
-                        <th style="width: 250px;">Acciones</th>
+                        <th style="width: 100px;">Acciones</th>
                     </tr>
                 </thead>
                 
@@ -49,20 +49,16 @@
                                 </span>
                             </td>
                             <td>
-                                <div class="btn-group">
-                                    <a href="{{ route('medico.pacientes.show', $paciente->paciente_id) }}" class="btn btn-primary btn-sm js-ver-paciente" data-paciente-id="{{ $paciente->paciente_id }}" title="Ver Información">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-success btn-sm" title="Historia Clínica">
-                                        <i class="fas fa-notes-medical"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-info btn-sm" title="Datos de Laboratorio">
-                                        <i class="fas fa-microscope"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-warning btn-sm" title="Actualizar Datos">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </div>
+                                <button
+                                    type="button"
+                                    class="btn btn-primary btn-sm js-open-clinical-history"
+                                    data-paciente-id="{{ $paciente->paciente_id }}"
+                                    data-paciente-nombre="{{ $paciente->persona->nombres }} {{ $paciente->persona->apellidos }}"
+                                    title="Ver información en la Historia Clínica"
+                                    aria-label="Ver historia clínica de {{ $paciente->persona->nombres }} {{ $paciente->persona->apellidos }}"
+                                >
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </button>
                             </td>
                         </tr>
                     @endforeach 

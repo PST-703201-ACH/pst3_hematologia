@@ -129,7 +129,7 @@ class MedicoController extends Controller
 
             DB::commit();
 
-            return redirect()->route('medico.pacientes.show', $paciente->paciente_id)
+            return redirect()->route('medico.index')
                 ->with('success', "Paciente registrado exitosamente. Historia Clínica N°: {$paciente->hc}");
 
         } catch (\Exception $e) {
@@ -142,25 +142,6 @@ class MedicoController extends Controller
             return back()->withInput()
                 ->withErrors(['error' => 'No se pudo completar el registro: '.$e->getMessage()]);
         }
-    }
-
-    /**
-     * Muestra la vista de detalle individual de un paciente.
-     */
-    public function show($id)
-    {
-        $with = [
-            'persona.estado',
-            'persona.municipio',
-            'persona.parroquia',
-            'consultas.enfermedad',
-            'consultas.medico.persona',
-        ];
-
-        $paciente = Paciente::with($with)->findOrFail($id);
-        $tiposConsulta = DB::table('tipo_consulta')->pluck('nombre', 'tipo_id');
-
-        return view('medico.pacientes.show', compact('paciente', 'tiposConsulta'));
     }
 
     /**

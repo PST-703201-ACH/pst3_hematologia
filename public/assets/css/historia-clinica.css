@@ -25,6 +25,20 @@
     white-space: pre-line;
 }
 
+.clinical-history-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.clinical-history-pagination-status {
+    color: #687b91;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
 .clinical-history-workspace {
     display: grid;
     grid-template-columns: minmax(230px, 290px) minmax(0, 1fr);
@@ -413,6 +427,10 @@
     border: 1px solid #e1e8f0;
     border-radius: 0.45rem;
     background: #fff;
+}
+
+.clinical-history-visit[hidden] {
+    display: none;
 }
 
 .clinical-history-visit::before {

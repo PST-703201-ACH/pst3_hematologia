@@ -44,12 +44,8 @@
                     @include('medico.pacientes.listado')
                 </div>
 
-                <div id="seccion-paciente_detalle" class="vista_med d-none">
-                    <div id="contenedor-paciente-detalle"></div>
-                </div>
-
                 <div id="seccion-historia-clinica" class="vista_med d-none">
-                    @include('administrador.historia_clinica')
+                    @include('medico.pacientes.historia_clinica')
                 </div>
 
                 <div id="seccion-consultas" class="vista_med d-none">
@@ -78,7 +74,6 @@
 <script src="{{ asset('assets/js/app.js') }}"></script>
 <script src="{{ asset('assets/js/botones_med.js') }}"></script>
 <script src="{{ asset('assets/js/medico-dashboard.js') }}"></script>
-<script src="{{ asset('assets/js/historia-clinica-templates.js') }}"></script>
 <script src="{{ asset('assets/js/historia-clinica-controller.js') }}"></script>
 <script src="{{ asset('assets/js/listar_consulta.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_con.js') }}"></script>

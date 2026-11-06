@@ -150,7 +150,6 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
             return redirect()->route('medico.index', ['vista' => 'registrar']);
         })->name('medico.pacientes.create');
         Route::post('/pacientes/crear', 'store')->name('medico.pacientes.store');
-        Route::get('/pacientes/{id}', 'show')->name('medico.pacientes.show');
         Route::delete('/pacientes/{id}', 'destroy')->name('medico.pacientes.destroy');
 
         Route::get('/obtener-pacientes', 'listar')->name('medico.pacientes.listar');

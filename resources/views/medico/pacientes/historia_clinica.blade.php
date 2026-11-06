@@ -1,13 +1,10 @@
-{{-- Historia clínica de solo lectura, disponible desde el panel Médico. --}}
+{{-- Contenedor de búsqueda e historial clínico dentro del panel del Médico. --}}
 <div class="card card-primary card-outline clinical-history-page">
     <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-        <div>
-            <h3 class="card-title">
-                <i class="fas fa-notes-medical mr-2 text-primary" aria-hidden="true"></i>
-                Historia Clínica
-            </h3>
-            <small class="d-block text-muted mt-1">Consulta longitudinal del paciente</small>
-        </div>
+        <h3 class="card-title">
+            <i class="fas fa-notes-medical mr-2 text-primary" aria-hidden="true"></i>
+            Historia Clínica
+        </h3>
         <button type="button" class="btn btn-outline-secondary btn-sm mt-2 mt-md-0" id="btnVolverHistoria">
             <i class="fas fa-arrow-left mr-1" aria-hidden="true"></i>
             Volver al listado
@@ -46,7 +43,7 @@
                 </div>
                 <div id="errorHistoriaClinica" class="alert alert-danger d-none mt-3 mb-0" role="alert"></div>
             </aside>
-                
+
             <section id="detalleHistoriaClinica" class="clinical-history-detail" aria-live="polite" aria-label="Detalle de historia clínica">
                 <div class="clinical-history-empty">
                     <span class="clinical-history-empty-icon"><i class="fas fa-user-injured" aria-hidden="true"></i></span>
