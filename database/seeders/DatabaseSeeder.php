@@ -12,13 +12,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             Roles::class,
+            CatalogoMedico::class,
             Estados::class,
             Municipios::class,
             Parroquias::class,
             Usuarios::class,
-            Enfermedades::class,
-            Medicinas::class,
             Citas::class,
+            
             
 
         ]);

@@ -111,6 +111,7 @@
 		          <div class="form-group">
 		            <label for="hc">Nº de Historia Clinica</label>
 		            <input type="text" onfocus="(this.type='number')" placeholder="Ingrese el Nº de historia clinica" onblur="(this.type='text')" class="form-control" name="hc" autocomplete="off">
+		            <small class="text-danger" id="hcReg"></small>
 		          </div>
 
 		          <div class="form-group">

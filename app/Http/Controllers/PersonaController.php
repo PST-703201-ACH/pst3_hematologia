@@ -54,7 +54,7 @@ class PersonaController extends Controller
                     'direccion_exacta' => $request->direccion,
                 ]);
 
-                $clave = Str::random(12);
+                $clave = Str::random(6);
                 $cedulaUsuario = preg_replace('/\D+/', '', (string) $request->cedula);
 
                 $usuario = User::create([

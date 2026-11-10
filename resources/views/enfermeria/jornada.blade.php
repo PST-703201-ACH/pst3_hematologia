@@ -8,15 +8,6 @@
                     <label for="filtro-paciente">Paciente / H.C</label>
                     <input class="form-control" name="busqueda_pac" maxlength="100">
                 </div>
-                
-                <div class="form-group col-md-3">
-                    <label for="filtro-estado">Status</label>
-                    <select class="form-control" name="busqueda_status">
-                        <option value="">Todos</option>
-                        <option value="1" class="text-success">Observado</option>
-                        <option value="0" class="text-danger">No observado</option>
-                    </select>
-                </div>
 
                 <div class="form-group">
                     <button class="btn btn-danger btn-block d-none" type="button" id="btnLimpiar_jor">Limpiar</button>

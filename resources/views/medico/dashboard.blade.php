@@ -34,7 +34,7 @@
                 <div class="small-box bg-warning">
                     <div class="inner">
                         <h3>{{ number_format($dashboardMetrics['interconsultas_realizadas']) }}</h3>
-                        <p>Interconsultas</p>
+                        <p>Interconsultas atendidas</p>
                     </div>
                     <div class="icon"><i class="fas fa-user-md" aria-hidden="true"></i></div>
                     <span class="small-box-footer">Consultas de segunda vez realizadas</span>

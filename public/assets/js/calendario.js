@@ -1,6 +1,6 @@
 var calendarEl = document.getElementById('calendar');
 const modalCita = document.getElementById('modalCita');
-const campoHc = document.getElementById('hc');
+const campoHc = document.querySelector('input[name="hc"]');
 
 async function precargarEventos(){
     const respuesta = await fetch('/admvo/obtener-citas');
