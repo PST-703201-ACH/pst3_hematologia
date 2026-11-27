@@ -52,7 +52,8 @@ Homestead.yaml
 
 # mis datos 
 .atl/
-docs/
+docs/*
+!docs/Manual_Tecnico.md
 openspec/
 pst3_hematologia/
 skills/

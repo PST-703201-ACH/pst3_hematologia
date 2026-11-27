@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('assets/adminlte/plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/adminlte/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/dashboard-clinico.css') }}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -24,9 +25,12 @@
 
         <section class="content">
             <div class="container-fluid">
+                <div class="vista_enf" id="seccion-dashboard">
+                    @include('partials.dashboard_clinico_graficas')
+                </div>
 
                 <div class="tab-content">
-                    <div class="vista_enf" id="seccion-jornada">
+                    <div class="vista_enf d-none" id="seccion-jornada">
                         @include('enfermeria.jornada')
                     </div>
 
@@ -50,6 +54,8 @@
 <script src="{{ asset('assets/adminlte/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('assets/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/adminlte/js/adminlte.min.js') }}"></script>
+<script src="{{ asset('assets/adminlte/plugins/chart.js/Chart.min.js') }}"></script>
+<script src="{{ asset('assets/js/dashboard-clinico.js') }}"></script>
 <script src="{{ asset('assets/js/listar_jornada.js') }}"></script>
 <script src="{{ asset('assets/js/registrar_obs.js') }}"></script>
 <script src="{{ asset('assets/js/listar_observacion.js') }}"></script>

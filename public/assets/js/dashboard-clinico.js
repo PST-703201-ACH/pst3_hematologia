@@ -1,7 +1,8 @@
+// Render the clinical charts shared by the Medical and Nursing panels.
 document.addEventListener('DOMContentLoaded', () => {
-    const metrics = window.PST3MedicoDashboardData;
+    const metrics = window.PST3ClinicalDashboardData;
     if (!metrics) {
-        console.error('No se recibieron las métricas del dashboard Médico.');
+        console.error('No se recibieron las métricas del panel clínico.');
         return;
     }
 
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const noProtocolData = document.getElementById('sinDatosProtocolos');
 
     if (typeof Chart === 'undefined') {
-        console.error('No se pudo cargar Chart.js para los gráficos del panel Médico.');
+        console.error('No se pudo cargar Chart.js para las gráficas clínicas.');
         [noDiseaseData, noSexData, noProtocolData].forEach((message) => {
             message.textContent = 'No se pudieron cargar los gráficos. Recarga el panel e inténtalo nuevamente.';
             message.classList.remove('d-none');

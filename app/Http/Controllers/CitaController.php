@@ -9,9 +9,11 @@ use App\Models\Consulta;
 use App\Models\Paciente;
 use App\Models\Persona;
 use App\Models\Auditoria;
+use App\Services\CitaExcelExporter;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CitaController extends Controller
 {
@@ -347,51 +349,22 @@ class CitaController extends Controller
             ->download('reporte_citas_' . $fechaEmision->format('Ymd_His') . '.pdf');
     }
 
-    public function exportarExcel()
+    public function exportarExcel(CitaExcelExporter $exportador)
     {
         $citas = $this->filasExportacion();
-        $nombreArchivo = 'reporte_citas_' . Carbon::now()->format('Ymd_His') . '.csv';
+        $fechaEmision = Carbon::now();
+        $reporte = $exportador->generar($citas, $fechaEmision);
+        $nombreArchivo = 'reporte_citas_' . $fechaEmision->format('Ymd_His') . '.xlsx';
 
-        return response()->streamDownload(function () use ($citas) {
-            $salida = fopen('php://output', 'w');
-
-            if ($salida === false) {
-                throw new \RuntimeException('No se pudo generar el archivo de citas.');
+        return response()->streamDownload(function () use ($reporte) {
+            try {
+                (new Xlsx($reporte))->save('php://output');
+            } finally {
+                $reporte->disconnectWorksheets();
             }
-
-            if (fwrite($salida, "\xEF\xBB\xBF") === false || fputcsv($salida, [
-                'Fecha y hora (cita)',
-                'Número de historia clínica',
-                'Nombre del paciente',
-                'Nombre del representante',
-                'Consulta asociada',
-                'Citas registradas en la fecha',
-            ], ';', '"', '\\') === false) {
-                throw new \RuntimeException('No se pudo escribir el archivo de citas.');
-            }
-
-            foreach ($citas as $cita) {
-                $valores = [
-                    $cita['fecha_hora'],
-                    $cita['numero_hc'],
-                    $cita['paciente'],
-                    $cita['representante'],
-                    $cita['consulta'],
-                    $cita['conteo_fecha'],
-                ];
-                $valores = array_map(static function ($valor) {
-                    $valor = (string) $valor;
-
-                    return preg_match('/^[=+\-@\t\r]/', $valor) === 1 ? "'" . $valor : $valor;
-                }, $valores);
-
-                if (fputcsv($salida, $valores, ';', '"', '\\') === false) {
-                    throw new \RuntimeException('No se pudo escribir una cita en el archivo.');
-                }
-            }
-
-            fclose($salida);
-        }, $nombreArchivo, ['Content-Type' => 'text/csv; charset=UTF-8']);
+        }, $nombreArchivo, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 
     private function filasExportacion(): Collection

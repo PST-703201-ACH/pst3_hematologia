@@ -21,7 +21,7 @@
                       <i class="fas fa-file-excel mr-1"></i> Excel
                   </a>
               </div>
-              <small class="text-muted">El archivo Excel se descarga en formato CSV compatible.</small>
+              <small class="text-muted">Descarga el reporte en Excel (.xlsx), con formato listo para presentar e imprimir.</small>
           </div>
       </div>
   </div>

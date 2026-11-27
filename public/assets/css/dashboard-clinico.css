@@ -1,21 +1,22 @@
-.medico-dashboard-chart {
+/* Keep the shared clinical charts readable at desktop and mobile widths. */
+.clinical-dashboard-chart {
     position: relative;
     min-height: 260px;
 }
 
-.medico-dashboard .card-title {
+.clinical-dashboard .card-title {
     margin-bottom: 0;
     font-size: 1rem;
 }
 
-.medico-dashboard-empty {
+.clinical-dashboard-empty {
     margin: 0;
     color: #6c757d;
     text-align: center;
 }
 
 @media (max-width: 575.98px) {
-    .medico-dashboard-chart {
+    .clinical-dashboard-chart {
         min-height: 220px;
     }
 }

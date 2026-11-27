@@ -96,22 +96,29 @@ it('builds dashboard metrics from clinical records and active protocol assignmen
 it('renders live dashboard indicators and uses the safe JavaScript data encoder', function () {
     $dashboard = file_get_contents(resource_path('views/medico/dashboard.blade.php'));
     $layout = file_get_contents(resource_path('views/medico/index.blade.php'));
+    $charts = file_get_contents(resource_path('views/partials/dashboard_clinico_graficas.blade.php'));
     $navbar = file_get_contents(resource_path('views/partials/navbar_med.blade.php'));
-    $script = file_get_contents(public_path('assets/js/medico-dashboard.js'));
+    $script = file_get_contents(public_path('assets/js/dashboard-clinico.js'));
 
     expect($dashboard)
         ->toContain("\$dashboardMetrics['historias_registradas']")
         ->toContain("\$dashboardMetrics['protocolos_activos']")
         ->toContain("\$dashboardMetrics['interconsultas_realizadas']")
-        ->toContain('\Illuminate\Support\Js::from($dashboardMetrics)')
+        ->toContain("partials.dashboard_clinico_graficas")
         ->toContain('Consultas de segunda vez realizadas')
         ->not->toContain('disabled')
         ->not->toContain('Leucemia');
 
     expect($layout)
-        ->toContain('assets/css/medico-dashboard.css')
-        ->toContain('assets/js/medico-dashboard.js')
+        ->toContain('assets/css/dashboard-clinico.css')
+        ->toContain('assets/js/dashboard-clinico.js')
         ->not->toContain('dashboard-demo');
+
+    expect($charts)
+        ->toContain('Pacientes por enfermedad')
+        ->toContain('Pacientes por sexo')
+        ->toContain('Usos por protocolo y medicamento')
+        ->toContain('\Illuminate\Support\Js::from($dashboardMetrics)');
 
     expect($navbar)
         ->toContain("route('medico.index')")

@@ -11,6 +11,7 @@ use App\Models\Auditoria;
 use App\Models\MedicinaTrat;
 use App\Models\Observacion;
 use App\Models\Tratamiento;
+use App\Services\MedicoDashboardMetrics;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,6 +21,16 @@ use Illuminate\Validation\ValidationException;
 
 class EnfermeriaController extends Controller
 {
+
+    /**
+     * Renderiza Enfermería con las métricas clínicas compartidas por los paneles.
+     */
+    public function dashboard(MedicoDashboardMetrics $metrics)
+    {
+        return view('enfermeria.index', [
+            'dashboardMetrics' => $metrics->build(),
+        ]);
+    }
 
     public function listarJor(Request $request) {
         $query = Tratamiento::with('medicina.paciente', 'medicina.paciente.persona')->where('status', 0);

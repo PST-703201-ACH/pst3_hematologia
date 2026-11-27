@@ -180,9 +180,7 @@ Route::middleware('role:3')->prefix('medico')->group(function () {
 // ENFERMERÍA
 // ---------------------------------------------------------------------
     Route::middleware('role:4')->prefix('enf')->controller(EnfermeriaController::class)->group(function () {
-        Route::get('/', function () {
-            return view('enfermeria.index');
-        })->name('enf.index');
+    Route::get('/', 'dashboard')->name('enf.index');
 
         Route::get('/obtener-jornada', 'listarJor');
         Route::get('/obtener-observacion', 'listarObs');
